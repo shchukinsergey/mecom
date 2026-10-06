@@ -7,37 +7,18 @@ $ErrorActionPreference = 'Stop'
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $ProjectRoot
 
-$Cloudflared = Get-Command cloudflared -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source -First 1
-if (-not $Cloudflared) {
-  $LocalCopy = Join-Path $env:LOCALAPPDATA 'MECOM\tools\cloudflared.exe'
-  if (Test-Path $LocalCopy) { $Cloudflared = $LocalCopy }
-}
-if ($LocalOnly) { $Cloudflared = $null }
-if (-not $Cloudflared) {
-  Write-Warning 'cloudflared was not found; starting in local-only mode.'
-}
-
-$ConfigPaths = @(
-  (Join-Path $env:USERPROFILE '.cloudflared\config.yml'),
-  (Join-Path $env:USERPROFILE '.cloudflared\config.yaml')
-)
-$ExistingConfig = $ConfigPaths | Where-Object { Test-Path $_ } | Select-Object -First 1
-if ($ExistingConfig) {
-  Write-Warning 'A cloudflared config already exists; leaving it untouched and starting in local-only mode.'
-  $Cloudflared = $null
-}
+# V2 is intentionally localhost-only. Never discover or start a tunnel here.
+$Cloudflared = $null
 
 $Random = [byte[]]::new(32)
 $Generator = [Security.Cryptography.RandomNumberGenerator]::Create()
 try { $Generator.GetBytes($Random) } finally { $Generator.Dispose() }
 $AdminToken = [Convert]::ToBase64String($Random).TrimEnd('=').Replace('+', '-').Replace('/', '_')
 $Random = $null
-$Port = 8787
-while ($true) {
-  $Probe = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, $Port)
-  try { $Probe.Start(); $Probe.Stop(); break }
-  catch { try { $Probe.Stop() } catch { }; $Port++ }
-}
+$Port = 8790
+$Probe = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, $Port)
+try { $Probe.Start(); $Probe.Stop() }
+catch { try { $Probe.Stop() } catch { }; throw 'V2 API port 8790 is already in use; stopping rather than connecting to another server.' }
 $LocalBase = "http://127.0.0.1:$Port"
 
 $Server = $null
@@ -56,8 +37,9 @@ try {
 
   $env:MECOM_ADMIN_TOKEN = $AdminToken
   $env:MECOM_SERVER_PORT = [string]$Port
+  $env:MECOM_DATA_FILE = Join-Path $ProjectRoot 'data\server-state-v2.json'
   try { $Server = Start-Process -FilePath 'node.exe' -ArgumentList @('dist-server/index.js') -WorkingDirectory $ProjectRoot -PassThru -WindowStyle Hidden -RedirectStandardOutput $ServerOut -RedirectStandardError $ServerErr }
-  finally { Remove-Item Env:MECOM_ADMIN_TOKEN, Env:MECOM_SERVER_PORT -ErrorAction SilentlyContinue }
+  finally { Remove-Item Env:MECOM_ADMIN_TOKEN, Env:MECOM_SERVER_PORT, Env:MECOM_DATA_FILE -ErrorAction SilentlyContinue }
   $Healthy = $false
   for ($i = 0; $i -lt 45; $i++) {
     $Server.Refresh()
@@ -115,5 +97,6 @@ try {
   if ($Server -and -not $Server.HasExited) { Stop-Process -Id $Server.Id -Force -ErrorAction SilentlyContinue }
   Remove-Item Env:MECOM_ADMIN_TOKEN -ErrorAction SilentlyContinue
   Remove-Item Env:MECOM_SERVER_PORT -ErrorAction SilentlyContinue
+  Remove-Item Env:MECOM_DATA_FILE -ErrorAction SilentlyContinue
   Remove-Variable AdminToken -ErrorAction SilentlyContinue
 }

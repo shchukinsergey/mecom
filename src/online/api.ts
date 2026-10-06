@@ -1,10 +1,10 @@
 import type { LeagueSnapshot } from '../state/persistence';
-import type { FirmDecision, FirmOpeningState, PeriodMacroParams } from '../engine/types';
+import type { FirmDecision, FirmOpeningState, LeagueConfig, PeriodMacroParams, FirmPeriodResult } from '../engine/types';
 
 const BASE = '/api';
-export interface OnlineFirm { firmId: string; firmName: string; submitted: boolean; }
+export interface OnlineFirm { firmId: string; firmName: string; submitted: boolean; currentRif?: number | null; }
 export interface OnlineGame { gameId: string; name: string; inviteToken?: string; inviteTokenHash?: string; open: boolean; phase: 'lobby' | 'collecting' | 'complete' | 'closed'; firms: Array<{firmId:string;firmName:string;submitted:boolean;decision?:Partial<FirmDecision>|null}>; snapshot?: LeagueSnapshot | null; }
-export interface PlayerMe { gameId: string; firmId: string; firmName: string; phase: 'lobby' | 'collecting' | 'complete' | 'closed'; currentPeriodIndex: number; submitted: boolean; decision?: Partial<FirmDecision> | null; openingState?: FirmOpeningState | null; periodMacro?: PeriodMacroParams | null; report?: string | null; reports?: Array<{ periodIndex: number; report: string }>; }
+export interface PlayerMe { gameId: string; firmId: string; firmName: string; phase: 'lobby' | 'collecting' | 'complete' | 'closed'; currentPeriodIndex: number; submitted: boolean; decision?: Partial<FirmDecision> | null; openingState?: FirmOpeningState | null; periodMacro?: PeriodMacroParams | null; config?: LeagueConfig | null; recentResults?: FirmPeriodResult[]; report?: string | null; reports?: Array<{ periodIndex: number; report: string }>; }
 export interface JoinResult { gameId: string; firmId: string; firmName: string; rejoinToken: string; }
 export interface GameStatus { gameId: string; phase: 'lobby' | 'collecting' | 'complete' | 'closed'; currentPeriodIndex: number; firms: OnlineFirm[]; }
 export type ApiError = Error & { status?: number };
@@ -13,7 +13,12 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   try { response = await fetch(`${BASE}${path}`, { ...init, headers: { ...(init.body ? { 'Content-Type': 'application/json' } : {}), ...init.headers } }); }
   catch { throw new Error('Сервер недоступен. Проверьте подключение и попробуйте снова.'); }
   if (!response.ok) {
-    const error = new Error(response.status === 401 || response.status === 403 ? 'Доступ отклонён. Проверьте токен или ссылку повторного входа.' : `Ошибка сервера (${response.status}).`) as ApiError;
+    let message = response.status === 401 || response.status === 403 ? 'Доступ отклонён. Проверьте токен или ссылку повторного входа.' : `Ошибка сервера (${response.status}).`;
+    try {
+      const payload = await response.json() as { error?: unknown };
+      if (typeof payload.error === 'string' && payload.error) message = payload.error;
+    } catch { /* keep the status-based fallback */ }
+    const error = new Error(message) as ApiError;
     error.status = response.status; throw error;
   }
   if (response.status === 204) return undefined as T;

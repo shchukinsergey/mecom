@@ -10,6 +10,7 @@ import type { League, PeriodMacroParams } from '../src/engine/types.ts';
 import { makeFirmDecision, makeFirmStart, makeMacroParams, DEFAULT_LEAGUE_CONFIG } from '../src/engine/config.ts';
 import { computePeriod, initialOpeningState, nextOpeningState } from '../src/engine/computePeriod.ts';
 import { renderFirmExport } from '../src/report/index.ts';
+import { validateOnlineDecision } from './decisionValidation.ts';
 
 const MAX_BODY_BYTES = 1_048_576;
 const MAX_NAME = 100;
@@ -35,7 +36,7 @@ export function createLocalServer(repository: JsonRepository, config: string | {
     });
   });
 }
-export async function listenLocal(server: Server, port = 8787): Promise<void> {
+export async function listenLocal(server: Server, port = 8790): Promise<void> {
   await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', () => { server.removeListener('error', reject); resolve(); }); });
 }
 async function handleRequest(req: IncomingMessage, res: ServerResponse, repo: JsonRepository, admin: string, webRoot: string): Promise<void> {
@@ -86,8 +87,14 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, repo: Js
     return sendJson(res, 200, playerDto(game, firm));
   }
   if (req.method === 'PUT' && path === '/api/player/decision') {
-    const token = header(req, 'x-mecom-player'), decision = await jsonBody(req); if (!validDecision(decision)) throw new ApiError(400, 'Invalid decision');
-    await repo.update(state => { const { game, firm } = findPlayerInState(state, token); if (game.phase === 'closed') throw new ApiError(409, 'Game is closed'); if (game.phase === 'complete') throw new ApiError(409, 'Game is complete'); if (game.phase === 'lobby' && game.snapshot) throw new ApiError(409, 'Game has not started'); firm.decision = decision; firm.submitted = false; }); return sendJson(res, 200, { ok: true });
+    const token = header(req, 'x-mecom-player'), decision = await jsonBody(req); if (!validDecision(decision)) throw new ApiError(400, 'Некорректный формат решения.');
+    await repo.update(state => { const { game, firm } = findPlayerInState(state, token); if (game.phase === 'closed') throw new ApiError(409, 'Game is closed'); if (game.phase === 'complete') throw new ApiError(409, 'Game is complete'); if (game.phase === 'lobby' && game.snapshot) throw new ApiError(409, 'Game has not started');
+      const league = game.snapshot?.league, opening = game.snapshot?.opening[firm.firmId], macro = league?.macroByPeriod[league.results.length];
+      if (!league || !opening || !macro) throw new ApiError(409, 'Данные текущего периода недоступны.');
+      const errors = validateOnlineDecision(decision, opening, macro, league.config);
+      if (errors) throw new ApiError(400, Object.values(errors).join(' '));
+      firm.decision = decision; firm.submitted = false;
+    }); return sendJson(res, 200, { ok: true });
   }
   if (req.method === 'POST' && path === '/api/player/submit') {
     const token = header(req, 'x-mecom-player'); await repo.update(state => { const { game, firm } = findPlayerInState(state, token); if (game.phase === 'closed') throw new ApiError(409, 'Game is closed'); if (game.phase === 'lobby' && game.snapshot) throw new ApiError(409, 'Game has not started'); if (game.phase === 'complete') throw new ApiError(409, 'Game is complete'); if (!firm.decision) throw new ApiError(409, 'Save a decision before submitting'); firm.submitted = true; }); return sendJson(res, 200, { ok: true });
@@ -95,7 +102,14 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, repo: Js
   const statusMatch = path.match(/^\/api\/games\/([^/]+)\/status$/);
   if (req.method === 'GET' && statusMatch) {
     const token = header(req, 'x-mecom-player'); const state = await repo.read(); const { game: own } = findPlayerInState(state, token); if (own.gameId !== statusMatch[1]) throw new ApiError(403, 'Player token belongs to another game');
-    return sendJson(res, 200, { gameId: own.gameId, phase: own.phase ?? (own.open ? 'lobby' : 'collecting'), currentPeriodIndex: own.snapshot?.league.results.length ?? 0, firms: own.firms.map(f => ({ firmId: f.firmId, firmName: f.firmName, submitted: f.submitted })) });
+    const latestResults = own.snapshot?.league.results.at(-1)?.firms;
+    return sendJson(res, 200, { gameId: own.gameId, phase: own.phase ?? (own.open ? 'lobby' : 'collecting'), currentPeriodIndex: own.snapshot?.league.results.length ?? 0, firms: own.firms.map(f => ({
+      firmId: f.firmId,
+      firmName: f.firmName,
+      submitted: f.submitted,
+      // RIF is already published for every firm in the industry report; expose only that score.
+      currentRif: latestResults?.find(result => result.firmId === f.firmId)?.rif.total ?? null,
+    })) });
   }
   const adminGameMatch = path.match(/^\/api\/admin\/games\/([^/]+)$/);
   if (req.method === 'GET' && adminGameMatch) { requireAdmin(req, admin); const g = (await repo.read()).games[adminGameMatch[1]]; if (!g) throw new ApiError(404, 'Game not found'); return sendJson(res, 200, adminDto(g)); }
@@ -181,7 +195,7 @@ function playerDto(g: Game,f: Firm): unknown {
   const current=history.at(-1)?.report ?? null;
   const openingState = g.phase === 'lobby' ? null : g.snapshot?.opening[f.firmId] ?? null;
   const periodMacro = league?.macroByPeriod[index] ?? null;
-  return {gameId:g.gameId,firmId:f.firmId,firmName:f.firmName,decision:g.phase==='lobby'?null:f.decision,submitted:f.submitted,phase:g.phase??(g.open?'lobby':'collecting'),currentPeriodIndex:index,report:current,reports:history,openingState,periodMacro};
+  return {gameId:g.gameId,firmId:f.firmId,firmName:f.firmName,decision:g.phase==='lobby'?null:f.decision,submitted:f.submitted,phase:g.phase??(g.open?'lobby':'collecting'),currentPeriodIndex:index,report:current,reports:history,openingState,periodMacro,config:league?.config??null,recentResults:league?.results.flatMap(period=>period.firms.filter(result=>result.firmId===f.firmId)).slice(-2)??[]};
 }
 const MACRO_KEYS=['demandOS','demandVM','demandVN','taxRate','bankRateBase','bankRateExtra','loanLimitBase','loanLimitAbs','rifWeightRetainedProfit','rifWeightDemandPotential','rifWeightSupplyPotential','rifWeightEfficiency','rifWeightMarketShare','rifWeightGrowth'] as const;
 function mergeMacro(current: PeriodMacroParams, patch: unknown): PeriodMacroParams {

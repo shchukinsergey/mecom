@@ -169,7 +169,7 @@ async function joinGame(url: string, inviteToken: string, firmName: string) {
     expect((await joinGame(url, game.inviteToken, 'nOrThWiNd')).response.status).toBe(409);
   });
 
-  it('keeps player identity private and status limited to names and booleans', async () => {
+  it('keeps decisions private while exposing each firm’s public current RIF', async () => {
     const { base: url } = await start();
     const game = await createGame(url);
     const { response: joined, result: player } = await joinGame(url, game.inviteToken, 'Northwind');
@@ -183,7 +183,10 @@ async function joinGame(url: string, inviteToken: string, firmName: string) {
     expect(statusResponse.status).toBe(200);
     const status = await body(statusResponse);
     expect(JSON.stringify(status)).not.toMatch(/decision|inviteToken|playerToken|adminToken|price|production|marketing|capex|rnd/i);
-    expect(status.firms).toEqual(expect.arrayContaining([expect.objectContaining({ firmId: player.firmId, firmName: 'Northwind', submitted: false })]));
+    expect(status.firms).toEqual(expect.arrayContaining([expect.objectContaining({
+      firmId: player.firmId, firmName: 'Northwind', submitted: false, currentRif: null,
+    })]));
+    expect(Object.keys(status.firms[0]).sort()).toEqual(['currentRif', 'firmId', 'firmName', 'submitted']);
   });
 
   it('accepts drafts only after start and clears submission when a draft changes', async () => {
@@ -200,6 +203,19 @@ async function joinGame(url: string, inviteToken: string, firmName: string) {
     expect((await body(await fetch(`${url}/api/player/me`, { headers: { 'x-mecom-player': player.rejoinToken } }))).submitted).toBe(true);
     expect((await fetch(`${url}/api/player/decision`, { method: 'PUT', headers: { 'x-mecom-player': player.rejoinToken, 'content-type': 'application/json' }, body: json({ ...decision, price: 14 }) })).status).toBe(200);
     expect((await body(await fetch(`${url}/api/player/me`, { headers: { 'x-mecom-player': player.rejoinToken } }))).submitted).toBe(false);
+    const beforeInvalidSave = await body(await fetch(`${url}/api/player/me`, { headers: { 'x-mecom-player': player.rejoinToken } }));
+    const overCapacity = { ...decision, production: beforeInvalidSave.openingState.machines + 1 };
+    const rejected = await fetch(`${url}/api/player/decision`, { method: 'PUT', headers: { 'x-mecom-player': player.rejoinToken, 'content-type': 'application/json' }, body: json(overCapacity) });
+    expect(rejected.status).toBe(400);
+    expect((await body(await fetch(`${url}/api/player/me`, { headers: { 'x-mecom-player': player.rejoinToken } }))).decision).toEqual(beforeInvalidSave.decision);
+    const overCategoryLimit = { ...decision, marketing: 50001 };
+    expect((await fetch(`${url}/api/player/decision`, { method: 'PUT', headers: { 'x-mecom-player': player.rejoinToken, 'content-type': 'application/json' }, body: json(overCategoryLimit) })).status).toBe(400);
+    const overBudget = { ...decision, production: beforeInvalidSave.openingState.machines, marketing: 50000, capexGross: 50000, rnd: 50000 };
+    expect((await fetch(`${url}/api/player/decision`, { method: 'PUT', headers: { 'x-mecom-player': player.rejoinToken, 'content-type': 'application/json' }, body: json(overBudget) })).status).toBe(400);
+    expect((await body(await fetch(`${url}/api/player/me`, { headers: { 'x-mecom-player': player.rejoinToken } }))).decision).toEqual(beforeInvalidSave.decision);
+    expect(beforeInvalidSave.config).toBeTruthy();
+    expect(beforeInvalidSave.recentResults).toHaveLength(1);
+    expect(beforeInvalidSave.recentResults[0].firmId).toBe(player.firmId);
     for (const invalid of [{ ...decision, price: 0 }, { ...decision, production: -1 }, { ...decision, marketing: Infinity }, { ...decision, extra: 1 }]) {
       const response = await fetch(`${url}/api/player/decision`, { method: 'PUT', headers: { 'x-mecom-player': player.rejoinToken, 'content-type': 'application/json' }, body: json(invalid) });
       expect(response.status).toBe(400);

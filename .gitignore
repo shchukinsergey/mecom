@@ -6,6 +6,7 @@ scripts/dosbox/screenshots/
 .DS_Store
 dist-server/
 data/server-state.json
+data/server-state-v2.json
 лиги/
 mecom-Test_period-p9.json
 test2/

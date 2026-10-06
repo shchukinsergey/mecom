@@ -359,6 +359,57 @@ input:focus, select:focus, textarea:focus { outline: 3px solid rgba(0, 82, 255, 
 .player-report-tabs button { border-radius: 10px; }
 .player-report-tabs button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 .report-scroll-hint { display: none; }
+.online-decision { padding: 24px; }
+.online-decision > h2 { margin: 0 0 8px; font-size: 24px; line-height: 1.3; letter-spacing: -0.02em; }
+.online-decision > .hint { margin: 0 0 18px; font-size: 14px; line-height: 1.5; }
+.online-decision-field { margin: 0 0 14px; padding: 16px; background: #fbfcfe; border: 1px solid var(--border); border-radius: 12px; }
+.online-decision-field label { display: block; margin: 0 0 8px; color: var(--text); font-size: 14px; font-weight: 600; line-height: 1.4; }
+.online-decision-field input { min-height: 48px; padding: 11px 14px; border-color: var(--border-strong); border-radius: 9px; font-size: 16px; }
+.online-decision-field input:focus { box-shadow: 0 0 0 3px rgba(0, 82, 255, .14); }
+.online-decision-field.invalid { background: #fffafb; border-color: #e9b8bd; }
+.decision-field-tip { margin: 12px 0 0; padding: 9px 11px; color: #475467; background: #f1f5fc; border-left: 3px solid #9eb8eb; border-radius: 0 8px 8px 0; font-size: 14px; line-height: 1.45; }
+.online-period-summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; margin: 14px 0 0; }
+.online-period-summary-grid > div { min-width: 0; padding: 12px; background: #f7f9fc; border: 1px solid #edf0f5; border-radius: 12px; }
+.online-period-summary-grid dt { color: var(--text-dim); font-size: 12px; line-height: 1.35; }
+.online-period-summary-grid dd { margin: 5px 0 0; font-size: 16px; font-weight: 700; overflow-wrap: anywhere; }
+.online-period-capacity-note { margin-bottom: 0; font-size: 13px; }
+.online-player-insights { margin-top: 16px; padding: 16px 18px; background: #fff8e7; border: 2px solid #e6a700; border-left-width: 6px; border-radius: 13px; color: #402d00; }
+.online-player-insights h3 { margin: 0 0 10px; color: #6b4700; font-size: 18px; }
+.online-player-insights ul { margin: 0; padding: 0; list-style: none; }
+.online-player-insights li { padding: 9px 0; line-height: 1.45; }
+.online-player-insights li + li { border-top: 1px solid #ead9ab; }
+.online-player-roster { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border); }
+.online-player-roster-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.online-player-roster-heading h3 { margin: 0 0 3px; font-size: 18px; line-height: 1.3; }
+.online-player-roster-heading p { margin: 0; color: var(--text-dim); font-size: 13px; }
+.online-player-roster-count { flex: 0 0 auto; padding: 5px 10px; color: #344054; background: #f2f4f7; border: 1px solid var(--border); border-radius: 999px; font-size: 12px; font-weight: 600; }
+.online-player-roster-table-wrap { margin-top: 13px; overflow: hidden; border: 1px solid var(--border); border-radius: 13px; }
+.online-player-roster-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+.online-player-roster-table th { padding: 10px 13px; color: var(--text-dim); background: #f7f9fc; font-size: 12px; font-weight: 600; letter-spacing: .02em; text-align: left; text-transform: none; }
+.online-player-roster-table th:first-child { width: 48%; }
+.online-player-roster-table th:nth-child(2) { width: 19%; }
+.online-player-roster-table th:last-child { width: 33%; }
+.online-player-roster-table td { padding: 11px 13px; border-bottom: 1px solid #edf0f5; vertical-align: middle; }
+.online-player-roster-table tbody tr:last-child td { border-bottom: 0; }
+.online-player-roster-table tbody tr:hover td { background: #fafcff; }
+.online-player-roster-table tbody tr.is-own-firm td { background: #f3f7ff; }
+.online-player-firm { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.online-player-firm-avatar { display: grid; flex: 0 0 34px; width: 34px; height: 34px; place-items: center; color: var(--accent); background: #eaf0ff; border-radius: 10px; font-size: 14px; font-weight: 700; }
+.online-player-firm-name { display: grid; min-width: 0; gap: 1px; }
+.online-player-firm-name strong { overflow-wrap: anywhere; font-size: 14px; }
+.online-player-firm-name small { color: var(--accent-dim); font-size: 11px; font-weight: 600; }
+.online-player-rif { font-size: 16px; font-variant-numeric: tabular-nums; }
+.online-player-rif-empty { color: var(--text-dim); font-size: 13px; }
+.online-player-submission { display: inline-flex; align-items: center; gap: 7px; padding: 5px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.online-player-submission-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.online-player-submission.is-submitted { color: #176a44; background: #eaf8f0; }
+.online-player-submission.is-waiting { color: #8a5700; background: #fff5dc; }
+.decision-budget { margin-top: 14px; padding: 14px; background: #f7f9fc; border: 1px solid var(--border); border-radius: 13px; }
+.decision-budget-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.decision-budget-grid > div { display: flex; justify-content: space-between; gap: 10px; }
+.decision-budget-error, .decision-field-error { color: var(--danger); font-size: 13px; }
+.decision-field-error { margin: 5px 0 0; }
+.field.invalid input { border-color: var(--danger); }
 
 @media (max-width: 640px) {
   .online-page { width: min(100% - 22px, 1040px); padding-top: 20px; }
@@ -378,5 +429,21 @@ input:focus, select:focus, textarea:focus { outline: 3px solid rgba(0, 82, 255, 
   .online-firm-actions button { flex: 1; }
   .online-control-card > div { min-width: 100%; }
   .online-control-card > button { flex: 1; }
+  .online-period-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+  .online-period-summary-grid > div { padding: 10px; }
+  .online-period-summary-grid dd { font-size: 15px; }
+  .online-player-roster-table th { padding: 9px 7px; font-size: 11px; }
+  .online-player-roster-table th:first-child { width: 43%; }
+  .online-player-roster-table th:nth-child(2) { width: 19%; }
+  .online-player-roster-table th:last-child { width: 38%; }
+  .online-player-roster-table td { padding: 9px 7px; }
+  .online-player-firm { gap: 7px; }
+  .online-player-firm-avatar { flex-basis: 30px; width: 30px; height: 30px; }
+  .online-player-firm-name strong { font-size: 13px; }
+  .online-player-submission { gap: 5px; padding: 5px 7px; font-size: 11px; }
+  .online-decision { padding: 18px; }
+  .online-decision-field { margin-bottom: 12px; padding: 13px; }
+  .online-decision > h2 { font-size: 22px; }
+  .decision-budget-grid { grid-template-columns: 1fr; }
   .report-scroll-hint { display: block; margin: 0 0 8px; color: var(--text-dim); font-size: 13px; line-height: 1.4; }
 }
