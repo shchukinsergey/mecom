@@ -70,8 +70,8 @@ describe('online game engine HTTP integration', () => {
     expect((await fetch(`${base}/api/games/${created.gameId}/status`)).status).toBe(401);
     const status = await json(await fetch(`${base}/api/games/${created.gameId}/status`, { headers: firstHeaders }));
     expect(status.firms).toEqual(expect.arrayContaining([
-      expect.objectContaining({ firmId: first.firmId, firmName: 'North', submitted: false }),
-      expect.objectContaining({ firmId: second.firmId, firmName: 'South', submitted: false }),
+      expect.objectContaining({ firmId: first.firmId, firmName: 'North', submitted: false, currentRif: expect.any(Number) }),
+      expect.objectContaining({ firmId: second.firmId, firmName: 'South', submitted: false, currentRif: expect.any(Number) }),
     ]));
     expect(JSON.stringify(status)).not.toContain('rejoinToken');
     for (const headers of [firstHeaders, secondHeaders]) {
@@ -80,7 +80,14 @@ describe('online game engine HTTP integration', () => {
     }
     const calculated = await fetch(`${base}/api/admin/games/${created.gameId}/calculate`, { method: 'POST', headers: admin });
     expect(calculated.status).toBe(200);
-    expect((await json(calculated)).firms).toHaveLength(2);
+    const calculatedResult = await json(calculated);
+    expect(calculatedResult.firms).toHaveLength(2);
+    const updatedStatus = await json(await fetch(`${base}/api/games/${created.gameId}/status`, { headers: firstHeaders }));
+    for (const result of calculatedResult.firms) {
+      expect(updatedStatus.firms).toEqual(expect.arrayContaining([
+        expect.objectContaining({ firmId: result.firmId, currentRif: result.rif.total }),
+      ]));
+    }
 
     const firstMe = await json(await fetch(`${base}/api/player/me`, { headers: { 'x-mecom-player': first.rejoinToken } }));
     const secondMe = await json(await fetch(`${base}/api/player/me`, { headers: { 'x-mecom-player': second.rejoinToken } }));
