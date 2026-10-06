@@ -2,14 +2,14 @@
  * Дымовой прогон приложения в реальном браузере: создание лиги, ввод решений,
  * расчёт периода, вкладки отчётов и переживание перезагрузки страницы.
  *
- * Запуск: node scripts/smoke.mjs  (dev-сервер должен быть поднят на :5174)
+ * Запуск: node scripts/smoke.mjs  (dev-сервер должен быть поднят на :5173)
  */
 
 import { chromium } from 'playwright-core';
 import { mkdirSync, readFileSync } from 'node:fs';
 import JSZip from 'jszip';
 
-const URL = process.env.MECOM_URL ?? 'http://127.0.0.1:5174/';
+const URL = process.env.MECOM_URL ?? 'http://127.0.0.1:5173/';
 const SHOTS = process.env.MECOM_SHOTS ?? 'scripts/screenshots';
 mkdirSync(SHOTS, { recursive: true });
 

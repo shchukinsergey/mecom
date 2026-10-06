@@ -16,7 +16,7 @@ localStorage и переживает перезагрузку страницы; 
 
 ```bash
 npm install
-npm run dev        # http://127.0.0.1:5174 (v2; API proxy :8790)
+npm run dev        # http://localhost:5173
 ```
 
 Прочие команды:

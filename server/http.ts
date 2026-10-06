@@ -36,7 +36,7 @@ export function createLocalServer(repository: JsonRepository, config: string | {
     });
   });
 }
-export async function listenLocal(server: Server, port = 8790): Promise<void> {
+export async function listenLocal(server: Server, port = 8787): Promise<void> {
   await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', () => { server.removeListener('error', reject); resolve(); }); });
 }
 async function handleRequest(req: IncomingMessage, res: ServerResponse, repo: JsonRepository, admin: string, webRoot: string): Promise<void> {

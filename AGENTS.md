@@ -5,8 +5,8 @@
 
 ## Stack and commands
 - React 18 + TypeScript (strict), Vite 8, Zustand 5; Vitest 4. `html-to-image` renders report images; `jszip` builds bulk ZIP exports.
-- V2 `npm run dev` serves strictly at `127.0.0.1:5174` and proxies API requests to `127.0.0.1:8790`; it must not connect to the original app's `:5173`/`:8787`. Online V2 launcher stores server state in `data/server-state-v2.json`. `npm test`; `npm run typecheck`; `npm run build`; `npm run smoke` requires the V2 dev server and system Chrome.
-- Latest V2 verification: 759 tests across 39 files passed; typecheck and production build passed. Smoke and desktop/mobile browser checks were completed before the latest roster/API changes and should be rerun after further UI changes.
+- `npm run dev` serves at `127.0.0.1:5173`; `npm test`; `npm run typecheck`; `npm run build` (static output in `dist/`); `npm run smoke` requires the dev server and system Chrome.
+- At inspection: 123 tests across 8 files passed; typecheck and production build passed. `npm run smoke` was not run.
 
 ## Structure and data flow
 - `index.html` → `src/main.tsx` → `src/ui/App.tsx` → four screens in `src/ui/screens/`.
