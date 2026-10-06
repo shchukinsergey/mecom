@@ -1,0 +1,8258 @@
+{
+  "priceQualityBeforeCurveChecks": [
+    {
+      "curve": "observed_native_loglog",
+      "model": "league_scalar",
+      "p1FitK": 2.7147932819541157e-05,
+      "p1TrainingError": 9.094947017729282e-12,
+      "p1EffectiveMeanPrice": 11.213586335999333,
+      "p1QualityVector": [
+        2.6753260822267046,
+        2.6753260822267046,
+        2.6753260822267046,
+        2.6753260822267046,
+        2.6753260822267046,
+        2.6753260822267046,
+        2.6753260822267046,
+        2.6753260822267046
+      ],
+      "heldP1MixedPrediction": 4677.875976478245,
+      "heldP1MixedEffectiveMeanPrice": 20.558241615998774,
+      "heldP1MixedError": -1219.1240235217547,
+      "p2FitK": 3.6787194609987344e-05,
+      "p2HeldPriceSiblings": [
+        {
+          "path": "прогнал\\TEST2_niokr2_50price.Z02",
+          "prediction": 6062.604428711102,
+          "effectiveMeanPrice": 15.288671726256338,
+          "error": -608.3955712888983
+        },
+        {
+          "path": "прогнал\\TEST2_niokr2_70price.Z02",
+          "prediction": 4515.607044798989,
+          "effectiveMeanPrice": 21.404140416758874,
+          "error": 29.60704479898868
+        }
+      ],
+      "caveat": "Separate period calibration does not identify quality dynamics; baseline period norm used explicitly. Extrapolation below observed20 is required."
+    },
+    {
+      "curve": "observed_native_loglog",
+      "model": "firm_positive_linear_excess",
+      "p1FitK": 0.055954546701009966,
+      "p1TrainingError": 9.094947017729282e-12,
+      "p1EffectiveMeanPrice": 11.213586335999333,
+      "p1QualityVector": [
+        1.0,
+        1.0,
+        1.05595454670101,
+        33.45363708658578,
+        117.38545713810073,
+        313.2263705916356,
+        816.8172909007253,
+        2215.6809584259745
+      ],
+      "heldP1MixedPrediction": 7911.357373036542,
+      "heldP1MixedEffectiveMeanPrice": 11.28102524534887,
+      "heldP1MixedError": 2014.3573730365424,
+      "p2FitK": 10.0,
+      "p2HeldPriceSiblings": [
+        {
+          "path": "прогнал\\TEST2_niokr2_50price.Z02",
+          "prediction": 5070.212115561093,
+          "effectiveMeanPrice": 18.75154650748695,
+          "error": -1600.787884438907
+        },
+        {
+          "path": "прогнал\\TEST2_niokr2_70price.Z02",
+          "prediction": 3776.443905729193,
+          "effectiveMeanPrice": 26.25216511048173,
+          "error": -709.5560942708071
+        }
+      ],
+      "caveat": "Separate period calibration does not identify quality dynamics; baseline period norm used explicitly. Extrapolation below observed20 is required."
+    },
+    {
+      "curve": "observed_native_loglog",
+      "model": "firm_signed_linear_excess",
+      "p1FitK": 0.0006318438089967836,
+      "p1TrainingError": -2958.9000234637715,
+      "p1EffectiveMeanPrice": 19.07829875613289,
+      "p1QualityVector": [
+        0.7346256002213509,
+        0.8294021715708684,
+        1.0006318438089967,
+        1.3664694092181344,
+        2.31423512271331,
+        4.525688454202053,
+        10.212282735173105,
+        26.008377960092695
+      ],
+      "heldP1MixedPrediction": 4072.928904693263,
+      "heldP1MixedEffectiveMeanPrice": 24.08108160986037,
+      "heldP1MixedError": -1824.0710953067369,
+      "p2FitK": 0.0006331663768556291,
+      "p2HeldPriceSiblings": [
+        {
+          "path": "прогнал\\TEST2_niokr2_50price.Z02",
+          "prediction": 3203.03569461225,
+          "effectiveMeanPrice": 31.784957913391118,
+          "error": -3467.96430538775
+        },
+        {
+          "path": "прогнал\\TEST2_niokr2_70price.Z02",
+          "prediction": 2180.0800725692616,
+          "effectiveMeanPrice": 44.49894107874756,
+          "error": -2305.9199274307384
+        }
+      ],
+      "caveat": "Separate period calibration does not identify quality dynamics; baseline period norm used explicitly. Extrapolation below observed20 is required."
+    },
+    {
+      "curve": "observed_native_loglog",
+      "model": "firm_sqrt_positive_excess",
+      "p1FitK": 0.3413272505612376,
+      "p1TrainingError": 9.094947017729282e-12,
+      "p1EffectiveMeanPrice": 11.213586335999333,
+      "p1QualityVector": [
+        1.0,
+        1.0,
+        1.3413272505612377,
+        9.220248739904557,
+        16.566917720263163,
+        26.496939997269706,
+        42.21447048071364,
+        68.90611074415884
+      ],
+      "heldP1MixedPrediction": 7584.14721045935,
+      "heldP1MixedEffectiveMeanPrice": 11.838594478972432,
+      "heldP1MixedError": 1687.1472104593504,
+      "p2FitK": 2.0000000000000004,
+      "p2HeldPriceSiblings": [
+        {
+          "path": "прогнал\\TEST2_niokr2_50price.Z02",
+          "prediction": 5005.710428754605,
+          "effectiveMeanPrice": 19.027766565360373,
+          "error": -1665.2895712453947
+        },
+        {
+          "path": "прогнал\\TEST2_niokr2_70price.Z02",
+          "prediction": 3728.401142133159,
+          "effectiveMeanPrice": 26.638873191504526,
+          "error": -757.5988578668412
+        }
+      ],
+      "caveat": "Separate period calibration does not identify quality dynamics; baseline period norm used explicitly. Extrapolation below observed20 is required."
+    },
+    {
+      "curve": "observed_native_loglog",
+      "model": "firm_cumulative_power",
+      "p1FitK": 0.7828314048109426,
+      "p1TrainingError": -3264.841135018165,
+      "p1EffectiveMeanPrice": 20.506748670102795,
+      "p1QualityVector": [
+        0.5812249724846709,
+        0.7381892614896365,
+        1.000931821737348,
+        1.508317088549935,
+        2.6521181290053435,
+        4.914058624883599,
+        9.75767417438699,
+        20.74773051906041
+      ],
+      "heldP1MixedPrediction": 3984.0119678882584,
+      "heldP1MixedEffectiveMeanPrice": 24.695891010315492,
+      "heldP1MixedError": -1912.9880321117416,
+      "p2FitK": 0.5470632506029223,
+      "p2HeldPriceSiblings": [
+        {
+          "path": "прогнал\\TEST2_niokr2_50price.Z02",
+          "prediction": 2835.5863759587764,
+          "effectiveMeanPrice": 36.82566870751,
+          "error": -3835.4136240412236
+        },
+        {
+          "path": "прогнал\\TEST2_niokr2_70price.Z02",
+          "prediction": 1680.6833271073224,
+          "effectiveMeanPrice": 51.55593619051399,
+          "error": -2805.3166728926776
+        }
+      ],
+      "caveat": "Separate period calibration does not identify quality dynamics; baseline period norm used explicitly. Extrapolation below observed20 is required."
+    },
+    {
+      "curve": "fixed_engine_kinked",
+      "model": "league_scalar",
+      "p1FitK": 2.8164142145577166e-05,
+      "p1TrainingError": 9.094947017729282e-13,
+      "p1EffectiveMeanPrice": 10.956753280125719,
+      "p1QualityVector": [
+        2.738037375945712,
+        2.738037375945712,
+        2.738037375945712,
+        2.738037375945712,
+        2.738037375945712,
+        2.738037375945712,
+        2.738037375945712,
+        2.738037375945712
+      ],
+      "heldP1MixedPrediction": 4750.898618235813,
+      "heldP1MixedEffectiveMeanPrice": 20.087381013563817,
+      "heldP1MixedError": -1146.101381764187,
+      "p2FitK": 3.8357768815386854e-05,
+      "p2HeldPriceSiblings": [
+        {
+          "path": "прогнал\\TEST2_niokr2_50price.Z02",
+          "prediction": 6142.2644940969885,
+          "effectiveMeanPrice": 14.848575336514465,
+          "error": -528.7355059030115
+        },
+        {
+          "path": "прогнал\\TEST2_niokr2_70price.Z02",
+          "prediction": 4614.447226237095,
+          "effectiveMeanPrice": 20.78800547112025,
+          "error": 128.44722623709458
+        }
+      ],
+      "caveat": "Separate period calibration does not identify quality dynamics; baseline period norm used explicitly. Extrapolation below observed20 is required."
+    },
+    {
+      "curve": "fixed_engine_kinked",
+      "model": "firm_positive_linear_excess",
+      "p1FitK": 0.11135187533963353,
+      "p1TrainingError": 9.094947017729282e-13,
+      "p1EffectiveMeanPrice": 10.956753280125719,
+      "p1QualityVector": [
+        1.0,
+        1.0,
+        1.1113518753396336,
+        65.58408769698745,
+        232.61190070643775,
+        622.3434643951551,
+        1624.510342451857,
+        4408.307225942695
+      ],
+      "heldP1MixedPrediction": 7988.59973943647,
+      "heldP1MixedEffectiveMeanPrice": 10.899332630087285,
+      "heldP1MixedError": 2091.5997394364704,
+      "p2FitK": 10.0,
+      "p2HeldPriceSiblings": [
+        {
+          "path": "прогнал\\TEST2_niokr2_50price.Z02",
+          "prediction": 5037.082394246497,
+          "effectiveMeanPrice": 18.75154650748695,
+          "error": -1633.9176057535033
+        },
+        {
+          "path": "прогнал\\TEST2_niokr2_70price.Z02",
+          "prediction": 3784.166394136304,
+          "effectiveMeanPrice": 26.25216511048173,
+          "error": -701.833605863696
+        }
+      ],
+      "caveat": "Separate period calibration does not identify quality dynamics; baseline period norm used explicitly. Extrapolation below observed20 is required."
+    },
+    {
+      "curve": "fixed_engine_kinked",
+      "model": "firm_signed_linear_excess",
+      "p1FitK": 0.0006318437540766069,
+      "p1TrainingError": -2989.3416180758786,
+      "p1EffectiveMeanPrice": 19.078298756132853,
+      "p1QualityVector": [
+        0.7346256232878251,
+        0.8294021863993162,
+        1.0006318437540767,
+        1.366469377364432,
+        2.3142350084793426,
+        4.525688147747466,
+        10.212281934436929,
+        26.0083757863521
+      ],
+      "heldP1MixedPrediction": 4072.264576680552,
+      "heldP1MixedEffectiveMeanPrice": 24.081081932889063,
+      "heldP1MixedError": -1824.7354233194478,
+      "p2FitK": 0.0006331663395212513,
+      "p2HeldPriceSiblings": [
+        {
+          "path": "прогнал\\TEST2_niokr2_50price.Z02",
+          "prediction": 3216.415808322327,
+          "effectiveMeanPrice": 31.78495791339109,
+          "error": -3454.584191677673
+        },
+        {
+          "path": "прогнал\\TEST2_niokr2_70price.Z02",
+          "prediction": 2176.694912645369,
+          "effectiveMeanPrice": 44.49894107874752,
+          "error": -2309.305087354631
+        }
+      ],
+      "caveat": "Separate period calibration does not identify quality dynamics; baseline period norm used explicitly. Extrapolation below observed20 is required."
+    },
+    {
+      "curve": "fixed_engine_kinked",
+      "model": "firm_sqrt_positive_excess",
+      "p1FitK": 0.4035763197592056,
+      "p1TrainingError": 0.0,
+      "p1EffectiveMeanPrice": 10.95675328012572,
+      "p1QualityVector": [
+        1.0,
+        1.0,
+        1.4035763197592055,
+        10.719404848282792,
+        19.405912077655916,
+        31.146907966767436,
+        49.73090059490187,
+        81.29039058037905
+      ],
+      "heldP1MixedPrediction": 7688.083924604774,
+      "heldP1MixedEffectiveMeanPrice": 11.40226519610383,
+      "heldP1MixedError": 1791.0839246047744,
+      "p2FitK": 2.0000000000000004,
+      "p2HeldPriceSiblings": [
+        {
+          "path": "прогнал\\TEST2_niokr2_50price.Z02",
+          "prediction": 4974.860875392744,
+          "effectiveMeanPrice": 19.027766565360373,
+          "error": -1696.1391246072562
+        },
+        {
+          "path": "прогнал\\TEST2_niokr2_70price.Z02",
+          "prediction": 3737.4217586093096,
+          "effectiveMeanPrice": 26.638873191504526,
+          "error": -748.5782413906904
+        }
+      ],
+      "caveat": "Separate period calibration does not identify quality dynamics; baseline period norm used explicitly. Extrapolation below observed20 is required."
+    },
+    {
+      "curve": "fixed_engine_kinked",
+      "model": "firm_cumulative_power",
+      "p1FitK": 0.7828313825938786,
+      "p1TrainingError": -3284.8124596640537,
+      "p1EffectiveMeanPrice": 20.506748670102784,
+      "p1QualityVector": [
+        0.5812249814353584,
+        0.7381892678491456,
+        1.0009318217108902,
+        1.5083170709566434,
+        2.652118055591898,
+        4.914058402844658,
+        9.757673543533148,
+        20.747728733474407
+      ],
+      "heldP1MixedPrediction": 3985.9292394177796,
+      "heldP1MixedEffectiveMeanPrice": 24.695891220436454,
+      "heldP1MixedError": -1911.0707605822204,
+      "p2FitK": 0.5470632292780306,
+      "p2HeldPriceSiblings": [
+        {
+          "path": "прогнал\\TEST2_niokr2_50price.Z02",
+          "prediction": 2838.1316511631376,
+          "effectiveMeanPrice": 36.82566870750997,
+          "error": -3832.8683488368624
+        },
+        {
+          "path": "прогнал\\TEST2_niokr2_70price.Z02",
+          "prediction": 1682.37114230646,
+          "effectiveMeanPrice": 51.55593619051396,
+          "error": -2803.6288576935403
+        }
+      ],
+      "caveat": "Separate period calibration does not identify quality dynamics; baseline period norm used explicitly. Extrapolation below observed20 is required."
+    }
+  ],
+  "corpus": "C:\\Users\\serge.DESKTOP-FQG7BEU\\Downloads\\mecom\\data\\calibration\\test2-original.json",
+  "corpusSha256": "e1b4253d2c6d1f99a62dd396ad05925e09b09f088c7d0bae4db64d368de8cec3",
+  "verifiedOriginalCount": 46,
+  "hashes": [
+    {
+      "path": "TEST2.Z00",
+      "expected": "e56979e8f83b511561fd25d97b06bfe19afedf60f7b7a48270cc57fef953b81a",
+      "actual": "e56979e8f83b511561fd25d97b06bfe19afedf60f7b7a48270cc57fef953b81a",
+      "match": true,
+      "size": 4765,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "TEST2_10_50.Z01",
+      "expected": "7ee74cb065bb78523074cc80df27037a5110e509135bcf99ad621d919f6c4c2f",
+      "actual": "7ee74cb065bb78523074cc80df27037a5110e509135bcf99ad621d919f6c4c2f",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "TEST2_15_45.Z01",
+      "expected": "4d9ead5d87d8698a1d93d28aab01cfbb0b228fc88d681fe5e601d53e2e871675",
+      "actual": "4d9ead5d87d8698a1d93d28aab01cfbb0b228fc88d681fe5e601d53e2e871675",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "TEST2_20_40.Z01",
+      "expected": "a21b331f76052d13018258629f25d806f142210a11777432c446283029b8c140",
+      "actual": "a21b331f76052d13018258629f25d806f142210a11777432c446283029b8c140",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "TEST2_25_35.Z01",
+      "expected": "2741e84f37162da49e3a212b69950df830d3621d247917ad4e925a8f4add7974",
+      "actual": "2741e84f37162da49e3a212b69950df830d3621d247917ad4e925a8f4add7974",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "Новая папка\\TEST2_2_6.Z01",
+      "expected": "6031acad74694842dad0fce255fa745a84880d5e8fb3357785fb309b681023fd",
+      "actual": "6031acad74694842dad0fce255fa745a84880d5e8fb3357785fb309b681023fd",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "Новая папка\\TEST2_3_5.Z01",
+      "expected": "224df5b2e73c63caf1f988caa16c87ad7faad01dbd935cb085d40d8f5515b804",
+      "actual": "224df5b2e73c63caf1f988caa16c87ad7faad01dbd935cb085d40d8f5515b804",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "Новая папка\\TEST2_4_4.Z01",
+      "expected": "2aac6411dc98fff815a2e73a5f499b5b2c1ad8a92cd3d1211caea4473900e4fd",
+      "actual": "2aac6411dc98fff815a2e73a5f499b5b2c1ad8a92cd3d1211caea4473900e4fd",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "Новая папка\\TEST2_5_3.Z01",
+      "expected": "e2107d8a5b8905ababa64629e55ea6b9c462bf74b9502dd03dbcd1dd7b40d803",
+      "actual": "e2107d8a5b8905ababa64629e55ea6b9c462bf74b9502dd03dbcd1dd7b40d803",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "Новая папка\\TEST2_6_2.Z01",
+      "expected": "5e6b7bfcd3b9d81bed8732e4afbc36e749cb052181ecd34a652a207c6b6f6fb1",
+      "actual": "5e6b7bfcd3b9d81bed8732e4afbc36e749cb052181ecd34a652a207c6b6f6fb1",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2.Z00",
+      "expected": "7694bac6196d55057d717b0c48f82883bcc6e415349f09d5f52a399ac732370e",
+      "actual": "7694bac6196d55057d717b0c48f82883bcc6e415349f09d5f52a399ac732370e",
+      "match": true,
+      "size": 6187,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_1.Z01",
+      "expected": "4d4f5e3d3edf010b903dfa94f1bd913d015716ba09d515cc39160b9b258b207e",
+      "actual": "4d4f5e3d3edf010b903dfa94f1bd913d015716ba09d515cc39160b9b258b207e",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_1_7.Z01",
+      "expected": "a512c4019e71f560a70ebf8c0775dbd8539516ffc026173620ea57676a368845",
+      "actual": "a512c4019e71f560a70ebf8c0775dbd8539516ffc026173620ea57676a368845",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_2_6.Z01",
+      "expected": "5cf33687afe2d5d7fe2a3f0e45f72c585c0b8ea90f94e48a037b6983ffe14c91",
+      "actual": "5cf33687afe2d5d7fe2a3f0e45f72c585c0b8ea90f94e48a037b6983ffe14c91",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_3_5.Z01",
+      "expected": "8412abe0bd4313348fc11c5e88f94e572365de41df74750f6d75a50d4933d8a2",
+      "actual": "8412abe0bd4313348fc11c5e88f94e572365de41df74750f6d75a50d4933d8a2",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_40_60.Z01",
+      "expected": "738eebb35903d7a3b6614a1b4e23cbfd6c1f4c8b573848428aa9f2a2a8342e9c",
+      "actual": "738eebb35903d7a3b6614a1b4e23cbfd6c1f4c8b573848428aa9f2a2a8342e9c",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_4_4.Z01",
+      "expected": "fd62211b39b97d23aa7fe484d8d6cfa733b9402fc96ae73a3a803a7849c3a0c0",
+      "actual": "fd62211b39b97d23aa7fe484d8d6cfa733b9402fc96ae73a3a803a7849c3a0c0",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_5_3.Z01",
+      "expected": "df35d133626b726b84080faf4e43ccd1fb02b8835d96cd644eaf8d14c24150d2",
+      "actual": "df35d133626b726b84080faf4e43ccd1fb02b8835d96cd644eaf8d14c24150d2",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_6_2.Z01",
+      "expected": "7f536581a7a40c68a943717d220751e4187b0df3e4cd1bad2df02de8326cbb9c",
+      "actual": "7f536581a7a40c68a943717d220751e4187b0df3e4cd1bad2df02de8326cbb9c",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_7_1.Z01",
+      "expected": "2414db829972682d0d3258cb9700549bf0008fea667848952dd0c390fb3ed606",
+      "actual": "2414db829972682d0d3258cb9700549bf0008fea667848952dd0c390fb3ed606",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_all_20.Z01",
+      "expected": "88579b0ff6e3602edd9c8ea783d90a2ad7b70f0505cb7ca5c056249e1ad60317",
+      "actual": "88579b0ff6e3602edd9c8ea783d90a2ad7b70f0505cb7ca5c056249e1ad60317",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_all_40.Z01",
+      "expected": "ab13123e75960ceab52b243184c4f251a9ae2ee369150d9350390ee7cf4dfc21",
+      "actual": "ab13123e75960ceab52b243184c4f251a9ae2ee369150d9350390ee7cf4dfc21",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_all_45.Z01",
+      "expected": "fdc4ddbb15447bb9ea3c1ece09b98e36367c262db7b8011dd35c6eb86fca85aa",
+      "actual": "fdc4ddbb15447bb9ea3c1ece09b98e36367c262db7b8011dd35c6eb86fca85aa",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_all_50.Z01",
+      "expected": "82e3e5f6fba42bb550812988967ac1df5f64198b6f4c83493625fa2a69d49e21",
+      "actual": "82e3e5f6fba42bb550812988967ac1df5f64198b6f4c83493625fa2a69d49e21",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_all_50_one_30.Z01",
+      "expected": "86440709878cbea0870a7bf7b274d3f32b9a83295b2865da08963d8f703ef8ef",
+      "actual": "86440709878cbea0870a7bf7b274d3f32b9a83295b2865da08963d8f703ef8ef",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_all_55.Z01",
+      "expected": "5210147c40fde1c4f3444e7f35058fba0dd37fc5093bf2be0a6560171eea283e",
+      "actual": "5210147c40fde1c4f3444e7f35058fba0dd37fc5093bf2be0a6560171eea283e",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_all_60.Z01",
+      "expected": "173512b004e74b5c97d1b522524cc5d0a59808bb07dce4dbd4567d29c35a765f",
+      "actual": "173512b004e74b5c97d1b522524cc5d0a59808bb07dce4dbd4567d29c35a765f",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_all_70.Z01",
+      "expected": "7c7f701405564a904a10e2049f9d76667a19c024e99422ebafa6f6ab3f63b149",
+      "actual": "7c7f701405564a904a10e2049f9d76667a19c024e99422ebafa6f6ab3f63b149",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_big.Z01",
+      "expected": "c68099910ebf617346f44220e799d6f9d6c9e776a1bfa95df8387cf9c815fd1f",
+      "actual": "c68099910ebf617346f44220e799d6f9d6c9e776a1bfa95df8387cf9c815fd1f",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_marketing.Z01",
+      "expected": "a2ced5fd1dc12443b001f514f02e11236ff038548378212756ae73e2756bc67b",
+      "actual": "a2ced5fd1dc12443b001f514f02e11236ff038548378212756ae73e2756bc67b",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_marketing2.Z02",
+      "expected": "7b2c87ec7cf6327ff3b55edf8f1e0df46d5254a3a94b381f2e2d134ea5e83d3b",
+      "actual": "7b2c87ec7cf6327ff3b55edf8f1e0df46d5254a3a94b381f2e2d134ea5e83d3b",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_niokr.Z01",
+      "expected": "7205eee40d838baf28039796882b944dbf48bc8056457b796f12c6274cbbed94",
+      "actual": "7205eee40d838baf28039796882b944dbf48bc8056457b796f12c6274cbbed94",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2.Z02",
+      "expected": "a6d6e77f67ff84d7403e693f65e6bf57f604d499d33f7728326e626601f15a3d",
+      "actual": "a6d6e77f67ff84d7403e693f65e6bf57f604d499d33f7728326e626601f15a3d",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2_50price.Z02",
+      "expected": "889c5231c889a905ac5ad9af5094689ec35ad8a50672fdd9ce98160ae7c8c357",
+      "actual": "889c5231c889a905ac5ad9af5094689ec35ad8a50672fdd9ce98160ae7c8c357",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2_70price.Z02",
+      "expected": "ea52f6a74e05dcc72c51275b5f3549d6580696eb633c289ab7d4841df6bdcbc5",
+      "actual": "ea52f6a74e05dcc72c51275b5f3549d6580696eb633c289ab7d4841df6bdcbc5",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_niokr_dif_prices.Z01",
+      "expected": "65a41b353468b3d7f0af080aa8aca0bb1396664c7af06162723b85680f6071d2",
+      "actual": "65a41b353468b3d7f0af080aa8aca0bb1396664c7af06162723b85680f6071d2",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_one_45.Z01",
+      "expected": "3ab89c5b8443ea6a55bcc49e64bffa40b366e2fb956212fbae357799d6c80e88",
+      "actual": "3ab89c5b8443ea6a55bcc49e64bffa40b366e2fb956212fbae357799d6c80e88",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_one_50.Z01",
+      "expected": "d1b942febd7c4a85b0af6c9b9d9c1cc148686777b6d5cca215d833ba8dbf2be2",
+      "actual": "d1b942febd7c4a85b0af6c9b9d9c1cc148686777b6d5cca215d833ba8dbf2be2",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_one_55.Z01",
+      "expected": "b49a31d4da1c273e34ba9406e4e40042ebc27a32136c127c00873bafcb639145",
+      "actual": "b49a31d4da1c273e34ba9406e4e40042ebc27a32136c127c00873bafcb639145",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_one_60.Z01",
+      "expected": "a03cd4722ac8fa8db41774577a583b8ea0a4d1d4f93157dd24ffa30d61eb435e",
+      "actual": "a03cd4722ac8fa8db41774577a583b8ea0a4d1d4f93157dd24ffa30d61eb435e",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_one_price_20.Z01",
+      "expected": "d5aaa6687826dec27548c4dd6cb96a8fbca0f28054a0750b3ee4c6babe93b5f0",
+      "actual": "d5aaa6687826dec27548c4dd6cb96a8fbca0f28054a0750b3ee4c6babe93b5f0",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_one_price_40.Z01",
+      "expected": "6e40866eef8e62993511c3372d7b7afaa335a78f5618ce0e8a98cf37723ddebe",
+      "actual": "6e40866eef8e62993511c3372d7b7afaa335a78f5618ce0e8a98cf37723ddebe",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_one_price_70.Z01",
+      "expected": "2a520c0d26d68a27cd7ec3a4301d5889139d6a6243228d97142e23d3de3686dd",
+      "actual": "2a520c0d26d68a27cd7ec3a4301d5889139d6a6243228d97142e23d3de3686dd",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_one_proce_100.Z01",
+      "expected": "87fd3370c932da01e66d1529ad3d44e67b7f171abb0f800a098ae4fc23747cf7",
+      "actual": "87fd3370c932da01e66d1529ad3d44e67b7f171abb0f800a098ae4fc23747cf7",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_prices.Z01",
+      "expected": "8949d6d47e370a8e7d50b55a5e8e6588079d04a41809bb269cfe969e885534cd",
+      "actual": "8949d6d47e370a8e7d50b55a5e8e6588079d04a41809bb269cfe969e885534cd",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    },
+    {
+      "path": "прогнал\\TEST2_small.Z01",
+      "expected": "1e80fed6dd07648a583baaa665960c53d72007f93897d83c73214ff7e235f7a2",
+      "actual": "1e80fed6dd07648a583baaa665960c53d72007f93897d83c73214ff7e235f7a2",
+      "match": true,
+      "size": 6223,
+      "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___"
+    }
+  ],
+  "dependencies": {
+    "stdlibOnly": true,
+    "scipyInstalled": false,
+    "numpyInstalled": false
+  },
+  "nativeControlledReports": [
+    {
+      "path": "прогнал\\TEST2_marketing.Z01",
+      "periodIndex": 1,
+      "industry": {
+        "totalOrders": 5763.0,
+        "totalEmployees": 848.0
+      },
+      "fields": {
+        "price": [
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ],
+        "production": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "marketing": [
+          0.0,
+          300.0,
+          1051.0,
+          2000.0,
+          4000.0,
+          8000.0,
+          16000.0,
+          32000.0
+        ],
+        "capexGross": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "rnd": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "ordersReceived": [
+          612.0,
+          613.0,
+          616.0,
+          621.0,
+          637.0,
+          682.0,
+          810.0,
+          1172.0
+        ],
+        "inventoryOpening": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "sold": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "unfulfilledOrders": [
+          87.0,
+          88.0,
+          91.0,
+          96.0,
+          112.0,
+          157.0,
+          285.0,
+          647.0
+        ],
+        "fullCapacity": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "newMachines": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "unitCost": [
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76
+        ],
+        "revenue": [
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0
+        ],
+        "netProfit": [
+          2337.0,
+          2105.0,
+          1527.0,
+          796.0,
+          -994.0,
+          -5104.0,
+          -13324.0,
+          -29764.0
+        ],
+        "retainedEarnings": [
+          4041.0,
+          3809.0,
+          3231.0,
+          2500.0,
+          710.0,
+          -3400.0,
+          -11620.0,
+          -28060.0
+        ],
+        "rndCumulative": [
+          840.0,
+          840.0,
+          840.0,
+          840.0,
+          840.0,
+          840.0,
+          840.0,
+          840.0
+        ],
+        "loan": [
+          9616.0,
+          9916.0,
+          10667.0,
+          11616.0,
+          13616.0,
+          17616.0,
+          25616.0,
+          41616.0
+        ],
+        "cash": [
+          13657.0,
+          13725.0,
+          13898.0,
+          14116.0,
+          14326.0,
+          14216.0,
+          13996.0,
+          13556.0
+        ],
+        "demandPotential": [
+          2.0,
+          2.0,
+          3.0,
+          4.0,
+          6.0,
+          10.0,
+          18.0,
+          20.0
+        ],
+        "supplyPotential": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "efficiency80": [
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0
+        ],
+        "marketShareScore": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "growthScore": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "rif": [
+          98.0,
+          95.0,
+          87.0,
+          78.0,
+          53.0,
+          -3.0,
+          -115.0,
+          -355.0
+        ],
+        "retainedProfitScore": [
+          4041.0,
+          3809.0,
+          3231.0,
+          2500.0,
+          710.0,
+          -3400.0,
+          -11620.0,
+          -28060.0
+        ]
+      }
+    },
+    {
+      "path": "прогнал\\TEST2_marketing2.Z02",
+      "periodIndex": 2,
+      "industry": {
+        "totalOrders": 5763.0,
+        "totalEmployees": 848.0
+      },
+      "fields": {
+        "price": [
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ],
+        "production": [
+          524.0,
+          524.0,
+          524.0,
+          524.0,
+          524.0,
+          524.0,
+          524.0,
+          524.0
+        ],
+        "marketing": [
+          0.0,
+          300.0,
+          1051.0,
+          2000.0,
+          4000.0,
+          8000.0,
+          16000.0,
+          32000.0
+        ],
+        "capexGross": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "rnd": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "ordersReceived": [
+          612.0,
+          613.0,
+          616.0,
+          621.0,
+          637.0,
+          682.0,
+          810.0,
+          1172.0
+        ],
+        "inventoryOpening": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "sold": [
+          524.0,
+          524.0,
+          524.0,
+          524.0,
+          524.0,
+          524.0,
+          524.0,
+          524.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "unfulfilledOrders": [
+          88.0,
+          89.0,
+          92.0,
+          97.0,
+          113.0,
+          158.0,
+          286.0,
+          648.0
+        ],
+        "fullCapacity": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "newMachines": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "unitCost": [
+          20.71,
+          20.71,
+          20.71,
+          20.71,
+          20.71,
+          20.71,
+          20.71,
+          20.71
+        ],
+        "revenue": [
+          15720.0,
+          15720.0,
+          15720.0,
+          15720.0,
+          15720.0,
+          15720.0,
+          15720.0,
+          15720.0
+        ],
+        "netProfit": [
+          2399.0,
+          2164.0,
+          1573.0,
+          826.0,
+          -1002.0,
+          -5225.0,
+          -13672.0,
+          -32110.0
+        ],
+        "retainedEarnings": [
+          6440.0,
+          5973.0,
+          4804.0,
+          3326.0,
+          -292.0,
+          -8625.0,
+          -25292.0,
+          -60170.0
+        ],
+        "rndCumulative": [
+          1260.0,
+          1260.0,
+          1260.0,
+          1260.0,
+          1260.0,
+          1260.0,
+          1260.0,
+          1260.0
+        ],
+        "loan": [
+          7231.0,
+          7763.0,
+          9092.0,
+          10772.0,
+          14562.0,
+          22672.0,
+          38892.0,
+          71332.0
+        ],
+        "cash": [
+          13671.0,
+          13736.0,
+          13896.0,
+          14098.0,
+          14270.0,
+          14047.0,
+          13600.0,
+          11162.0
+        ],
+        "demandPotential": [
+          1.0,
+          2.0,
+          2.0,
+          3.0,
+          6.0,
+          10.0,
+          19.0,
+          20.0
+        ],
+        "supplyPotential": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "efficiency80": [
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0
+        ],
+        "marketShareScore": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "growthScore": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "rif": [
+          101.0,
+          97.0,
+          86.0,
+          73.0,
+          40.0,
+          -37.0,
+          -191.0,
+          -532.0
+        ],
+        "retainedProfitScore": [
+          6440.0,
+          5973.0,
+          4804.0,
+          3326.0,
+          -292.0,
+          -8625.0,
+          -25292.0,
+          -60170.0
+        ]
+      }
+    },
+    {
+      "path": "прогнал\\TEST2_niokr.Z01",
+      "periodIndex": 1,
+      "industry": {
+        "totalOrders": 7953.0,
+        "totalEmployees": 848.0
+      },
+      "fields": {
+        "price": [
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ],
+        "production": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "marketing": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "capexGross": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "rnd": [
+          0.0,
+          150.0,
+          421.0,
+          1000.0,
+          2500.0,
+          6000.0,
+          15000.0,
+          40000.0
+        ],
+        "ordersReceived": [
+          852.0,
+          855.0,
+          860.0,
+          870.0,
+          896.0,
+          957.0,
+          1114.0,
+          1549.0
+        ],
+        "inventoryOpening": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "sold": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "unfulfilledOrders": [
+          327.0,
+          330.0,
+          335.0,
+          345.0,
+          371.0,
+          432.0,
+          589.0,
+          1024.0
+        ],
+        "fullCapacity": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "newMachines": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "unitCost": [
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76
+        ],
+        "revenue": [
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0
+        ],
+        "netProfit": [
+          1851.0,
+          1735.0,
+          1527.0,
+          1081.0,
+          -100.0,
+          -3697.0,
+          -12944.0,
+          -38650.0
+        ],
+        "retainedEarnings": [
+          3555.0,
+          3439.0,
+          3231.0,
+          2785.0,
+          1604.0,
+          -1993.0,
+          -11240.0,
+          -36946.0
+        ],
+        "rndCumulative": [
+          420.0,
+          570.0,
+          841.0,
+          1420.0,
+          2920.0,
+          6420.0,
+          15420.0,
+          40420.0
+        ],
+        "loan": [
+          10246.0,
+          10396.0,
+          10667.0,
+          11246.0,
+          12746.0,
+          16246.0,
+          25246.0,
+          50246.0
+        ],
+        "cash": [
+          13801.0,
+          13835.0,
+          13898.0,
+          14031.0,
+          14350.0,
+          14253.0,
+          14006.0,
+          13300.0
+        ],
+        "demandPotential": [
+          2.0,
+          3.0,
+          3.0,
+          3.0,
+          5.0,
+          8.0,
+          16.0,
+          20.0
+        ],
+        "supplyPotential": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "efficiency80": [
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0
+        ],
+        "marketShareScore": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "growthScore": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "rif": [
+          91.0,
+          90.0,
+          87.0,
+          81.0,
+          66.0,
+          16.0,
+          -112.0,
+          -485.0
+        ],
+        "retainedProfitScore": [
+          3555.0,
+          3439.0,
+          3231.0,
+          2785.0,
+          1604.0,
+          -1993.0,
+          -11240.0,
+          -36946.0
+        ]
+      }
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2.Z02",
+      "periodIndex": 2,
+      "industry": {
+        "totalOrders": 9482.0,
+        "totalEmployees": 848.0
+      },
+      "fields": {
+        "price": [
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ],
+        "production": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "marketing": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "capexGross": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "rnd": [
+          1.0,
+          151.0,
+          420.0,
+          1001.0,
+          2501.0,
+          6001.0,
+          15001.0,
+          40001.0
+        ],
+        "ordersReceived": [
+          1012.0,
+          1015.0,
+          1021.0,
+          1033.0,
+          1065.0,
+          1140.0,
+          1332.0,
+          1864.0
+        ],
+        "inventoryOpening": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "sold": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "unfulfilledOrders": [
+          487.0,
+          490.0,
+          496.0,
+          508.0,
+          540.0,
+          615.0,
+          807.0,
+          1339.0
+        ],
+        "fullCapacity": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "newMachines": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "unitCost": [
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76
+        ],
+        "revenue": [
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0,
+          15750.0
+        ],
+        "netProfit": [
+          1888.0,
+          1771.0,
+          1559.0,
+          1102.0,
+          -104.0,
+          -3799.0,
+          -13301.0,
+          -42516.0
+        ],
+        "retainedEarnings": [
+          5443.0,
+          5210.0,
+          4790.0,
+          3887.0,
+          1500.0,
+          -5792.0,
+          -24541.0,
+          -79462.0
+        ],
+        "rndCumulative": [
+          421.0,
+          721.0,
+          1261.0,
+          2421.0,
+          5421.0,
+          12421.0,
+          30421.0,
+          80421.0
+        ],
+        "loan": [
+          8396.0,
+          8662.0,
+          9139.0,
+          10166.0,
+          12847.0,
+          19944.0,
+          38191.0,
+          88897.0
+        ],
+        "cash": [
+          13839.0,
+          13872.0,
+          13929.0,
+          14053.0,
+          14347.0,
+          14152.0,
+          13650.0,
+          9435.0
+        ],
+        "demandPotential": [
+          2.0,
+          2.0,
+          2.0,
+          3.0,
+          4.0,
+          8.0,
+          17.0,
+          20.0
+        ],
+        "supplyPotential": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "efficiency80": [
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0
+        ],
+        "marketShareScore": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "growthScore": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "rif": [
+          92.0,
+          90.0,
+          86.0,
+          78.0,
+          56.0,
+          -12.0,
+          -186.0,
+          -720.0
+        ],
+        "retainedProfitScore": [
+          5443.0,
+          5210.0,
+          4790.0,
+          3887.0,
+          1500.0,
+          -5792.0,
+          -24541.0,
+          -79462.0
+        ]
+      }
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2_50price.Z02",
+      "periodIndex": 2,
+      "industry": {
+        "totalOrders": 6671.0,
+        "totalEmployees": 848.0
+      },
+      "fields": {
+        "price": [
+          50.0,
+          50.0,
+          50.0,
+          50.0,
+          50.0,
+          50.0,
+          50.0,
+          50.0
+        ],
+        "production": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "marketing": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "capexGross": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "rnd": [
+          1.0,
+          151.0,
+          420.0,
+          1001.0,
+          2501.0,
+          6001.0,
+          15001.0,
+          40001.0
+        ],
+        "ordersReceived": [
+          712.0,
+          714.0,
+          718.0,
+          727.0,
+          749.0,
+          802.0,
+          937.0,
+          1312.0
+        ],
+        "inventoryOpening": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "sold": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "unfulfilledOrders": [
+          187.0,
+          189.0,
+          193.0,
+          202.0,
+          224.0,
+          277.0,
+          412.0,
+          787.0
+        ],
+        "fullCapacity": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "newMachines": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "unitCost": [
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76
+        ],
+        "revenue": [
+          26250.0,
+          26250.0,
+          26250.0,
+          26250.0,
+          26250.0,
+          26250.0,
+          26250.0,
+          26250.0
+        ],
+        "netProfit": [
+          9763.0,
+          9646.0,
+          9434.0,
+          8977.0,
+          7797.0,
+          5026.0,
+          -2801.0,
+          -32016.0
+        ],
+        "retainedEarnings": [
+          13318.0,
+          13085.0,
+          12665.0,
+          11762.0,
+          9401.0,
+          3033.0,
+          -14041.0,
+          -68962.0
+        ],
+        "rndCumulative": [
+          421.0,
+          721.0,
+          1261.0,
+          2421.0,
+          5421.0,
+          12421.0,
+          30421.0,
+          80421.0
+        ],
+        "loan": [
+          8396.0,
+          8662.0,
+          9139.0,
+          10166.0,
+          12847.0,
+          19944.0,
+          38191.0,
+          88897.0
+        ],
+        "cash": [
+          21714.0,
+          21747.0,
+          21804.0,
+          21928.0,
+          22248.0,
+          22977.0,
+          24150.0,
+          19935.0
+        ],
+        "demandPotential": [
+          2.0,
+          2.0,
+          2.0,
+          3.0,
+          4.0,
+          8.0,
+          17.0,
+          20.0
+        ],
+        "supplyPotential": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "efficiency80": [
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0
+        ],
+        "marketShareScore": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "growthScore": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "rif": [
+          169.0,
+          167.0,
+          163.0,
+          155.0,
+          133.0,
+          75.0,
+          -83.0,
+          -618.0
+        ],
+        "retainedProfitScore": [
+          13318.0,
+          13085.0,
+          12665.0,
+          11762.0,
+          9401.0,
+          3033.0,
+          -14041.0,
+          -68962.0
+        ]
+      }
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2_70price.Z02",
+      "periodIndex": 2,
+      "industry": {
+        "totalOrders": 4486.0,
+        "totalEmployees": 848.0
+      },
+      "fields": {
+        "price": [
+          70.0,
+          70.0,
+          70.0,
+          70.0,
+          70.0,
+          70.0,
+          70.0,
+          70.0
+        ],
+        "production": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "marketing": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "capexGross": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "rnd": [
+          1.0,
+          151.0,
+          420.0,
+          1001.0,
+          2501.0,
+          6001.0,
+          15001.0,
+          40001.0
+        ],
+        "ordersReceived": [
+          479.0,
+          480.0,
+          483.0,
+          489.0,
+          504.0,
+          539.0,
+          630.0,
+          882.0
+        ],
+        "inventoryOpening": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "sold": [
+          479.0,
+          480.0,
+          483.0,
+          489.0,
+          504.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "inventoryEnd": [
+          46.0,
+          45.0,
+          42.0,
+          36.0,
+          21.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "unfulfilledOrders": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          14.0,
+          105.0,
+          357.0
+        ],
+        "fullCapacity": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "newMachines": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "unitCost": [
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76
+        ],
+        "revenue": [
+          33530.0,
+          33600.0,
+          33810.0,
+          34230.0,
+          35280.0,
+          36750.0,
+          36750.0,
+          36750.0
+        ],
+        "netProfit": [
+          15940.0,
+          15859.0,
+          15758.0,
+          15523.0,
+          14896.0,
+          12901.0,
+          5774.0,
+          -21516.0
+        ],
+        "retainedEarnings": [
+          19495.0,
+          19298.0,
+          18989.0,
+          18308.0,
+          16500.0,
+          10908.0,
+          -5466.0,
+          -58462.0
+        ],
+        "rndCumulative": [
+          421.0,
+          721.0,
+          1261.0,
+          2421.0,
+          5421.0,
+          12421.0,
+          30421.0,
+          80421.0
+        ],
+        "loan": [
+          8396.0,
+          8661.0,
+          9139.0,
+          10165.0,
+          12847.0,
+          19944.0,
+          38191.0,
+          88897.0
+        ],
+        "cash": [
+          26936.0,
+          27025.0,
+          27256.0,
+          27726.0,
+          28911.0,
+          30852.0,
+          32725.0,
+          30435.0
+        ],
+        "demandPotential": [
+          2.0,
+          2.0,
+          2.0,
+          3.0,
+          4.0,
+          8.0,
+          17.0,
+          20.0
+        ],
+        "supplyPotential": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "efficiency80": [
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0
+        ],
+        "marketShareScore": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "growthScore": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "rif": [
+          230.0,
+          228.0,
+          225.0,
+          219.0,
+          202.0,
+          152.0,
+          1.0,
+          -515.0
+        ],
+        "retainedProfitScore": [
+          19495.0,
+          19298.0,
+          18989.0,
+          18308.0,
+          16500.0,
+          10908.0,
+          -5466.0,
+          -58462.0
+        ]
+      }
+    },
+    {
+      "path": "прогнал\\TEST2_niokr_dif_prices.Z01",
+      "periodIndex": 1,
+      "industry": {
+        "totalOrders": 5897.0,
+        "totalEmployees": 848.0
+      },
+      "fields": {
+        "price": [
+          20.0,
+          30.0,
+          40.0,
+          50.0,
+          60.0,
+          70.0,
+          80.0,
+          90.0
+        ],
+        "production": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "marketing": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "capexGross": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "rnd": [
+          0.0,
+          150.0,
+          421.0,
+          1000.0,
+          2500.0,
+          6000.0,
+          15000.0,
+          40000.0
+        ],
+        "ordersReceived": [
+          3334.0,
+          1085.0,
+          512.0,
+          242.0,
+          148.0,
+          125.0,
+          158.0,
+          293.0
+        ],
+        "inventoryOpening": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "sold": [
+          525.0,
+          525.0,
+          512.0,
+          242.0,
+          148.0,
+          125.0,
+          158.0,
+          293.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          13.0,
+          283.0,
+          377.0,
+          400.0,
+          367.0,
+          232.0
+        ],
+        "unfulfilledOrders": [
+          2809.0,
+          560.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fullCapacity": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "newMachines": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "unitCost": [
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76,
+          20.76
+        ],
+        "revenue": [
+          10500.0,
+          15750.0,
+          20480.0,
+          12100.0,
+          8880.0,
+          8750.0,
+          12640.0,
+          26370.0
+        ],
+        "netProfit": [
+          -2782.0,
+          1735.0,
+          5277.0,
+          2750.0,
+          643.0,
+          -2393.0,
+          -8435.0,
+          -23213.0
+        ],
+        "retainedEarnings": [
+          -1078.0,
+          3439.0,
+          6981.0,
+          4454.0,
+          2347.0,
+          -689.0,
+          -6731.0,
+          -21509.0
+        ],
+        "rndCumulative": [
+          420.0,
+          570.0,
+          841.0,
+          1420.0,
+          2920.0,
+          6420.0,
+          15420.0,
+          40420.0
+        ],
+        "loan": [
+          10246.0,
+          10396.0,
+          10667.0,
+          11245.0,
+          12746.0,
+          16246.0,
+          25246.0,
+          50245.0
+        ],
+        "cash": [
+          9168.0,
+          13835.0,
+          17378.0,
+          9824.0,
+          7266.0,
+          7253.0,
+          10896.0,
+          23920.0
+        ],
+        "demandPotential": [
+          2.0,
+          3.0,
+          3.0,
+          3.0,
+          5.0,
+          8.0,
+          16.0,
+          20.0
+        ],
+        "supplyPotential": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "efficiency80": [
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0
+        ],
+        "marketShareScore": [
+          17.0,
+          17.0,
+          16.0,
+          8.0,
+          5.0,
+          4.0,
+          5.0,
+          9.0
+        ],
+        "growthScore": [
+          17.0,
+          17.0,
+          16.0,
+          8.0,
+          5.0,
+          4.0,
+          5.0,
+          9.0
+        ],
+        "rif": [
+          37.0,
+          104.0,
+          154.0,
+          101.0,
+          66.0,
+          23.0,
+          -56.0,
+          -261.0
+        ],
+        "retainedProfitScore": [
+          -1078.0,
+          3439.0,
+          6981.0,
+          4454.0,
+          2347.0,
+          -689.0,
+          -6731.0,
+          -21509.0
+        ]
+      }
+    }
+  ],
+  "stateLinks": [
+    {
+      "path": "TEST2_10_50.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "TEST2_15_45.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "TEST2_20_40.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "TEST2_25_35.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "Новая папка\\TEST2_2_6.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "Новая папка\\TEST2_3_5.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "Новая папка\\TEST2_4_4.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "Новая папка\\TEST2_5_3.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "Новая папка\\TEST2_6_2.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_1.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_1_7.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_2_6.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_3_5.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_40_60.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_4_4.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_5_3.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_6_2.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_7_1.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_all_20.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_all_40.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_all_45.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_all_50.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_all_50_one_30.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_all_55.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_all_60.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_all_70.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_big.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_marketing.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_marketing2.Z02",
+      "opening": {
+        "rndCumulative": [
+          840.0,
+          840.0,
+          840.0,
+          840.0,
+          840.0,
+          840.0,
+          840.0,
+          840.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          4041.0,
+          3809.0,
+          3231.0,
+          2500.0,
+          710.0,
+          -3400.0,
+          -11620.0,
+          -28060.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2_marketing.Z01",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2_marketing.Z01",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        },
+        {
+          "path": "прогнал\\TEST2_all_20.Z01",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 26551.0
+          }
+        },
+        {
+          "path": "прогнал\\TEST2_one_price_20.Z01",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 165.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 26551.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_niokr.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2.Z02",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          570.0,
+          841.0,
+          1420.0,
+          2920.0,
+          6420.0,
+          15420.0,
+          40420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          3555.0,
+          3439.0,
+          3231.0,
+          2785.0,
+          1604.0,
+          -1993.0,
+          -11240.0,
+          -36946.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2_niokr.Z01",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2_niokr.Z01",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        },
+        {
+          "path": "прогнал\\TEST2_niokr_dif_prices.Z01",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 400.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 15437.0
+          }
+        },
+        {
+          "path": "прогнал\\TEST2_marketing.Z01",
+          "maxErrors": {
+            "rndCumulative": 39580.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 8886.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2_50price.Z02",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          570.0,
+          841.0,
+          1420.0,
+          2920.0,
+          6420.0,
+          15420.0,
+          40420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          3555.0,
+          3439.0,
+          3231.0,
+          2785.0,
+          1604.0,
+          -1993.0,
+          -11240.0,
+          -36946.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2_niokr.Z01",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2_niokr.Z01",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        },
+        {
+          "path": "прогнал\\TEST2_niokr_dif_prices.Z01",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 400.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 15437.0
+          }
+        },
+        {
+          "path": "прогнал\\TEST2_marketing.Z01",
+          "maxErrors": {
+            "rndCumulative": 39580.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 8886.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2_70price.Z02",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          570.0,
+          841.0,
+          1420.0,
+          2920.0,
+          6420.0,
+          15420.0,
+          40420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          3555.0,
+          3439.0,
+          3231.0,
+          2785.0,
+          1604.0,
+          -1993.0,
+          -11240.0,
+          -36946.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2_niokr.Z01",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2_niokr.Z01",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        },
+        {
+          "path": "прогнал\\TEST2_niokr_dif_prices.Z01",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 400.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 15437.0
+          }
+        },
+        {
+          "path": "прогнал\\TEST2_marketing.Z01",
+          "maxErrors": {
+            "rndCumulative": 39580.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 8886.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_niokr_dif_prices.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_one_45.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_one_50.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_one_55.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_one_60.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_one_price_20.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_one_price_40.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_one_price_70.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_one_proce_100.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_prices.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "path": "прогнал\\TEST2_small.Z01",
+      "opening": {
+        "rndCumulative": [
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0,
+          420.0
+        ],
+        "inventoryEnd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "capacityNextPeriod": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "retainedEarnings": [
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0,
+          1704.0
+        ]
+      },
+      "candidates": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ],
+      "bestByRnd": [
+        {
+          "path": "прогнал\\TEST2.Z00",
+          "maxErrors": {
+            "rndCumulative": 0.0,
+            "inventoryEnd": 0.0,
+            "capacityNextPeriod": 0.0,
+            "retainedEarnings": 0.0
+          }
+        }
+      ]
+    }
+  ],
+  "actualDecisionStateGroups": {
+    "price": [
+      {
+        "signature": {
+          "decisions": {
+            "capexGross": [
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0
+            ],
+            "marketing": [
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0
+            ],
+            "production": [
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0
+            ],
+            "rnd": [
+              420.0,
+              420.0,
+              420.0,
+              420.0,
+              420.0,
+              420.0,
+              420.0,
+              420.0
+            ]
+          },
+          "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___",
+          "opening": {
+            "capacityNextPeriod": [
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0
+            ],
+            "inventoryEnd": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "retainedEarnings": [
+              1704.0,
+              1704.0,
+              1704.0,
+              1704.0,
+              1704.0,
+              1704.0,
+              1704.0,
+              1704.0
+            ],
+            "rndCumulative": [
+              420.0,
+              420.0,
+              420.0,
+              420.0,
+              420.0,
+              420.0,
+              420.0,
+              420.0
+            ]
+          },
+          "period": 1
+        },
+        "paths": [
+          "TEST2_10_50.Z01",
+          "TEST2_15_45.Z01",
+          "TEST2_20_40.Z01",
+          "TEST2_25_35.Z01",
+          "Новая папка\\TEST2_2_6.Z01",
+          "Новая папка\\TEST2_3_5.Z01",
+          "Новая папка\\TEST2_4_4.Z01",
+          "Новая папка\\TEST2_5_3.Z01",
+          "Новая папка\\TEST2_6_2.Z01",
+          "прогнал\\TEST2_1_7.Z01",
+          "прогнал\\TEST2_2_6.Z01",
+          "прогнал\\TEST2_3_5.Z01",
+          "прогнал\\TEST2_40_60.Z01",
+          "прогнал\\TEST2_4_4.Z01",
+          "прогнал\\TEST2_5_3.Z01",
+          "прогнал\\TEST2_6_2.Z01",
+          "прогнал\\TEST2_7_1.Z01",
+          "прогнал\\TEST2_all_20.Z01",
+          "прогнал\\TEST2_all_40.Z01",
+          "прогнал\\TEST2_all_45.Z01",
+          "прогнал\\TEST2_all_50.Z01",
+          "прогнал\\TEST2_all_50_one_30.Z01",
+          "прогнал\\TEST2_all_55.Z01",
+          "прогнал\\TEST2_all_60.Z01",
+          "прогнал\\TEST2_all_70.Z01",
+          "прогнал\\TEST2_one_45.Z01",
+          "прогнал\\TEST2_one_50.Z01",
+          "прогнал\\TEST2_one_55.Z01",
+          "прогнал\\TEST2_one_60.Z01",
+          "прогнал\\TEST2_one_price_20.Z01",
+          "прогнал\\TEST2_one_price_40.Z01",
+          "прогнал\\TEST2_one_price_70.Z01",
+          "прогнал\\TEST2_one_proce_100.Z01",
+          "прогнал\\TEST2_prices.Z01"
+        ]
+      },
+      {
+        "signature": {
+          "decisions": {
+            "capexGross": [
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0
+            ],
+            "marketing": [
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0
+            ],
+            "production": [
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0
+            ],
+            "rnd": [
+              0.0,
+              150.0,
+              421.0,
+              1000.0,
+              2500.0,
+              6000.0,
+              15000.0,
+              40000.0
+            ]
+          },
+          "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___",
+          "opening": {
+            "capacityNextPeriod": [
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0
+            ],
+            "inventoryEnd": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "retainedEarnings": [
+              1704.0,
+              1704.0,
+              1704.0,
+              1704.0,
+              1704.0,
+              1704.0,
+              1704.0,
+              1704.0
+            ],
+            "rndCumulative": [
+              420.0,
+              420.0,
+              420.0,
+              420.0,
+              420.0,
+              420.0,
+              420.0,
+              420.0
+            ]
+          },
+          "period": 1
+        },
+        "paths": [
+          "прогнал\\TEST2_niokr.Z01",
+          "прогнал\\TEST2_niokr_dif_prices.Z01"
+        ]
+      },
+      {
+        "signature": {
+          "decisions": {
+            "capexGross": [
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0
+            ],
+            "marketing": [
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0,
+              1050.0
+            ],
+            "production": [
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0
+            ],
+            "rnd": [
+              1.0,
+              151.0,
+              420.0,
+              1001.0,
+              2501.0,
+              6001.0,
+              15001.0,
+              40001.0
+            ]
+          },
+          "nativeModifierWeightHeader": "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___",
+          "opening": {
+            "capacityNextPeriod": [
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0,
+              525.0
+            ],
+            "inventoryEnd": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "retainedEarnings": [
+              3555.0,
+              3439.0,
+              3231.0,
+              2785.0,
+              1604.0,
+              -1993.0,
+              -11240.0,
+              -36946.0
+            ],
+            "rndCumulative": [
+              420.0,
+              570.0,
+              841.0,
+              1420.0,
+              2920.0,
+              6420.0,
+              15420.0,
+              40420.0
+            ]
+          },
+          "period": 2
+        },
+        "paths": [
+          "прогнал\\TEST2_niokr2.Z02",
+          "прогнал\\TEST2_niokr2_50price.Z02",
+          "прогнал\\TEST2_niokr2_70price.Z02"
+        ]
+      }
+    ],
+    "rnd": [],
+    "marketing": []
+  },
+  "baselineFixedNativeTable": {
+    "30": 3360.0,
+    "20.0": 4792.0,
+    "40.0": 2648.0,
+    "45.0": 2136.0,
+    "50.0": 1776.0,
+    "55.0": 1496.0,
+    "60.0": 1288.0,
+    "70.0": 984.0
+  },
+  "p2EffectivePriceUnderAssumedInterpolation": [
+    9.173203035753817,
+    13.706766611353377,
+    21.565559010228203
+  ],
+  "priceRndModelFits": {
+    "additive_constant": {
+      "coefficients": [
+        4839.666666666667
+      ],
+      "training": {
+        "predictions": [
+          8199.666666666668,
+          6615.666666666667,
+          5823.666666666667
+        ],
+        "errors": [
+          -1282.3333333333321,
+          -55.33333333333303,
+          1337.666666666667
+        ],
+        "mae": 891.7777777777774,
+        "rmse": 1070.3259109054377,
+        "maxAbs": 1337.666666666667
+      },
+      "leaveOnePriceOut": [
+        {
+          "heldPrice": 30.0,
+          "trainPrices": [
+            50.0,
+            70.0
+          ],
+          "coefficients": [
+            4198.5
+          ],
+          "predicted": 7558.5,
+          "actual": 9482.0,
+          "error": -1923.5
+        },
+        {
+          "heldPrice": 50.0,
+          "trainPrices": [
+            30.0,
+            70.0
+          ],
+          "coefficients": [
+            4812.0
+          ],
+          "predicted": 6588.0,
+          "actual": 6671.0,
+          "error": -83.0
+        },
+        {
+          "heldPrice": 70.0,
+          "trainPrices": [
+            30.0,
+            50.0
+          ],
+          "coefficients": [
+            5508.5
+          ],
+          "predicted": 6492.5,
+          "actual": 4486.0,
+          "error": 2006.5
+        }
+      ],
+      "heldMetrics": {
+        "predictions": [
+          7558.5,
+          6588.0,
+          6492.5
+        ],
+        "errors": [
+          -1923.5,
+          -83.0,
+          2006.5
+        ],
+        "mae": 1337.6666666666667,
+        "rmse": 1605.4888663581569,
+        "maxAbs": 2006.5
+      }
+    },
+    "multiplicative_constant": {
+      "coefficients": [
+        3.122329359295387
+      ],
+      "training": {
+        "predictions": [
+          10491.0266472325,
+          5545.256942108607,
+          3072.372089546661
+        ],
+        "errors": [
+          1009.0266472325002,
+          -1125.7430578913927,
+          -1413.6279104533392
+        ],
+        "mae": 1182.7992051924107,
+        "rmse": 1194.9583083980515,
+        "maxAbs": 1413.6279104533392
+      },
+      "leaveOnePriceOut": [
+        {
+          "heldPrice": 30.0,
+          "trainPrices": [
+            50.0,
+            70.0
+          ],
+          "coefficients": [
+            3.9447394159564064
+          ],
+          "predicted": 13254.324437613526,
+          "actual": 9482.0,
+          "error": 3772.3244376135262
+        },
+        {
+          "heldPrice": 50.0,
+          "trainPrices": [
+            30.0,
+            70.0
+          ],
+          "coefficients": [
+            2.9592241905925474
+          ],
+          "predicted": 5255.582162492364,
+          "actual": 6671.0,
+          "error": -1415.4178375076362
+        },
+        {
+          "heldPrice": 70.0,
+          "trainPrices": [
+            30.0,
+            50.0
+          ],
+          "coefficients": [
+            3.026024219705429
+          ],
+          "predicted": 2977.6078321901423,
+          "actual": 4486.0,
+          "error": -1508.3921678098577
+        }
+      ],
+      "heldMetrics": {
+        "predictions": [
+          13254.324437613526,
+          5255.582162492364,
+          2977.6078321901423
+        ],
+        "errors": [
+          3772.3244376135262,
+          -1415.4178375076362,
+          -1508.3921678098577
+        ],
+        "mae": 2232.04481431034,
+        "rmse": 2483.88715855217,
+        "maxAbs": 3772.3244376135262
+      }
+    },
+    "additive_affine_price": {
+      "coefficients": [
+        8114.666666666666,
+        -65.5
+      ],
+      "training": {
+        "predictions": [
+          9509.666666666666,
+          6615.666666666666,
+          4513.666666666666
+        ],
+        "errors": [
+          27.66666666666606,
+          -55.33333333333394,
+          27.66666666666606
+        ],
+        "mae": 36.88888888888869,
+        "rmse": 39.12657522565563,
+        "maxAbs": 55.33333333333394
+      },
+      "leaveOnePriceOut": [
+        {
+          "heldPrice": 30.0,
+          "trainPrices": [
+            50.0,
+            70.0
+          ],
+          "coefficients": [
+            8377.500000000011,
+            -69.65000000000019
+          ],
+          "predicted": 9648.000000000005,
+          "actual": 9482.0,
+          "error": 166.00000000000546
+        },
+        {
+          "heldPrice": 50.0,
+          "trainPrices": [
+            30.0,
+            70.0
+          ],
+          "coefficients": [
+            8087.0,
+            -65.5
+          ],
+          "predicted": 6588.0,
+          "actual": 6671.0,
+          "error": -83.0
+        },
+        {
+          "heldPrice": 70.0,
+          "trainPrices": [
+            30.0,
+            50.0
+          ],
+          "coefficients": [
+            7962.5,
+            -61.35
+          ],
+          "predicted": 4652.0,
+          "actual": 4486.0,
+          "error": 166.0
+        }
+      ],
+      "heldMetrics": {
+        "predictions": [
+          9648.000000000005,
+          6588.0,
+          4652.0
+        ],
+        "errors": [
+          166.00000000000546,
+          -83.0,
+          166.0
+        ],
+        "mae": 138.33333333333516,
+        "rmse": 143.7602170282189,
+        "maxAbs": 166.00000000000546
+      }
+    },
+    "additive_affine_sqrt_baseline": {
+      "coefficients": [
+        590.8254140131166,
+        96.94877289256277
+      ],
+      "training": {
+        "predictions": [
+          9570.510186280657,
+          6452.500225853104,
+          4615.989587866237
+        ],
+        "errors": [
+          88.51018628065685,
+          -218.49977414689602,
+          129.98958786623734
+        ],
+        "mae": 145.66651609793007,
+        "rmse": 155.42790111100322,
+        "maxAbs": 218.49977414689602
+      },
+      "leaveOnePriceOut": [
+        {
+          "heldPrice": 30.0,
+          "trainPrices": [
+            50.0,
+            70.0
+          ],
+          "coefficients": [
+            -553.8147903043673,
+            129.29465313979662
+          ],
+          "predicted": 10300.815329362344,
+          "actual": 9482.0,
+          "error": 818.8153293623436
+        },
+        {
+          "heldPrice": 50.0,
+          "trainPrices": [
+            30.0,
+            70.0
+          ],
+          "coefficients": [
+            411.9141033060696,
+            98.50834045487466
+          ],
+          "predicted": 6339.313170508851,
+          "actual": 6671.0,
+          "error": -331.6868294911492
+        },
+        {
+          "heldPrice": 70.0,
+          "trainPrices": [
+            30.0,
+            50.0
+          ],
+          "coefficients": [
+            1627.0140524182725,
+            77.54587480385014
+          ],
+          "predicted": 5043.533095696021,
+          "actual": 4486.0,
+          "error": 557.5330956960206
+        }
+      ],
+      "heldMetrics": {
+        "predictions": [
+          10300.815329362344,
+          6339.313170508851,
+          5043.533095696021
+        ],
+        "errors": [
+          818.8153293623436,
+          -331.6868294911492,
+          557.5330956960206
+        ],
+        "mae": 569.3450848498378,
+        "rmse": 603.1356534127963,
+        "maxAbs": 818.8153293623436
+      }
+    },
+    "additive_affine_baseline": {
+      "coefficients": [
+        2685.7813852813842,
+        1.0558261183261188
+      ],
+      "training": {
+        "predictions": [
+          9593.357142857143,
+          6336.928571428572,
+          4708.714285714285
+        ],
+        "errors": [
+          111.35714285714312,
+          -334.07142857142844,
+          222.71428571428532
+        ],
+        "mae": 222.71428571428564,
+        "rmse": 240.55892259090115,
+        "maxAbs": 334.07142857142844
+      },
+      "leaveOnePriceOut": [
+        {
+          "heldPrice": 30.0,
+          "trainPrices": [
+            50.0,
+            70.0
+          ],
+          "coefficients": [
+            1771.30303030303,
+            1.758838383838384
+          ],
+          "predicted": 11041.0,
+          "actual": 9482.0,
+          "error": 1559.0
+        },
+        {
+          "heldPrice": 50.0,
+          "trainPrices": [
+            30.0,
+            70.0
+          ],
+          "coefficients": [
+            2416.9494949494965,
+            1.102693602693602
+          ],
+          "predicted": 6151.333333333334,
+          "actual": 6671.0,
+          "error": -519.6666666666661
+        },
+        {
+          "heldPrice": 70.0,
+          "trainPrices": [
+            30.0,
+            50.0
+          ],
+          "coefficients": [
+            3519.2727272727266,
+            0.7746212121212124
+          ],
+          "predicted": 5265.5,
+          "actual": 4486.0,
+          "error": 779.5
+        }
+      ],
+      "heldMetrics": {
+        "predictions": [
+          11041.0,
+          6151.333333333334,
+          5265.5
+        ],
+        "errors": [
+          1559.0,
+          -519.6666666666661,
+          779.5
+        ],
+        "mae": 952.7222222222221,
+        "rmse": 1050.1039146110643,
+        "maxAbs": 1559.0
+      }
+    },
+    "squared_sqrt_addition": {
+      "coefficient": 38.56998118690595,
+      "perPriceImpliedShift": [
+        39.41005463108095,
+        39.5335749095201,
+        35.60883391584515
+      ],
+      "training": {
+        "predictions": [
+          9319.100476541422,
+          6514.52318507256,
+          4891.429516639609
+        ],
+        "errors": [
+          -162.8995234585782,
+          -156.4768149274396,
+          405.42951663960866
+        ],
+        "mae": 241.60195167520882,
+        "rmse": 267.9517004458669,
+        "maxAbs": 405.42951663960866
+      },
+      "leaveOnePriceOut": [
+        {
+          "heldPrice": 30.0,
+          "coefficient": 37.87872845153592,
+          "predicted": 9186.117466367692,
+          "error": -295.88253363230797
+        },
+        {
+          "heldPrice": 50.0,
+          "coefficient": 38.125935218967754,
+          "predicted": 6443.0401560868295,
+          "error": -227.95984391317052
+        },
+        {
+          "heldPrice": 70.0,
+          "coefficient": 39.461003642443686,
+          "predicted": 5016.857440927473,
+          "error": 530.8574409274734
+        }
+      ],
+      "heldMetrics": {
+        "predictions": [
+          9186.117466367692,
+          6443.0401560868295,
+          5016.857440927473
+        ],
+        "errors": [
+          -295.88253363230797,
+          -227.95984391317052,
+          530.8574409274734
+        ],
+        "mae": 351.5666061576506,
+        "rmse": 374.75404677986546,
+        "maxAbs": 530.8574409274734
+      }
+    },
+    "additive_power_price": {
+      "C": 55820.4586809728,
+      "exponent": -0.6411664343829939,
+      "training": {
+        "predictions": [
+          9665.402763454096,
+          6320.340459161829,
+          4646.5070504556525
+        ],
+        "errors": [
+          183.4027634540962,
+          -350.65954083817087,
+          160.50705045565246
+        ],
+        "mae": 231.52311824930652,
+        "rmse": 246.55033324482943,
+        "maxAbs": 350.65954083817087
+      },
+      "leaveOnePriceOut": [
+        {
+          "heldPrice": 30.0,
+          "C": 240260.91939356973,
+          "exponent": -0.99526797658448,
+          "predicted": 11498.636508906533,
+          "error": 2016.636508906533
+        },
+        {
+          "heldPrice": 50.0,
+          "C": 57628.763395951486,
+          "exponent": -0.6592187148971057,
+          "predicted": 6147.661003774838,
+          "error": -523.3389962251622
+        },
+        {
+          "heldPrice": 70.0,
+          "C": 27144.292445334595,
+          "exponent": -0.437868724931519,
+          "predicted": 5208.426900507636,
+          "error": 722.4269005076358
+        }
+      ],
+      "heldMetrics": {
+        "predictions": [
+          11498.636508906533,
+          6147.661003774838,
+          5208.426900507636
+        ],
+        "errors": [
+          2016.636508906533,
+          -523.3389962251622,
+          722.4269005076358
+        ],
+        "mae": 1087.4674685464436,
+        "rmse": 1273.13355421466,
+        "maxAbs": 2016.636508906533
+      }
+    },
+    "effective_price_subtractive": {
+      "parameters": [
+        21.35863114275064
+      ],
+      "training": {
+        "predictions": [
+          9991.035319801795,
+          3499.1454168917217,
+          1863.811373021599
+        ],
+        "errors": [
+          509.0353198017947,
+          -3171.8545831082783,
+          -2622.188626978401
+        ],
+        "mae": 2101.026176629491,
+        "rmse": 2394.135310061204,
+        "maxAbs": 3171.8545831082783
+      },
+      "leaveOnePriceOut": [
+        {
+          "heldPrice": 30.0,
+          "parameters": [
+            29.99
+          ],
+          "predicted": 3721767.025187348,
+          "error": 3712285.025187348
+        },
+        {
+          "heldPrice": 50.0,
+          "parameters": [
+            21.026698707487427
+          ],
+          "predicted": 3464.0211065275103,
+          "error": -3206.9788934724897
+        },
+        {
+          "heldPrice": 70.0,
+          "parameters": [
+            21.194114116147254
+          ],
+          "predicted": 1852.819390352029,
+          "error": -2633.1806096479713
+        }
+      ],
+      "heldMetrics": {
+        "predictions": [
+          3721767.025187348,
+          3464.0211065275103,
+          1852.819390352029
+        ],
+        "errors": [
+          3712285.025187348,
+          -3206.9788934724897,
+          -2633.1806096479713
+        ],
+        "mae": 1239375.0615634895,
+        "rmse": 2143290.097535716,
+        "maxAbs": 3712285.025187348
+      },
+      "caveat": "Most inferred effective prices are below lowest observed native baseline price 20; log-log extrapolation is assumed, NOT established."
+    },
+    "effective_price_proportional": {
+      "parameters": [
+        0.29754451543712634
+      ],
+      "training": {
+        "predictions": [
+          9711.210094128694,
+          6209.1568577102325,
+          4624.763627353983
+        ],
+        "errors": [
+          229.21009412869353,
+          -461.84314228976746,
+          138.76362735398288
+        ],
+        "mae": 276.6056212574813,
+        "rmse": 308.27028162907413,
+        "maxAbs": 461.84314228976746
+      },
+      "leaveOnePriceOut": [
+        {
+          "heldPrice": 30.0,
+          "parameters": [
+            0.2854080825201263
+          ],
+          "predicted": 10071.82923063918,
+          "error": 589.8292306391795
+        },
+        {
+          "heldPrice": 50.0,
+          "parameters": [
+            0.30619729208862945
+          ],
+          "predicted": 6055.255931401708,
+          "error": -615.744068598292
+        },
+        {
+          "heldPrice": 70.0,
+          "parameters": [
+            0.2959114834097938
+          ],
+          "predicted": 4647.102274411651,
+          "error": 161.1022744116508
+        }
+      ],
+      "heldMetrics": {
+        "predictions": [
+          10071.82923063918,
+          6055.255931401708,
+          4647.102274411651
+        ],
+        "errors": [
+          589.8292306391795,
+          -615.744068598292,
+          161.1022744116508
+        ],
+        "mae": 455.55852454970744,
+        "rmse": 500.9967472119925,
+        "maxAbs": 615.744068598292
+      },
+      "caveat": "Most inferred effective prices are below lowest observed native baseline price 20; log-log extrapolation is assumed, NOT established."
+    },
+    "effective_price_affine": {
+      "parameters": [
+        -0.6752687489811784,
+        0.3098088993618595
+      ],
+      "training": {
+        "predictions": [
+          10013.736322628876,
+          6231.920132431181,
+          4589.431401117824
+        ],
+        "errors": [
+          531.7363226288762,
+          -439.0798675688193,
+          103.43140111782395
+        ],
+        "mae": 358.08253043850647,
+        "rmse": 402.58858306561075,
+        "maxAbs": 531.7363226288762
+      },
+      "leaveOnePriceOut": [
+        {
+          "heldPrice": 30.0,
+          "parameters": [
+            -5.94021438583372,
+            0.3929396199437418
+          ],
+          "predicted": 14063.211841457836,
+          "error": 4581.211841457836
+        },
+        {
+          "heldPrice": 50.0,
+          "parameters": [
+            -0.12106394510196594,
+            0.3098088993618595
+          ],
+          "predicted": 6034.720634337212,
+          "error": -636.2793656627882
+        },
+        {
+          "heldPrice": 70.0,
+          "parameters": [
+            2.372857672354481,
+            0.22667817877997792
+          ],
+          "predicted": 5194.4148798644355,
+          "error": 708.4148798644355
+        }
+      ],
+      "heldMetrics": {
+        "predictions": [
+          14063.211841457836,
+          6034.720634337212,
+          5194.4148798644355
+        ],
+        "errors": [
+          4581.211841457836,
+          -636.2793656627882,
+          708.4148798644355
+        ],
+        "mae": 1975.30202899502,
+        "rmse": 2701.493723201733,
+        "maxAbs": 4581.211841457836
+      },
+      "caveat": "Most inferred effective prices are below lowest observed native baseline price 20; log-log extrapolation is assumed, NOT established."
+    }
+  },
+  "equalPriceAllocationTests": [
+    {
+      "path": "прогнал\\TEST2_marketing.Z01",
+      "formula": "D*(0.70/N+0.15*M_i^1.5/sum(M^1.5)+0.15*Rcum_i/sum(Rcum))",
+      "native": [
+        612.0,
+        613.0,
+        616.0,
+        621.0,
+        637.0,
+        682.0,
+        810.0,
+        1172.0
+      ],
+      "evaluation": {
+        "predictions": [
+          612.31875,
+          612.8265619945324,
+          615.6486036528194,
+          621.0598495459038,
+          637.0423130557409,
+          682.2475463672306,
+          810.1072544459278,
+          1171.7491209378447
+        ],
+        "errors": [
+          0.31875000000002274,
+          -0.17343800546757393,
+          -0.35139634718063917,
+          0.0598495459038304,
+          0.04231305574091948,
+          0.24754636723059775,
+          0.10725444592776512,
+          -0.25087906215526345
+        ],
+        "mae": 0.1939283537008265,
+        "rmse": 0.22255816200820186,
+        "maxAbs": 0.35139634718063917
+      },
+      "rounded": [
+        612,
+        613,
+        616,
+        621,
+        637,
+        682,
+        810,
+        1172
+      ],
+      "rawTotalRoundingInterval": [
+        5761.774751404421,
+        5764.705882352941
+      ],
+      "canExactRoundWithUnreportedRawTotal": true,
+      "currentOnlyRndAlternative": {
+        "predictions": [
+          612.31875,
+          612.8265619945324,
+          615.6486036528194,
+          621.0598495459038,
+          637.0423130557409,
+          682.2475463672306,
+          810.1072544459278,
+          1171.7491209378447
+        ],
+        "errors": [
+          0.31875000000002274,
+          -0.17343800546757393,
+          -0.35139634718063917,
+          0.0598495459038304,
+          0.04231305574091948,
+          0.24754636723059775,
+          0.10725444592776512,
+          -0.25087906215526345
+        ],
+        "mae": 0.1939283537008265,
+        "rmse": 0.22255816200820186,
+        "maxAbs": 0.35139634718063917
+      }
+    },
+    {
+      "path": "прогнал\\TEST2_marketing2.Z02",
+      "formula": "D*(0.70/N+0.15*M_i^1.5/sum(M^1.5)+0.15*Rcum_i/sum(Rcum))",
+      "native": [
+        612.0,
+        613.0,
+        616.0,
+        621.0,
+        637.0,
+        682.0,
+        810.0,
+        1172.0
+      ],
+      "evaluation": {
+        "predictions": [
+          612.31875,
+          612.8265619945324,
+          615.6486036528194,
+          621.0598495459038,
+          637.0423130557409,
+          682.2475463672306,
+          810.1072544459278,
+          1171.7491209378447
+        ],
+        "errors": [
+          0.31875000000002274,
+          -0.17343800546757393,
+          -0.35139634718063917,
+          0.0598495459038304,
+          0.04231305574091948,
+          0.24754636723059775,
+          0.10725444592776512,
+          -0.25087906215526345
+        ],
+        "mae": 0.1939283537008265,
+        "rmse": 0.22255816200820186,
+        "maxAbs": 0.35139634718063917
+      },
+      "rounded": [
+        612,
+        613,
+        616,
+        621,
+        637,
+        682,
+        810,
+        1172
+      ],
+      "rawTotalRoundingInterval": [
+        5761.774751404421,
+        5764.705882352941
+      ],
+      "canExactRoundWithUnreportedRawTotal": true,
+      "currentOnlyRndAlternative": {
+        "predictions": [
+          612.31875,
+          612.8265619945324,
+          615.6486036528194,
+          621.0598495459038,
+          637.0423130557409,
+          682.2475463672306,
+          810.1072544459278,
+          1171.7491209378447
+        ],
+        "errors": [
+          0.31875000000002274,
+          -0.17343800546757393,
+          -0.35139634718063917,
+          0.0598495459038304,
+          0.04231305574091948,
+          0.24754636723059775,
+          0.10725444592776512,
+          -0.25087906215526345
+        ],
+        "mae": 0.1939283537008265,
+        "rmse": 0.22255816200820186,
+        "maxAbs": 0.35139634718063917
+      }
+    },
+    {
+      "path": "прогнал\\TEST2_niokr.Z01",
+      "formula": "D*(0.70/N+0.15*M_i^1.5/sum(M^1.5)+0.15*Rcum_i/sum(Rcum))",
+      "native": [
+        852.0,
+        855.0,
+        860.0,
+        870.0,
+        896.0,
+        957.0,
+        1114.0,
+        1549.0
+      ],
+      "evaluation": {
+        "predictions": [
+          852.3280632133097,
+          854.9429965037775,
+          859.6673093152226,
+          869.7609518164282,
+          895.9102847211059,
+          956.9253948320206,
+          1113.821392260087,
+          1549.6436073380487
+        ],
+        "errors": [
+          0.32806321330974697,
+          -0.057003496222478134,
+          -0.33269068477738983,
+          -0.23904818357175373,
+          -0.08971527889411846,
+          -0.07460516797937089,
+          -0.17860773991310452,
+          0.643607338048696
+        ],
+        "mae": 0.2429176378395823,
+        "rmse": 0.30381900224858,
+        "maxAbs": 0.643607338048696
+      },
+      "rounded": [
+        852,
+        855,
+        860,
+        870,
+        896,
+        957,
+        1114,
+        1550
+      ],
+      "rawTotalRoundingInterval": [
+        7951.452179151694,
+        7952.262985918767
+      ],
+      "canExactRoundWithUnreportedRawTotal": true,
+      "currentOnlyRndAlternative": {
+        "predictions": [
+          845.00625,
+          847.7562077384703,
+          852.7244647193065,
+          863.339301589802,
+          890.8388789745047,
+          955.0045595388115,
+          1120.0020238470286,
+          1578.3283135920763
+        ],
+        "errors": [
+          -6.993749999999977,
+          -7.243792261529734,
+          -7.275535280693475,
+          -6.6606984101980515,
+          -5.161121025495277,
+          -1.9954404611885366,
+          6.002023847028568,
+          29.328313592076256
+        ],
+        "mae": 8.832584359776234,
+        "rmse": 11.861052881238823,
+        "maxAbs": 29.328313592076256
+      }
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2.Z02",
+      "formula": "D*(0.70/N+0.15*M_i^1.5/sum(M^1.5)+0.15*Rcum_i/sum(Rcum))",
+      "native": [
+        1012.0,
+        1015.0,
+        1021.0,
+        1033.0,
+        1065.0,
+        1140.0,
+        1332.0,
+        1864.0
+      ],
+      "evaluation": {
+        "predictions": [
+          1011.9475368517243,
+          1015.1435251071097,
+          1020.8963039668034,
+          1033.2541252209605,
+          1065.214007774815,
+          1139.787067067142,
+          1331.5463623902688,
+          1864.2110716211762
+        ],
+        "errors": [
+          -0.05246314827570586,
+          0.14352510710966726,
+          -0.10369603319657017,
+          0.2541252209605318,
+          0.21400777481494515,
+          -0.2129329328579388,
+          -0.45363760973123135,
+          0.21107162117618827
+        ],
+        "mae": 0.20568243101534733,
+        "rmse": 0.23456406516454104,
+        "maxAbs": 0.45363760973123135
+      },
+      "rounded": [
+        1012,
+        1015,
+        1021,
+        1033,
+        1065,
+        1140,
+        1332,
+        1864
+      ],
+      "rawTotalRoundingInterval": [
+        9481.66985138712,
+        9483.469586212479
+      ],
+      "canExactRoundWithUnreportedRawTotal": true,
+      "currentOnlyRndAlternative": {
+        "predictions": [
+          1007.4843556479248,
+          1010.7627028366397,
+          1016.6418721284017,
+          1029.3400035726906,
+          1062.12347545984,
+          1138.618243196521,
+          1335.3190745194154,
+          1881.7102726385665
+        ],
+        "errors": [
+          -4.515644352075242,
+          -4.237297163360267,
+          -4.358127871598299,
+          -3.659996427309352,
+          -2.8765245401600623,
+          -1.3817568034789929,
+          3.3190745194153806,
+          17.710272638566494
+        ],
+        "mae": 5.257336789495511,
+        "rmse": 7.120290034911342,
+        "maxAbs": 17.710272638566494
+      }
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2_50price.Z02",
+      "formula": "D*(0.70/N+0.15*M_i^1.5/sum(M^1.5)+0.15*Rcum_i/sum(Rcum))",
+      "native": [
+        712.0,
+        714.0,
+        718.0,
+        727.0,
+        749.0,
+        802.0,
+        937.0,
+        1312.0
+      ],
+      "evaluation": {
+        "predictions": [
+          711.949168776403,
+          714.1976857192078,
+          718.2450162162567,
+          726.9392817284357,
+          749.424451156485,
+          801.8898464885999,
+          936.8008630568955,
+          1311.5536868577165
+        ],
+        "errors": [
+          -0.050831223597015196,
+          0.19768571920781142,
+          0.24501621625665848,
+          -0.060718271564269344,
+          0.42445115648501996,
+          -0.11015351140008534,
+          -0.19913694310446317,
+          -0.44631314228354313
+        ],
+        "mae": 0.21678827298735825,
+        "rmse": 0.2589707114233194,
+        "maxAbs": 0.44631314228354313
+      },
+      "rounded": [
+        712,
+        714,
+        718,
+        727,
+        749,
+        802,
+        937,
+        1312
+      ],
+      "rawTotalRoundingInterval": [
+        6670.726930714759,
+        6671.672497853934
+      ],
+      "canExactRoundWithUnreportedRawTotal": true,
+      "currentOnlyRndAlternative": {
+        "predictions": [
+          708.8091264002643,
+          711.1155864399096,
+          715.2518381110069,
+          724.1855266645665,
+          747.25012706102,
+          801.0675279860781,
+          939.4551303647986,
+          1323.8651369723557
+        ],
+        "errors": [
+          -3.19087359973571,
+          -2.8844135600903655,
+          -2.7481618889930814,
+          -2.8144733354334903,
+          -1.7498729389800474,
+          -0.932472013921938,
+          2.455130364798606,
+          11.865136972355685
+        ],
+        "mae": 3.5800668342886155,
+        "rmse": 4.805151788436864,
+        "maxAbs": 11.865136972355685
+      }
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2_70price.Z02",
+      "formula": "D*(0.70/N+0.15*M_i^1.5/sum(M^1.5)+0.15*Rcum_i/sum(Rcum))",
+      "native": [
+        479.0,
+        480.0,
+        483.0,
+        489.0,
+        504.0,
+        539.0,
+        630.0,
+        882.0
+      ],
+      "evaluation": {
+        "predictions": [
+          478.75940205830364,
+          480.2714462803727,
+          482.99312588009707,
+          488.83969687209753,
+          503.96013909278844,
+          539.2411709410673,
+          629.9638242652126,
+          881.9711946100608
+        ],
+        "errors": [
+          -0.24059794169636461,
+          0.27144628037268603,
+          -0.006874119902931852,
+          -0.16030312790246626,
+          -0.03986090721156188,
+          0.2411709410672529,
+          -0.03617573478743452,
+          -0.028805389939179804
+        ],
+        "mae": 0.12815430535998473,
+        "rmse": 0.1655315483648059,
+        "maxAbs": 0.27144628037268603
+      },
+      "rounded": [
+        479,
+        480,
+        483,
+        489,
+        504,
+        539,
+        630,
+        882
+      ],
+      "rawTotalRoundingInterval": [
+        4483.603346873854,
+        4488.134817704006
+      ],
+      "canExactRoundWithUnreportedRawTotal": true,
+      "currentOnlyRndAlternative": {
+        "predictions": [
+          476.64784005869967,
+          478.19884886365384,
+          480.98032465387155,
+          486.9878987583939,
+          502.4979868079352,
+          538.6881922568649,
+          631.7487205541128,
+          890.250188046468
+        ],
+        "errors": [
+          -2.3521599413003287,
+          -1.8011511363461636,
+          -2.0196753461284516,
+          -2.0121012416061035,
+          -1.5020131920647941,
+          -0.3118077431350912,
+          1.748720554112765,
+          8.250188046467997
+        ],
+        "mae": 2.499727150145212,
+        "rmse": 3.361200228190938,
+        "maxAbs": 8.250188046467997
+      }
+    }
+  ],
+  "rndAllocationRegressions": [
+    {
+      "path": "прогнал\\TEST2_niokr.Z01",
+      "rnd": {
+        "intercept": 852.46172116927,
+        "slope": 0.017416456342239085,
+        "impliedShareWeight": 0.1425004690866138,
+        "training": {
+          "predictions": [
+            852.46172116927,
+            855.0741896206059,
+            859.7940492893528,
+            869.8781775115091,
+            896.0028620248678,
+            956.9604592227046,
+            1113.7085663028563,
+            1549.1199748588333
+          ],
+          "errors": [
+            0.46172116927004936,
+            0.07418962060592094,
+            -0.2059507106472438,
+            -0.12182248849092048,
+            0.0028620248677952986,
+            -0.0395407772954286,
+            -0.2914336971437024,
+            0.11997485883330228
+          ],
+          "mae": 0.1646869183942954,
+          "rmse": 0.2170386436542943,
+          "maxAbs": 0.46172116927004936
+        },
+        "heldFirms": {
+          "predictions": [
+            852.5592577741975,
+            855.0896657843973,
+            859.7520393311746,
+            869.8544529384787,
+            896.0033619527968,
+            956.9546342524817,
+            1113.6529709923211,
+            1550.0277796612843
+          ],
+          "errors": [
+            0.5592577741974765,
+            0.08966578439731165,
+            -0.24796066882538526,
+            -0.14554706152125618,
+            0.0033619527968085094,
+            -0.04536574751830358,
+            -0.3470290076788842,
+            1.0277796612842849
+          ],
+          "mae": 0.30824595727746384,
+          "rmse": 0.4447340735468273,
+          "maxAbs": 1.0277796612842849
+        }
+      },
+      "rndCumulative": {
+        "intercept": 845.1468095055297,
+        "slope": 0.017416456342239085,
+        "impliedShareWeight": 0.14985860982720517,
+        "training": {
+          "predictions": [
+            852.4617211692702,
+            855.074189620606,
+            859.7940492893529,
+            869.8781775115092,
+            896.0028620248679,
+            956.9604592227047,
+            1113.7085663028565,
+            1549.1199748588335
+          ],
+          "errors": [
+            0.46172116927016305,
+            0.07418962060603462,
+            -0.2059507106471301,
+            -0.12182248849080679,
+            0.0028620248679089855,
+            -0.03954077729531491,
+            -0.291433697143475,
+            0.11997485883352965
+          ],
+          "mae": 0.1646869183942954,
+          "rmse": 0.21703864365428305,
+          "maxAbs": 0.46172116927016305
+        },
+        "heldFirms": {
+          "predictions": [
+            852.5592577741975,
+            855.0896657843974,
+            859.7520393311744,
+            869.8544529384787,
+            896.0033619527965,
+            956.9546342524817,
+            1113.6529709923211,
+            1550.0277796612843
+          ],
+          "errors": [
+            0.5592577741974765,
+            0.08966578439742534,
+            -0.24796066882561263,
+            -0.14554706152125618,
+            0.003361952796467449,
+            -0.04536574751830358,
+            -0.3470290076788842,
+            1.0277796612842849
+          ],
+          "mae": 0.30824595727746384,
+          "rmse": 0.4447340735468457,
+          "maxAbs": 1.0277796612842849
+        }
+      }
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2.Z02",
+      "rnd": {
+        "intercept": 1011.9367433242139,
+        "slope": 0.02130562339084913,
+        "impliedShareWeight": 0.14622506363702686,
+        "training": {
+          "predictions": [
+            1011.9580489476048,
+            1015.1538924562321,
+            1020.8851051483706,
+            1033.263672338454,
+            1065.2221074247277,
+            1139.7917892926996,
+            1331.5423998103417,
+            1864.18298458157
+          ],
+          "errors": [
+            -0.041951052395234,
+            0.15389245623214265,
+            -0.11489485162940127,
+            0.26367233845394367,
+            0.22210742472771017,
+            -0.20821070730039537,
+            -0.4576001896582511,
+            0.1829845815700537
+          ],
+          "mae": 0.2056642002458915,
+          "rmse": 0.23551311144506482,
+          "maxAbs": 0.4576001896582511
+        },
+        "heldFirms": {
+          "predictions": [
+            1011.9491872257432,
+            1015.1859939394144,
+            1020.8616656355691,
+            1033.3150204225594,
+            1065.260903517002,
+            1139.761116863609,
+            1331.455104633848,
+            1865.567485513137
+          ],
+          "errors": [
+            -0.050812774256769444,
+            0.18599393941440212,
+            -0.1383343644308752,
+            0.31502042255942797,
+            0.26090351700190695,
+            -0.2388831363909958,
+            -0.5448953661521045,
+            1.567485513136944
+          ],
+          "mae": 0.41279112916792826,
+          "rmse": 0.6158944246503171,
+          "maxAbs": 1.567485513136944
+        }
+      },
+      "rndCumulative": {
+        "intercept": 1007.4695272901035,
+        "slope": 0.010652873098834314,
+        "impliedShareWeight": 0.1499940710482147,
+        "training": {
+          "predictions": [
+            1011.9543868647128,
+            1015.150248794363,
+            1020.9028002677336,
+            1033.2601330623813,
+            1065.2187523588843,
+            1139.7888640507244,
+            1331.5405798297422,
+            1864.1842347714578
+          ],
+          "errors": [
+            -0.045613135287226214,
+            0.15024879436305127,
+            -0.09719973226640377,
+            0.2601330623813283,
+            0.21875235888433053,
+            -0.21113594927555823,
+            -0.45942017025777204,
+            0.18423477145779543
+          ],
+          "mae": 0.20334224677168322,
+          "rmse": 0.23431084691669907,
+          "maxAbs": 0.45942017025777204
+        },
+        "heldFirms": {
+          "predictions": [
+            1011.9447514263762,
+            1015.1815906685572,
+            1020.8829720558512,
+            1033.310792557756,
+            1065.2569628127858,
+            1139.75776056987,
+            1331.4529380311565,
+            1865.5782325876385
+          ],
+          "errors": [
+            -0.055248573623771335,
+            0.18159066855719175,
+            -0.11702794414884465,
+            0.3107925577560309,
+            0.2569628127857868,
+            -0.2422394301299846,
+            -0.5470619688435363,
+            1.5782325876384675
+          ],
+          "mae": 0.41114456793545173,
+          "rmse": 0.6185790022873202,
+          "maxAbs": 1.5782325876384675
+        }
+      }
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2_50price.Z02",
+      "rnd": {
+        "intercept": 711.8130361774377,
+        "slope": 0.015005235499185554,
+        "impliedShareWeight": 0.14637921010050942,
+        "training": {
+          "predictions": [
+            711.8280414129368,
+            714.0788267378147,
+            718.1152350870956,
+            726.8332769121224,
+            749.3411301609008,
+            801.8594544080502,
+            936.9065739007201,
+            1312.037461380359
+          ],
+          "errors": [
+            -0.17195858706315903,
+            0.07882673781466565,
+            0.11523508709558428,
+            -0.16672308787758539,
+            0.3411301609007751,
+            -0.14054559194983085,
+            -0.09342609927989542,
+            0.03746138035899094
+          ],
+          "mae": 0.14316334154256083,
+          "rmse": 0.16700066045019066,
+          "maxAbs": 0.3411301609007751
+        },
+        "heldFirms": {
+          "predictions": [
+            711.7917169566181,
+            714.0952697478245,
+            718.1387440107841,
+            726.8008089210208,
+            749.4007162698126,
+            801.8387500227718,
+            936.8887512511452,
+            1312.320902288656
+          ],
+          "errors": [
+            -0.20828304338192538,
+            0.09526974782454545,
+            0.13874401078408027,
+            -0.1991910789791973,
+            0.40071626981261943,
+            -0.1612499772281808,
+            -0.1112487488547913,
+            0.3209022886560433
+          ],
+          "mae": 0.2044506456901729,
+          "rmse": 0.22729792798203502,
+          "maxAbs": 0.40071626981261943
+        }
+      },
+      "rndCumulative": {
+        "intercept": 708.6668432053718,
+        "slope": 0.007502660921870038,
+        "impliedShareWeight": 0.1501521892305539,
+        "training": {
+          "predictions": [
+            711.8254634534791,
+            714.0762617300402,
+            718.1276986278499,
+            726.8307852972192,
+            749.3387680628293,
+            801.8573945159196,
+            936.9052911095803,
+            1312.0383372030822
+          ],
+          "errors": [
+            -0.1745365465209261,
+            0.0762617300401871,
+            0.12769862784989527,
+            -0.16921470278077777,
+            0.33876806282933103,
+            -0.1426054840803772,
+            -0.09470889041972441,
+            0.038337203082164706
+          ],
+          "mae": 0.14526640595042295,
+          "rmse": 0.16835938208180648,
+          "maxAbs": 0.33876806282933103
+        },
+        "heldFirms": {
+          "predictions": [
+            711.7885938956007,
+            714.0921699145874,
+            718.1537484470322,
+            726.7978316565924,
+            749.3979421970606,
+            801.8363865968086,
+            936.8872238630033,
+            1312.3284126158394
+          ],
+          "errors": [
+            -0.21140610439931606,
+            0.09216991458742996,
+            0.1537484470321715,
+            -0.2021683434076067,
+            0.3979421970606154,
+            -0.16361340319144801,
+            -0.112776136996672,
+            0.3284126158393974
+          ],
+          "mae": 0.20777964531433213,
+          "rmse": 0.23005409673515212,
+          "maxAbs": 0.3979421970606154
+        }
+      }
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2_70price.Z02",
+      "rnd": {
+        "intercept": 478.7481996123863,
+        "slope": 0.010080587659248418,
+        "impliedShareWeight": 0.1462359347081831,
+        "training": {
+          "predictions": [
+            478.7582802000456,
+            480.27036834893283,
+            482.98204642927067,
+            488.838867859294,
+            503.9597493481666,
+            539.2418061555361,
+            629.9670950887719,
+            881.9817865699823
+          ],
+          "errors": [
+            -0.24171979995441006,
+            0.2703683489328341,
+            -0.01795357072933257,
+            -0.1611321407060018,
+            -0.040250651833389384,
+            0.2418061555360964,
+            -0.03290491122811545,
+            -0.018213430017681276
+          ],
+          "mae": 0.12804362611723263,
+          "rmse": 0.16557407606159147,
+          "maxAbs": 0.2703683489328341
+        },
+        "heldFirms": {
+          "predictions": [
+            478.7072194157904,
+            480.3267663376243,
+            482.97838375035184,
+            488.8074886605445,
+            503.95271866018055,
+            539.277427676905,
+            629.9608179059863,
+            881.8439798181224
+          ],
+          "errors": [
+            -0.29278058420959496,
+            0.3267663376242922,
+            -0.021616249648161556,
+            -0.1925113394555069,
+            -0.04728133981944893,
+            0.2774276769049493,
+            -0.03918209401365402,
+            -0.1560201818775795
+          ],
+          "mae": 0.16919822544414842,
+          "rmse": 0.20466550839562483,
+          "maxAbs": 0.3267663376242922
+        }
+      },
+      "rndCumulative": {
+        "intercept": 476.63457180787174,
+        "slope": 0.00504032286856987,
+        "impliedShareWeight": 0.15000522192087076,
+        "training": {
+          "predictions": [
+            478.75654773553964,
+            480.2686445961106,
+            482.99041894513834,
+            488.8371934726794,
+            503.958162078389,
+            539.2404221583781,
+            629.9662337926358,
+            881.9823772211294
+          ],
+          "errors": [
+            -0.24345226446035895,
+            0.26864459611061875,
+            -0.009581054861655502,
+            -0.16280652732058343,
+            -0.04183792161097699,
+            0.24042215837812364,
+            -0.033766207364237744,
+            -0.01762277887064556
+          ],
+          "mae": 0.12726668862215007,
+          "rmse": 0.16546926869496575,
+          "maxAbs": 0.26864459611061875
+        },
+        "heldFirms": {
+          "predictions": [
+            478.7051202406447,
+            480.32468381539303,
+            482.98846446253395,
+            488.8054877892792,
+            503.95085406130886,
+            539.2758399355297,
+            629.9597923446184,
+            881.8490358596348
+          ],
+          "errors": [
+            -0.29487975935529676,
+            0.3246838153930298,
+            -0.011535537466045298,
+            -0.19451221072080216,
+            -0.049145938691140145,
+            0.2758399355296888,
+            -0.04020765538155047,
+            -0.150964140365204
+          ],
+          "mae": 0.16772112411284468,
+          "rmse": 0.2040991002399569,
+          "maxAbs": 0.3246838153930298
+        }
+      }
+    }
+  ],
+  "marketing": {
+    "sumM": 63351.0,
+    "exponentFit": 1.5020626158796775,
+    "interceptAndScaledSlope": [
+      612.3601320619042,
+      559.6473951987078
+    ],
+    "train": {
+      "predictions": [
+        612.3601320619042,
+        612.86327149615,
+        615.6678891226601,
+        621.0547574658308,
+        636.9874307962665,
+        682.1163107096486,
+        809.9426810869279,
+        1172.007527260612
+      ],
+      "errors": [
+        0.3601320619042099,
+        -0.13672850385000856,
+        -0.3321108773399146,
+        0.05475746583078944,
+        -0.012569203733505674,
+        0.11631070964858736,
+        -0.0573189130720948,
+        0.007527260612050668
+      ],
+      "mae": 0.13468187449889513,
+      "rmse": 0.18665278065089125,
+      "maxAbs": 0.3601320619042099
+    },
+    "heldFirms": [
+      {
+        "heldFirm": 1,
+        "exponent": 1.5031171356267592,
+        "predicted": 612.4843204424551,
+        "error": 0.4843204424551004
+      },
+      {
+        "heldFirm": 2,
+        "exponent": 1.5016907315858008,
+        "predicted": 612.8186126620055,
+        "error": -0.18138733799446527
+      },
+      {
+        "heldFirm": 3,
+        "exponent": 1.5014036691028174,
+        "predicted": 615.5787555350967,
+        "error": -0.42124446490333867
+      },
+      {
+        "heldFirm": 4,
+        "exponent": 1.5021204933772823,
+        "predicted": 621.0664750366162,
+        "error": 0.06647503661622522
+      },
+      {
+        "heldFirm": 5,
+        "exponent": 1.5020715480427675,
+        "predicted": 636.9850740942621,
+        "error": -0.014925905737868561
+      },
+      {
+        "heldFirm": 6,
+        "exponent": 1.501551234307517,
+        "predicted": 682.1669800015578,
+        "error": 0.16698000155781756
+      },
+      {
+        "heldFirm": 7,
+        "exponent": 1.5029469062193992,
+        "predicted": 809.8311728720365,
+        "error": -0.16882712796348187
+      },
+      {
+        "heldFirm": 8,
+        "exponent": 1.5034681744000866,
+        "predicted": 1172.6301002956616,
+        "error": 0.6301002956615775
+      }
+    ],
+    "heldMetrics": {
+      "predictions": [
+        612.4843204424551,
+        612.8186126620055,
+        615.5787555350967,
+        621.0664750366162,
+        636.9850740942621,
+        682.1669800015578,
+        809.8311728720365,
+        1172.6301002956616
+      ],
+      "errors": [
+        0.4843204424551004,
+        -0.18138733799446527,
+        -0.42124446490333867,
+        0.06647503661622522,
+        -0.014925905737868561,
+        0.16698000155781756,
+        -0.16882712796348187,
+        0.6301002956615775
+      ],
+      "mae": 0.2667825766112344,
+      "rmse": 0.3359627160082278,
+      "maxAbs": 0.6301002956615775
+    },
+    "volumeControls": [
+      {
+        "path": "прогнал\\TEST2_1.Z01",
+        "sumM": 8401.0,
+        "marketing": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1051.0,
+          1050.0,
+          1050.0
+        ],
+        "production": [
+          50.0,
+          100.0,
+          200.0,
+          300.0,
+          400.0,
+          420.0,
+          500.0,
+          525.0
+        ],
+        "capexGross": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "D": 3360.0,
+        "opening": {
+          "rndCumulative": [
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0
+          ],
+          "inventoryEnd": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "capacityNextPeriod": [
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0
+          ],
+          "retainedEarnings": [
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0
+          ]
+        },
+        "caveat": "Not an exact isolated marketing-volume pair: production vectors differ between these reports."
+      },
+      {
+        "path": "прогнал\\TEST2_big.Z01",
+        "sumM": 8400.0,
+        "marketing": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1051.0,
+          1050.0,
+          1049.0
+        ],
+        "production": [
+          446.0,
+          460.0,
+          473.0,
+          486.0,
+          499.0,
+          512.0,
+          525.0,
+          420.0
+        ],
+        "capexGross": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "D": 3360.0,
+        "opening": {
+          "rndCumulative": [
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0
+          ],
+          "inventoryEnd": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "capacityNextPeriod": [
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0
+          ],
+          "retainedEarnings": [
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0
+          ]
+        },
+        "caveat": "Not an exact isolated marketing-volume pair: production vectors differ between these reports."
+      },
+      {
+        "path": "прогнал\\TEST2_marketing.Z01",
+        "sumM": 63351.0,
+        "marketing": [
+          0.0,
+          300.0,
+          1051.0,
+          2000.0,
+          4000.0,
+          8000.0,
+          16000.0,
+          32000.0
+        ],
+        "production": [
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0,
+          525.0
+        ],
+        "capexGross": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "D": 5763.0,
+        "opening": {
+          "rndCumulative": [
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0
+          ],
+          "inventoryEnd": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "capacityNextPeriod": [
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0
+          ],
+          "retainedEarnings": [
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0
+          ]
+        },
+        "caveat": "Not an exact isolated marketing-volume pair: production vectors differ between these reports."
+      },
+      {
+        "path": "прогнал\\TEST2_small.Z01",
+        "sumM": 7770.0,
+        "marketing": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1051.0,
+          1050.0,
+          419.0
+        ],
+        "production": [
+          105.0,
+          158.0,
+          210.0,
+          263.0,
+          315.0,
+          368.0,
+          394.0,
+          525.0
+        ],
+        "capexGross": [
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0,
+          1050.0
+        ],
+        "D": 3253.0,
+        "opening": {
+          "rndCumulative": [
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0
+          ],
+          "inventoryEnd": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "capacityNextPeriod": [
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0
+          ],
+          "retainedEarnings": [
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0,
+            1704.0
+          ]
+        },
+        "caveat": "Not an exact isolated marketing-volume pair: production vectors differ between these reports."
+      }
+    ],
+    "logVolumeSensitivity": {
+      "0": {
+        "coefficients": [
+          -7462.032362335789,
+          1196.1377459891137
+        ],
+        "errors": {
+          "predictions": [
+            3346.3951313627676,
+            3346.252742487415,
+            5763.000000000004,
+            3252.999999999998
+          ],
+          "errors": [
+            -13.604868637232357,
+            -13.747257512584838,
+            3.637978807091713e-12,
+            -1.8189894035458565e-12
+          ],
+          "mae": 6.838031537455663,
+          "rmse": 9.67056797393086,
+          "maxAbs": 13.747257512584838
+        }
+      },
+      "1000": {
+        "coefficients": [
+          -8181.190661556945,
+          1259.398027252822
+        ],
+        "errors": {
+          "predictions": [
+            3340.502043246378,
+            3340.3680718588503,
+            5763.000000000005,
+            3252.9999999999936
+          ],
+          "errors": [
+            -19.49795675362202,
+            -19.63192814114973,
+            4.547473508864641e-12,
+            -6.366462912410498e-12
+          ],
+          "mae": 9.782471223695666,
+          "rmse": 13.834584562839076,
+          "maxAbs": 19.63192814114973
+        }
+      },
+      "8400": {
+        "coefficients": [
+          -13071.477385107626,
+          1684.5138806841205
+        ],
+        "errors": {
+          "predictions": [
+            3317.4844292315265,
+            3317.3841635322187,
+            5762.999999999987,
+            3253.0000000000127
+          ],
+          "errors": [
+            -42.51557076847348,
+            -42.615836467781264,
+            -1.2732925824820995e-11,
+            1.2732925824820995e-11
+          ],
+          "mae": 21.282851809070053,
+          "rmse": 30.098518549995745,
+          "maxAbs": 42.615836467781264
+        }
+      },
+      "50000": {
+        "coefficients": [
+          -37576.97720767427,
+          3723.9273748821124
+        ],
+        "errors": {
+          "predictions": [
+            3293.4545244940164,
+            3293.3907591602474,
+            5763.000000000102,
+            3252.999999999898
+          ],
+          "errors": [
+            -66.54547550598363,
+            -66.6092408397526,
+            1.0186340659856796e-10,
+            -1.0186340659856796e-10
+          ],
+          "mae": 33.28867908648499,
+          "rmse": 47.07730683558065,
+          "maxAbs": 66.6092408397526
+        }
+      }
+    }
+  },
+  "comparison": {
+    "p1Expansion": 4593.0,
+    "p2ExpansionByPrice": [
+      6122.0,
+      4895.0,
+      3502.0
+    ],
+    "p2MultiplierByPrice": [
+      2.8220238095238095,
+      3.7561936936936937,
+      4.558943089430894
+    ],
+    "p2PriceDrops": [
+      2811.0,
+      2185.0
+    ],
+    "baselinePriceDrops": [
+      1584.0,
+      792.0
+    ],
+    "mixedP1": {
+      "meanPrice": 55.0,
+      "nativeD": 5897.0,
+      "baselineUniform55": 1496.0,
+      "additiveFromP1": 6089.0,
+      "additiveError": 192.0,
+      "multiplicativeFromP1": 3540.9785714285713,
+      "multiplicativeError": -2356.0214285714287,
+      "caveat": "Mixed-price baseline at same actual price vector is absent; uniform55 is a surrogate, so 192-unit residual is not a clean interaction estimate."
+    },
+    "periodCarryover": {
+      "currentRndTotals": [
+        65071.0,
+        65077.0
+      ],
+      "nativeDemandIncrease": 1529.0,
+      "expansionRatio": 1.3328978880905726,
+      "identifiedDecay": "Only one aggregate carryover observation; cannot identify per-firm lambda(R), decay stock vs nonlinear cumulative response."
+    },
+    "rndNormalization": {
+      "N": 8,
+      "perFirmCurrentBaseline": 420,
+      "leagueCurrentBaseline": 3360,
+      "p1CurrentExcess": 61711.0,
+      "p2CurrentExcess": 61717.0,
+      "p1CumulativeExcessVsPeriodBaseline": 61711.0,
+      "p2CumulativeExcessVsPeriodBaseline": 123428.0,
+      "zeroCurrentContributionForFirm1P1": -420,
+      "caveat": "No controlled zero-R&D league or cross-N R&D trajectory: sum vs average normalization and effect of a full zero-R&D market cannot be identified."
+    }
+  }
+}

@@ -1,0 +1,372 @@
+{
+  "source": "test2-original.json",
+  "comparison": "Actual computePeriod results; original volume/history used only for sharesOnlyMae",
+  "financingMode": "none (default); preRevenue verified in finance-original.test.ts separately",
+  "summary": {
+    "runs": 40,
+    "meanOrderMae": 15.717249999999998,
+    "meanSharesOnlyMae": 1.9942499999999999
+  },
+  "scenarios": [
+    {
+      "file": "TEST2_10_50.Z01",
+      "originalOrders": 3296,
+      "cloneOrders": 3380,
+      "orderMae": 10.5,
+      "sharesOnlyMae": 0,
+      "originalRevenue": 33400,
+      "cloneRevenue": 33800
+    },
+    {
+      "file": "TEST2_15_45.Z01",
+      "originalOrders": 3316,
+      "cloneOrders": 3380,
+      "orderMae": 8,
+      "sharesOnlyMae": 0,
+      "originalRevenue": 48240,
+      "cloneRevenue": 48600
+    },
+    {
+      "file": "TEST2_20_40.Z01",
+      "originalOrders": 3360,
+      "cloneOrders": 3380,
+      "orderMae": 9.5,
+      "sharesOnlyMae": 7.82,
+      "originalRevenue": 67760,
+      "cloneRevenue": 66640
+    },
+    {
+      "file": "TEST2_25_35.Z01",
+      "originalOrders": 3360,
+      "cloneOrders": 3380,
+      "orderMae": 2.5,
+      "sharesOnlyMae": 0.17,
+      "originalRevenue": 89880,
+      "cloneRevenue": 90160
+    },
+    {
+      "file": "Новая папка\\TEST2_2_6.Z01",
+      "originalOrders": 2038,
+      "cloneOrders": 1772,
+      "orderMae": 33.25,
+      "sharesOnlyMae": 0.25,
+      "originalRevenue": 41880,
+      "cloneRevenue": 39000
+    },
+    {
+      "file": "Новая папка\\TEST2_3_5.Z01",
+      "originalOrders": 2270,
+      "cloneOrders": 2135,
+      "orderMae": 16.88,
+      "sharesOnlyMae": 0.15,
+      "originalRevenue": 48000,
+      "cloneRevenue": 47100
+    },
+    {
+      "file": "Новая папка\\TEST2_4_4.Z01",
+      "originalOrders": 2536,
+      "cloneOrders": 2624,
+      "orderMae": 11,
+      "sharesOnlyMae": 0.63,
+      "originalRevenue": 55200,
+      "cloneRevenue": 55920
+    },
+    {
+      "file": "Новая папка\\TEST2_5_3.Z01",
+      "originalOrders": 2866,
+      "cloneOrders": 2963,
+      "orderMae": 12.13,
+      "sharesOnlyMae": 1.41,
+      "originalRevenue": 62760,
+      "cloneRevenue": 63480
+    },
+    {
+      "file": "Новая папка\\TEST2_6_2.Z01",
+      "originalOrders": 3298,
+      "cloneOrders": 3378,
+      "orderMae": 10,
+      "sharesOnlyMae": 1.31,
+      "originalRevenue": 70440,
+      "cloneRevenue": 70920
+    },
+    {
+      "file": "прогнал\\TEST2_1.Z01",
+      "originalOrders": 3360,
+      "cloneOrders": 3376,
+      "orderMae": 2,
+      "sharesOnlyMae": 0.02,
+      "originalRevenue": 69300,
+      "cloneRevenue": 69420
+    },
+    {
+      "file": "прогнал\\TEST2_1_7.Z01",
+      "originalOrders": 1812,
+      "cloneOrders": 1504,
+      "orderMae": 38.5,
+      "sharesOnlyMae": 0.23,
+      "originalRevenue": 40320,
+      "cloneRevenue": 35280
+    },
+    {
+      "file": "прогнал\\TEST2_2_6.Z01",
+      "originalOrders": 2176,
+      "cloneOrders": 2134,
+      "orderMae": 5.25,
+      "sharesOnlyMae": 0.18,
+      "originalRevenue": 77100,
+      "cloneRevenue": 76200
+    },
+    {
+      "file": "прогнал\\TEST2_3_5.Z01",
+      "originalOrders": 2345,
+      "cloneOrders": 2360,
+      "orderMae": 1.88,
+      "sharesOnlyMae": 1.21,
+      "originalRevenue": 82000,
+      "cloneRevenue": 82000
+    },
+    {
+      "file": "прогнал\\TEST2_40_60.Z01",
+      "originalOrders": 2004,
+      "cloneOrders": 1776,
+      "orderMae": 28.5,
+      "sharesOnlyMae": 0.33,
+      "originalRevenue": 88640,
+      "cloneRevenue": 78560
+    },
+    {
+      "file": "прогнал\\TEST2_4_4.Z01",
+      "originalOrders": 2516,
+      "cloneOrders": 2624,
+      "orderMae": 13.5,
+      "sharesOnlyMae": 1.45,
+      "originalRevenue": 85960,
+      "cloneRevenue": 89520
+    },
+    {
+      "file": "прогнал\\TEST2_5_3.Z01",
+      "originalOrders": 2693,
+      "cloneOrders": 2792,
+      "orderMae": 12.38,
+      "sharesOnlyMae": 1.14,
+      "originalRevenue": 88350,
+      "cloneRevenue": 91500
+    },
+    {
+      "file": "прогнал\\TEST2_6_2.Z01",
+      "originalOrders": 2894,
+      "cloneOrders": 2962,
+      "orderMae": 8.5,
+      "sharesOnlyMae": 0.83,
+      "originalRevenue": 91780,
+      "cloneRevenue": 93860
+    },
+    {
+      "file": "прогнал\\TEST2_7_1.Z01",
+      "originalOrders": 3898,
+      "cloneOrders": 3946,
+      "orderMae": 6,
+      "sharesOnlyMae": 1.17,
+      "originalRevenue": 77640,
+      "cloneRevenue": 78000
+    },
+    {
+      "file": "прогнал\\TEST2_all_20.Z01",
+      "originalOrders": 4792,
+      "cloneOrders": 4768,
+      "orderMae": 3,
+      "sharesOnlyMae": 0,
+      "originalRevenue": 84000,
+      "cloneRevenue": 84000
+    },
+    {
+      "file": "прогнал\\TEST2_all_40.Z01",
+      "originalOrders": 2648,
+      "cloneOrders": 2624,
+      "orderMae": 3,
+      "sharesOnlyMae": 0,
+      "originalRevenue": 105920,
+      "cloneRevenue": 104960
+    },
+    {
+      "file": "прогнал\\TEST2_all_45.Z01",
+      "originalOrders": 2136,
+      "cloneOrders": 2136,
+      "orderMae": 0,
+      "sharesOnlyMae": 0,
+      "originalRevenue": 96120,
+      "cloneRevenue": 96120
+    },
+    {
+      "file": "прогнал\\TEST2_all_50.Z01",
+      "originalOrders": 1776,
+      "cloneOrders": 1776,
+      "orderMae": 0,
+      "sharesOnlyMae": 0,
+      "originalRevenue": 88800,
+      "cloneRevenue": 88800
+    },
+    {
+      "file": "прогнал\\TEST2_all_50_one_30.Z01",
+      "originalOrders": 1999,
+      "cloneOrders": 1939,
+      "orderMae": 7.5,
+      "sharesOnlyMae": 0.89,
+      "originalRevenue": 77350,
+      "cloneRevenue": 75600
+    },
+    {
+      "file": "прогнал\\TEST2_all_55.Z01",
+      "originalOrders": 1496,
+      "cloneOrders": 1504,
+      "orderMae": 1,
+      "sharesOnlyMae": 0,
+      "originalRevenue": 82280,
+      "cloneRevenue": 82720
+    },
+    {
+      "file": "прогнал\\TEST2_all_60.Z01",
+      "originalOrders": 1288,
+      "cloneOrders": 1288,
+      "orderMae": 0,
+      "sharesOnlyMae": 0,
+      "originalRevenue": 77280,
+      "cloneRevenue": 77280
+    },
+    {
+      "file": "прогнал\\TEST2_all_70.Z01",
+      "originalOrders": 984,
+      "cloneOrders": 984,
+      "orderMae": 0,
+      "sharesOnlyMae": 0,
+      "originalRevenue": 68880,
+      "cloneRevenue": 68880
+    },
+    {
+      "file": "прогнал\\TEST2_big.Z01",
+      "originalOrders": 3360,
+      "cloneOrders": 3376,
+      "orderMae": 2,
+      "sharesOnlyMae": 0.02,
+      "originalRevenue": 100800,
+      "cloneRevenue": 101220
+    },
+    {
+      "file": "прогнал\\TEST2_marketing.Z01",
+      "originalOrders": 5763,
+      "cloneOrders": 5814,
+      "orderMae": 6.38,
+      "sharesOnlyMae": 0.19,
+      "originalRevenue": 126000,
+      "cloneRevenue": 126000
+    },
+    {
+      "file": "прогнал\\TEST2_niokr.Z01",
+      "originalOrders": 7953,
+      "cloneOrders": 8048,
+      "orderMae": 11.88,
+      "sharesOnlyMae": 0.24,
+      "originalRevenue": 126000,
+      "cloneRevenue": 126000
+    },
+    {
+      "file": "прогнал\\TEST2_niokr_dif_prices.Z01",
+      "originalOrders": 5897,
+      "cloneOrders": 3579,
+      "orderMae": 290.5,
+      "sharesOnlyMae": 56.73,
+      "originalRevenue": 115470,
+      "cloneRevenue": 89680
+    },
+    {
+      "file": "прогнал\\TEST2_one_45.Z01",
+      "originalOrders": 3175,
+      "cloneOrders": 3212,
+      "orderMae": 4.63,
+      "sharesOnlyMae": 0,
+      "originalRevenue": 97725,
+      "cloneRevenue": 98865
+    },
+    {
+      "file": "прогнал\\TEST2_one_50.Z01",
+      "originalOrders": 3112,
+      "cloneOrders": 3155,
+      "orderMae": 5.38,
+      "sharesOnlyMae": 0.25,
+      "originalRevenue": 95820,
+      "cloneRevenue": 97130
+    },
+    {
+      "file": "прогнал\\TEST2_one_55.Z01",
+      "originalOrders": 3057,
+      "cloneOrders": 3108,
+      "orderMae": 6.38,
+      "sharesOnlyMae": 0.01,
+      "originalRevenue": 94110,
+      "cloneRevenue": 95690
+    },
+    {
+      "file": "прогнал\\TEST2_one_60.Z01",
+      "originalOrders": 3004,
+      "cloneOrders": 3058,
+      "orderMae": 6.75,
+      "sharesOnlyMae": 0.99,
+      "originalRevenue": 92460,
+      "cloneRevenue": 94230
+    },
+    {
+      "file": "прогнал\\TEST2_one_price_20.Z01",
+      "originalOrders": 3487,
+      "cloneOrders": 3506,
+      "orderMae": 2.38,
+      "sharesOnlyMae": 0.05,
+      "originalRevenue": 86100,
+      "cloneRevenue": 86520
+    },
+    {
+      "file": "прогнал\\TEST2_one_price_40.Z01",
+      "originalOrders": 3248,
+      "cloneOrders": 3265,
+      "orderMae": 2.13,
+      "sharesOnlyMae": 0.5,
+      "originalRevenue": 99750,
+      "cloneRevenue": 100290
+    },
+    {
+      "file": "прогнал\\TEST2_one_price_70.Z01",
+      "originalOrders": 2911,
+      "cloneOrders": 2962,
+      "orderMae": 6.38,
+      "sharesOnlyMae": 0.23,
+      "originalRevenue": 89530,
+      "cloneRevenue": 91140
+    },
+    {
+      "file": "прогнал\\TEST2_one_proce_100.Z01",
+      "originalOrders": 2673,
+      "cloneOrders": 2716,
+      "orderMae": 5.38,
+      "sharesOnlyMae": 0.23,
+      "originalRevenue": 82080,
+      "cloneRevenue": 83440
+    },
+    {
+      "file": "прогнал\\TEST2_prices.Z01",
+      "originalOrders": 2264,
+      "cloneOrders": 2034,
+      "orderMae": 28.75,
+      "sharesOnlyMae": 0.99,
+      "originalRevenue": 57465,
+      "cloneRevenue": 52580
+    },
+    {
+      "file": "прогнал\\TEST2_small.Z01",
+      "originalOrders": 3253,
+      "cloneOrders": 3293,
+      "orderMae": 5,
+      "sharesOnlyMae": 0.15,
+      "originalRevenue": 65250,
+      "cloneRevenue": 65400
+    }
+  ]
+}

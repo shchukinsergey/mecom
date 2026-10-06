@@ -1,0 +1,1376 @@
+{
+  "provenance": {
+    "exeSha256": "59127ff0fd88d89c437160c2a11f3cf3a6481aea9ac55b101714b90129290407",
+    "verificationSha256": "447f7bc1368ccb42caa4fbb2ace597aef9f3dea4d8d369fd0c1e9b7830bd64ed",
+    "verifierSha256": "05fb0327c9ea6917d08b5a860e4b7313672a1ba0c734c364ebe981de72ecff67",
+    "method": "EXE arithmetic transcription; executed decisions and native predecessor R&D/inventory. State-supplied demand verification, not full financial replay."
+  },
+  "reports": [
+    {
+      "path": "TEST2_10_50.Z01",
+      "latentMarketDemand": 3360
+    },
+    {
+      "path": "TEST2_15_45.Z01",
+      "latentMarketDemand": 3360
+    },
+    {
+      "path": "TEST2_20_40.Z01",
+      "latentMarketDemand": 3360
+    },
+    {
+      "path": "TEST2_25_35.Z01",
+      "latentMarketDemand": 3360
+    },
+    {
+      "path": "Новая папка\\TEST2_2_6.Z01",
+      "latentMarketDemand": 2216
+    },
+    {
+      "path": "Новая папка\\TEST2_3_5.Z01",
+      "latentMarketDemand": 2407
+    },
+    {
+      "path": "Новая папка\\TEST2_4_4.Z01",
+      "latentMarketDemand": 2645
+    },
+    {
+      "path": "Новая папка\\TEST2_5_3.Z01",
+      "latentMarketDemand": 2952
+    },
+    {
+      "path": "Новая папка\\TEST2_6_2.Z01",
+      "latentMarketDemand": 3360
+    },
+    {
+      "path": "прогнал\\TEST2_1.Z01",
+      "latentMarketDemand": 3360
+    },
+    {
+      "path": "прогнал\\TEST2_1_7.Z01",
+      "latentMarketDemand": 2060
+    },
+    {
+      "path": "прогнал\\TEST2_2_6.Z01",
+      "latentMarketDemand": 2407
+    },
+    {
+      "path": "прогнал\\TEST2_3_5.Z01",
+      "latentMarketDemand": 2519
+    },
+    {
+      "path": "прогнал\\TEST2_40_60.Z01",
+      "latentMarketDemand": 2216
+    },
+    {
+      "path": "прогнал\\TEST2_4_4.Z01",
+      "latentMarketDemand": 2645
+    },
+    {
+      "path": "прогнал\\TEST2_5_3.Z01",
+      "latentMarketDemand": 2788
+    },
+    {
+      "path": "прогнал\\TEST2_6_2.Z01",
+      "latentMarketDemand": 2952
+    },
+    {
+      "path": "прогнал\\TEST2_7_1.Z01",
+      "latentMarketDemand": 3932
+    },
+    {
+      "path": "прогнал\\TEST2_all_20.Z01",
+      "latentMarketDemand": 4790
+    },
+    {
+      "path": "прогнал\\TEST2_all_40.Z01",
+      "latentMarketDemand": 2645
+    },
+    {
+      "path": "прогнал\\TEST2_all_45.Z01",
+      "latentMarketDemand": 2407
+    },
+    {
+      "path": "прогнал\\TEST2_all_50.Z01",
+      "latentMarketDemand": 2216
+    },
+    {
+      "path": "прогнал\\TEST2_all_50_one_30.Z01",
+      "latentMarketDemand": 2306
+    },
+    {
+      "path": "прогнал\\TEST2_all_55.Z01",
+      "latentMarketDemand": 2060
+    },
+    {
+      "path": "прогнал\\TEST2_all_60.Z01",
+      "latentMarketDemand": 1930
+    },
+    {
+      "path": "прогнал\\TEST2_all_70.Z01",
+      "latentMarketDemand": 1726
+    },
+    {
+      "path": "прогнал\\TEST2_big.Z01",
+      "latentMarketDemand": 3360
+    },
+    {
+      "path": "прогнал\\TEST2_marketing.Z01",
+      "latentMarketDemand": 5763
+    },
+    {
+      "path": "прогнал\\TEST2_marketing2.Z02",
+      "latentMarketDemand": 5763
+    },
+    {
+      "path": "прогнал\\TEST2_niokr.Z01",
+      "latentMarketDemand": 7952
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2.Z02",
+      "latentMarketDemand": 9483
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2_50price.Z02",
+      "latentMarketDemand": 8339
+    },
+    {
+      "path": "прогнал\\TEST2_niokr2_70price.Z02",
+      "latentMarketDemand": 7848
+    },
+    {
+      "path": "прогнал\\TEST2_niokr_dif_prices.Z01",
+      "latentMarketDemand": 6652
+    },
+    {
+      "path": "прогнал\\TEST2_one_45.Z01",
+      "latentMarketDemand": 3192
+    },
+    {
+      "path": "прогнал\\TEST2_one_50.Z01",
+      "latentMarketDemand": 3140
+    },
+    {
+      "path": "прогнал\\TEST2_one_55.Z01",
+      "latentMarketDemand": 3090
+    },
+    {
+      "path": "прогнал\\TEST2_one_60.Z01",
+      "latentMarketDemand": 3042
+    },
+    {
+      "path": "прогнал\\TEST2_one_price_20.Z01",
+      "latentMarketDemand": 3484
+    },
+    {
+      "path": "прогнал\\TEST2_one_price_40.Z01",
+      "latentMarketDemand": 3246
+    },
+    {
+      "path": "прогнал\\TEST2_one_price_70.Z01",
+      "latentMarketDemand": 2952
+    },
+    {
+      "path": "прогнал\\TEST2_one_proce_100.Z01",
+      "latentMarketDemand": 2714
+    },
+    {
+      "path": "прогнал\\TEST2_prices.Z01",
+      "latentMarketDemand": 2355
+    },
+    {
+      "path": "прогнал\\TEST2_small.Z01",
+      "latentMarketDemand": 3251
+    }
+  ],
+  "saves": [
+    {
+      "name": "HERMES1.S00",
+      "sha256": "29c11d65b03a50a5369ccaf9f897cceef54861c4bd709482648e22433a737b59",
+      "periodIndex": 0,
+      "firmCount": 8,
+      "previousLeagueRnd": 0.0,
+      "weightedPrice": 30.0,
+      "rndStock": 3360.0,
+      "latentMarketDemand": 3360.0,
+      "modifiers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "weights": [
+        15.0,
+        70.0,
+        15.0
+      ],
+      "priceCutoff": 40.0,
+      "firms": [
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        }
+      ]
+    },
+    {
+      "name": "HERMES1.S01",
+      "sha256": "573f1d46d15f8b23b25290046432d1f1ff4b8134d65d2eb30a42f2a8ec78d06c",
+      "periodIndex": 1,
+      "firmCount": 8,
+      "previousLeagueRnd": 3360.0,
+      "weightedPrice": 32.827091217041016,
+      "rndStock": 25210.0,
+      "latentMarketDemand": 6102.0,
+      "modifiers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "weights": [
+        15.0,
+        70.0,
+        15.0
+      ],
+      "priceCutoff": 40.0,
+      "firms": [
+        {
+          "price": 30.0,
+          "production": 450.0,
+          "marketing": 2000.0,
+          "capexGross": 3000.0,
+          "rnd": 5000.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 5420.0,
+          "orders": 746.0
+        },
+        {
+          "price": 50.0,
+          "production": 420.0,
+          "marketing": 5000.0,
+          "capexGross": 5050.0,
+          "rnd": 7000.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 7420.0,
+          "orders": 341.0
+        },
+        {
+          "price": 24.0,
+          "production": 450.0,
+          "marketing": 3000.0,
+          "capexGross": 5000.0,
+          "rnd": 0.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 1103.0
+        },
+        {
+          "price": 28.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 2010.0,
+          "rnd": 5000.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 5420.0,
+          "orders": 854.0
+        },
+        {
+          "price": 42.0,
+          "production": 400.0,
+          "marketing": 7000.0,
+          "capexGross": 3000.0,
+          "rnd": 150.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 570.0,
+          "orders": 291.0
+        },
+        {
+          "price": 30.0,
+          "production": 460.0,
+          "marketing": 1300.0,
+          "capexGross": 1050.0,
+          "rnd": 1000.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 1420.0,
+          "orders": 590.0
+        },
+        {
+          "price": 35.0,
+          "production": 450.0,
+          "marketing": 3100.0,
+          "capexGross": 4000.0,
+          "rnd": 2700.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 3120.0,
+          "orders": 481.0
+        },
+        {
+          "price": 25.0,
+          "production": 420.0,
+          "marketing": 15000.0,
+          "capexGross": 24050.0,
+          "rnd": 1000.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 1420.0,
+          "orders": 1597.0
+        }
+      ]
+    },
+    {
+      "name": "HERMES1.S02",
+      "sha256": "31eb5ec68c53e398e09b396e43fea42c2e909df513f63034f696f1897a910d5b",
+      "periodIndex": 2,
+      "firmCount": 8,
+      "previousLeagueRnd": 25210.0,
+      "weightedPrice": 45.02760314941406,
+      "rndStock": 48989.0,
+      "latentMarketDemand": 5477.0,
+      "modifiers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "weights": [
+        15.0,
+        70.0,
+        15.0
+      ],
+      "priceCutoff": 40.0,
+      "firms": [
+        {
+          "price": 45.0,
+          "production": 460.0,
+          "marketing": 2000.0,
+          "capexGross": 3000.0,
+          "rnd": 3000.0,
+          "rndCumulativeBefore": 5420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 8420.0,
+          "orders": 365.0
+        },
+        {
+          "price": 49.0,
+          "production": 500.0,
+          "marketing": 6500.0,
+          "capexGross": 1250.0,
+          "rnd": 7000.0,
+          "rndCumulativeBefore": 7420.0,
+          "openingInventory": 79.0,
+          "rndCumulative": 14420.0,
+          "orders": 441.0
+        },
+        {
+          "price": 28.0,
+          "production": 500.0,
+          "marketing": 3000.0,
+          "capexGross": 5000.0,
+          "rnd": 0.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 1118.0
+        },
+        {
+          "price": 35.0,
+          "production": 439.0,
+          "marketing": 1050.0,
+          "capexGross": 2100.0,
+          "rnd": 10000.0,
+          "rndCumulativeBefore": 5420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 15420.0,
+          "orders": 799.0
+        },
+        {
+          "price": 80.0,
+          "production": 400.0,
+          "marketing": 10000.0,
+          "capexGross": 1000.0,
+          "rnd": 79.0,
+          "rndCumulativeBefore": 570.0,
+          "openingInventory": 109.0,
+          "rndCumulative": 649.0,
+          "orders": 76.0
+        },
+        {
+          "price": 34.0,
+          "production": 525.0,
+          "marketing": 850.0,
+          "capexGross": 2250.0,
+          "rnd": 1000.0,
+          "rndCumulativeBefore": 1420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 2420.0,
+          "orders": 627.0
+        },
+        {
+          "price": 75.0,
+          "production": 500.0,
+          "marketing": 2100.0,
+          "capexGross": 7000.0,
+          "rnd": 1700.0,
+          "rndCumulativeBefore": 3120.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 4820.0,
+          "orders": 77.0
+        },
+        {
+          "price": 27.0,
+          "production": 908.0,
+          "marketing": 10000.0,
+          "capexGross": 9760.0,
+          "rnd": 1000.0,
+          "rndCumulativeBefore": 1420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 2420.0,
+          "orders": 1686.0
+        }
+      ]
+    },
+    {
+      "name": "HERMES1.S03",
+      "sha256": "6f3cecd62258956bc39e0c5e2fbd5715abfd9ca8e154ba59bc23a19693cdc277",
+      "periodIndex": 3,
+      "firmCount": 8,
+      "previousLeagueRnd": 48989.0,
+      "weightedPrice": 46.19449234008789,
+      "rndStock": 67639.0,
+      "latentMarketDemand": 5312.0,
+      "modifiers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "weights": [
+        15.0,
+        70.0,
+        15.0
+      ],
+      "priceCutoff": 40.0,
+      "firms": [
+        {
+          "price": 35.0,
+          "production": 520.0,
+          "marketing": 2000.0,
+          "capexGross": 2500.0,
+          "rnd": 4000.0,
+          "rndCumulativeBefore": 8420.0,
+          "openingInventory": 95.0,
+          "rndCumulative": 12420.0,
+          "orders": 717.0
+        },
+        {
+          "price": 47.0,
+          "production": 500.0,
+          "marketing": 6500.0,
+          "capexGross": 1250.0,
+          "rnd": 3500.0,
+          "rndCumulativeBefore": 14420.0,
+          "openingInventory": 138.0,
+          "rndCumulative": 17920.0,
+          "orders": 500.0
+        },
+        {
+          "price": 34.0,
+          "production": 580.0,
+          "marketing": 3000.0,
+          "capexGross": 13000.0,
+          "rnd": 5000.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 5420.0,
+          "orders": 721.0
+        },
+        {
+          "price": 33.0,
+          "production": 459.0,
+          "marketing": 1000.0,
+          "capexGross": 1600.0,
+          "rnd": 4000.0,
+          "rndCumulativeBefore": 15420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 19420.0,
+          "orders": 875.0
+        },
+        {
+          "price": 80.0,
+          "production": 570.0,
+          "marketing": 200.0,
+          "capexGross": 500.0,
+          "rnd": 150.0,
+          "rndCumulativeBefore": 649.0,
+          "openingInventory": 433.0,
+          "rndCumulative": 799.0,
+          "orders": 27.0
+        },
+        {
+          "price": 37.0,
+          "production": 555.0,
+          "marketing": 1000.0,
+          "capexGross": 2310.0,
+          "rnd": 1000.0,
+          "rndCumulativeBefore": 2420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 3420.0,
+          "orders": 501.0
+        },
+        {
+          "price": 57.0,
+          "production": 590.0,
+          "marketing": 5000.0,
+          "capexGross": 120.0,
+          "rnd": 0.0,
+          "rndCumulativeBefore": 4820.0,
+          "openingInventory": 423.0,
+          "rndCumulative": 4820.0,
+          "orders": 182.0
+        },
+        {
+          "price": 27.0,
+          "production": 1055.0,
+          "marketing": 7000.0,
+          "capexGross": 15000.0,
+          "rnd": 1000.0,
+          "rndCumulativeBefore": 2420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 3420.0,
+          "orders": 1597.0
+        }
+      ]
+    },
+    {
+      "name": "HERMES1.S04",
+      "sha256": "7faa3aa264e7cb82f2fea2498a037a8e676ce9f4e0028a6ae35ad795364c4f09",
+      "periodIndex": 4,
+      "firmCount": 8,
+      "previousLeagueRnd": 67639.0,
+      "weightedPrice": 25.673694610595703,
+      "rndStock": 88269.0,
+      "latentMarketDemand": 7713.0,
+      "modifiers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "weights": [
+        15.0,
+        70.0,
+        15.0
+      ],
+      "priceCutoff": 40.0,
+      "firms": [
+        {
+          "price": 35.0,
+          "production": 550.0,
+          "marketing": 3000.0,
+          "capexGross": 3000.0,
+          "rnd": 4000.0,
+          "rndCumulativeBefore": 12420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 16420.0,
+          "orders": 339.0
+        },
+        {
+          "price": 44.0,
+          "production": 500.0,
+          "marketing": 8500.0,
+          "capexGross": 1250.0,
+          "rnd": 3000.0,
+          "rndCumulativeBefore": 17920.0,
+          "openingInventory": 138.0,
+          "rndCumulative": 20920.0,
+          "orders": 527.0
+        },
+        {
+          "price": 34.0,
+          "production": 800.0,
+          "marketing": 4000.0,
+          "capexGross": 10000.0,
+          "rnd": 10000.0,
+          "rndCumulativeBefore": 5420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 15420.0,
+          "orders": 381.0
+        },
+        {
+          "price": 31.0,
+          "production": 468.0,
+          "marketing": 1200.0,
+          "capexGross": 1800.0,
+          "rnd": 1000.0,
+          "rndCumulativeBefore": 19420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 20420.0,
+          "orders": 350.0
+        },
+        {
+          "price": 7.0,
+          "production": 500.0,
+          "marketing": 5.0,
+          "capexGross": 60.0,
+          "rnd": 30.0,
+          "rndCumulativeBefore": 799.0,
+          "openingInventory": 976.0,
+          "rndCumulative": 829.0,
+          "orders": 4937.0
+        },
+        {
+          "price": 37.0,
+          "production": 400.0,
+          "marketing": 700.0,
+          "capexGross": 1170.0,
+          "rnd": 800.0,
+          "rndCumulativeBefore": 3420.0,
+          "openingInventory": 54.0,
+          "rndCumulative": 4220.0,
+          "orders": 97.0
+        },
+        {
+          "price": 20.0,
+          "production": 590.0,
+          "marketing": 4000.0,
+          "capexGross": 500.0,
+          "rnd": 800.0,
+          "rndCumulativeBefore": 4820.0,
+          "openingInventory": 831.0,
+          "rndCumulative": 5620.0,
+          "orders": 586.0
+        },
+        {
+          "price": 29.0,
+          "production": 1355.0,
+          "marketing": 6000.0,
+          "capexGross": 25000.0,
+          "rnd": 1000.0,
+          "rndCumulativeBefore": 3420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 4420.0,
+          "orders": 444.0
+        }
+      ]
+    },
+    {
+      "name": "HERMES2.S00",
+      "sha256": "b64f701ba9cbcda63cde603af593bcc549c2651abe2acb0d4b172b5458836c6e",
+      "periodIndex": 0,
+      "firmCount": 8,
+      "previousLeagueRnd": 0.0,
+      "weightedPrice": 30.0,
+      "rndStock": 3360.0,
+      "latentMarketDemand": 3360.0,
+      "modifiers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "weights": [
+        15.0,
+        70.0,
+        15.0
+      ],
+      "priceCutoff": 40.0,
+      "firms": [
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 420.0,
+          "orders": 420.0
+        }
+      ]
+    },
+    {
+      "name": "HERMES2.S01",
+      "sha256": "cb3ec6c57bed25a336c107248968549fd18f37e714fce8f4cdd2380383bc280a",
+      "periodIndex": 1,
+      "firmCount": 8,
+      "previousLeagueRnd": 3360.0,
+      "weightedPrice": 30.0,
+      "rndStock": 51360.0,
+      "latentMarketDemand": 6682.0,
+      "modifiers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "weights": [
+        15.0,
+        70.0,
+        15.0
+      ],
+      "priceCutoff": 40.0,
+      "firms": [
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 6000.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 835.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 6000.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 835.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 6000.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 835.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 6000.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 835.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 6000.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 835.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 6000.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 835.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 6000.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 835.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 6000.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 835.0
+        }
+      ]
+    },
+    {
+      "name": "HERMES2.S02",
+      "sha256": "b6feabc9bcae10ca14cb6cc49202124bc7c7c1aed432dd3718833965b8c95ab6",
+      "periodIndex": 2,
+      "firmCount": 8,
+      "previousLeagueRnd": 51360.0,
+      "weightedPrice": 30.0,
+      "rndStock": 51360.0,
+      "latentMarketDemand": 5408.0,
+      "modifiers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "weights": [
+        15.0,
+        70.0,
+        15.0
+      ],
+      "priceCutoff": 40.0,
+      "firms": [
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 0.0,
+          "rndCumulativeBefore": 6420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 676.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 0.0,
+          "rndCumulativeBefore": 6420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 676.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 0.0,
+          "rndCumulativeBefore": 6420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 676.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 0.0,
+          "rndCumulativeBefore": 6420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 676.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 0.0,
+          "rndCumulativeBefore": 6420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 676.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 0.0,
+          "rndCumulativeBefore": 6420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 676.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 0.0,
+          "rndCumulativeBefore": 6420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 676.0
+        },
+        {
+          "price": 30.0,
+          "production": 420.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 0.0,
+          "rndCumulativeBefore": 6420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 6420.0,
+          "orders": 676.0
+        }
+      ]
+    },
+    {
+      "name": "TEST2.S00",
+      "sha256": "69e2dcc5af6bbf09dcd3b2c9b97c02849e602a0547c197568c7d98b0258a2ed0",
+      "periodIndex": 0,
+      "firmCount": 5,
+      "previousLeagueRnd": 0.0,
+      "weightedPrice": 30.0,
+      "rndStock": 3360.0,
+      "latentMarketDemand": 3360.0,
+      "modifiers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "weights": [
+        15.0,
+        70.0,
+        15.0
+      ],
+      "priceCutoff": 40.0,
+      "firms": [
+        {
+          "price": 30.0,
+          "production": 672.0,
+          "marketing": 1680.0,
+          "capexGross": 1680.0,
+          "rnd": 672.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 672.0,
+          "orders": 672.0
+        },
+        {
+          "price": 30.0,
+          "production": 672.0,
+          "marketing": 1680.0,
+          "capexGross": 1680.0,
+          "rnd": 672.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 672.0,
+          "orders": 672.0
+        },
+        {
+          "price": 30.0,
+          "production": 672.0,
+          "marketing": 1680.0,
+          "capexGross": 1680.0,
+          "rnd": 672.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 672.0,
+          "orders": 672.0
+        },
+        {
+          "price": 30.0,
+          "production": 672.0,
+          "marketing": 1680.0,
+          "capexGross": 1680.0,
+          "rnd": 672.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 672.0,
+          "orders": 672.0
+        },
+        {
+          "price": 30.0,
+          "production": 672.0,
+          "marketing": 1680.0,
+          "capexGross": 1680.0,
+          "rnd": 672.0,
+          "rndCumulativeBefore": 0.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 672.0,
+          "orders": 672.0
+        }
+      ]
+    },
+    {
+      "name": "TEST2.S01",
+      "sha256": "9fd6ef2b4afb94826031d7bad3e750469a6be1d0943fa11c5aa2b9aa1c9d1c6c",
+      "periodIndex": 1,
+      "firmCount": 8,
+      "previousLeagueRnd": 3360.0,
+      "weightedPrice": 30.0,
+      "rndStock": 6720.0,
+      "latentMarketDemand": 3360.0,
+      "modifiers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "weights": [
+        15.0,
+        70.0,
+        15.0
+      ],
+      "priceCutoff": 40.0,
+      "firms": [
+        {
+          "price": 10.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 840.0,
+          "orders": 762.0
+        },
+        {
+          "price": 10.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 840.0,
+          "orders": 762.0
+        },
+        {
+          "price": 10.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 840.0,
+          "orders": 762.0
+        },
+        {
+          "price": 10.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 840.0,
+          "orders": 762.0
+        },
+        {
+          "price": 50.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 840.0,
+          "orders": 62.0
+        },
+        {
+          "price": 50.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 840.0,
+          "orders": 62.0
+        },
+        {
+          "price": 50.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 840.0,
+          "orders": 62.0
+        },
+        {
+          "price": 50.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 840.0,
+          "orders": 62.0
+        }
+      ]
+    },
+    {
+      "name": "TEST2.S02",
+      "sha256": "42d3dfcb2ce266dc394d51a86cd217415490d2f28abc2e14092e08ffcfd34708",
+      "periodIndex": 2,
+      "firmCount": 8,
+      "previousLeagueRnd": 68431.0,
+      "weightedPrice": 70.0,
+      "rndStock": 133508.0,
+      "latentMarketDemand": 7848.0,
+      "modifiers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "weights": [
+        15.0,
+        70.0,
+        15.0
+      ],
+      "priceCutoff": 40.0,
+      "firms": [
+        {
+          "price": 70.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 1.0,
+          "rndCumulativeBefore": 420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 421.0,
+          "orders": 479.0
+        },
+        {
+          "price": 70.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 151.0,
+          "rndCumulativeBefore": 570.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 721.0,
+          "orders": 480.0
+        },
+        {
+          "price": 70.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 420.0,
+          "rndCumulativeBefore": 841.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 1261.0,
+          "orders": 483.0
+        },
+        {
+          "price": 70.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 1001.0,
+          "rndCumulativeBefore": 1420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 2421.0,
+          "orders": 489.0
+        },
+        {
+          "price": 70.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 2501.0,
+          "rndCumulativeBefore": 2920.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 5421.0,
+          "orders": 504.0
+        },
+        {
+          "price": 70.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 6001.0,
+          "rndCumulativeBefore": 6420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 12421.0,
+          "orders": 539.0
+        },
+        {
+          "price": 70.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 15001.0,
+          "rndCumulativeBefore": 15420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 30421.0,
+          "orders": 630.0
+        },
+        {
+          "price": 70.0,
+          "production": 525.0,
+          "marketing": 1050.0,
+          "capexGross": 1050.0,
+          "rnd": 40001.0,
+          "rndCumulativeBefore": 40420.0,
+          "openingInventory": 0.0,
+          "rndCumulative": 80421.0,
+          "orders": 882.0
+        }
+      ]
+    }
+  ]
+}

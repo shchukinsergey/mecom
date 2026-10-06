@@ -1,0 +1,39 @@
+{
+  "name": "mecom",
+  "version": "1.0.0",
+  "description": "Веб-симулятор деловой игры МЭКОМ (режим ведущего)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && tsc -p tsconfig.server.json && vite build && npm run build:server",
+    "build:server": "vite build --config vite.server.config.ts",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:server": "vitest run server",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "smoke": "node scripts/smoke.mjs",
+    "server": "node dist-server/index.js",
+    "start": "npm run build && npm run server",
+    "online:share": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/start-online.ps1"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "html-to-image": "^1.11.13",
+    "jszip": "^3.10.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^5.0.14"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^6.0.5",
+    "playwright-core": "^1.62.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.1",
+    "vitest": "^4.1.10"
+  }
+}

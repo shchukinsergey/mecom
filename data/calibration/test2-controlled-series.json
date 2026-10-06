@@ -1,0 +1,1549 @@
+{
+  "verifiedHashes": 46,
+  "controlNote": "Groups use same period, firm count, opening capacity/inventory/previous cumulative R&D and native demand-modifier/weight header. Not an assertion of identical full hidden state.",
+  "families": [
+    {
+      "varied": "price",
+      "count": 34,
+      "fixedInputs": [
+        1,
+        8,
+        "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___",
+        {
+          "capacity": [
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0
+          ],
+          "inventory": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rndPrevious": [
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0
+          ]
+        },
+        {
+          "capexGross": [
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0
+          ],
+          "marketing": [
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0
+          ],
+          "production": [
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0
+          ],
+          "rnd": [
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0
+          ]
+        }
+      ],
+      "members": [
+        {
+          "path": "TEST2_10_50.Z01",
+          "vector": [
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0
+          ],
+          "totalOrders": 3296.0
+        },
+        {
+          "path": "TEST2_15_45.Z01",
+          "vector": [
+            15.0,
+            15.0,
+            15.0,
+            15.0,
+            45.0,
+            45.0,
+            45.0,
+            45.0
+          ],
+          "totalOrders": 3316.0
+        },
+        {
+          "path": "TEST2_20_40.Z01",
+          "vector": [
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            40.0,
+            40.0,
+            40.0,
+            40.0
+          ],
+          "totalOrders": 3360.0
+        },
+        {
+          "path": "TEST2_25_35.Z01",
+          "vector": [
+            25.0,
+            25.0,
+            25.0,
+            25.0,
+            35.0,
+            35.0,
+            35.0,
+            35.0
+          ],
+          "totalOrders": 3360.0
+        },
+        {
+          "path": "Новая папка\\TEST2_2_6.Z01",
+          "vector": [
+            20.0,
+            20.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0
+          ],
+          "totalOrders": 2038.0
+        },
+        {
+          "path": "Новая папка\\TEST2_3_5.Z01",
+          "vector": [
+            20.0,
+            20.0,
+            20.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0
+          ],
+          "totalOrders": 2270.0
+        },
+        {
+          "path": "Новая папка\\TEST2_4_4.Z01",
+          "vector": [
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0
+          ],
+          "totalOrders": 2536.0
+        },
+        {
+          "path": "Новая папка\\TEST2_5_3.Z01",
+          "vector": [
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            60.0,
+            60.0,
+            60.0
+          ],
+          "totalOrders": 2866.0
+        },
+        {
+          "path": "Новая папка\\TEST2_6_2.Z01",
+          "vector": [
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            60.0,
+            60.0
+          ],
+          "totalOrders": 3298.0
+        },
+        {
+          "path": "прогнал\\TEST2_1_7.Z01",
+          "vector": [
+            20.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0
+          ],
+          "totalOrders": 1812.0
+        },
+        {
+          "path": "прогнал\\TEST2_2_6.Z01",
+          "vector": [
+            30.0,
+            30.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0
+          ],
+          "totalOrders": 2176.0
+        },
+        {
+          "path": "прогнал\\TEST2_3_5.Z01",
+          "vector": [
+            30.0,
+            30.0,
+            30.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0
+          ],
+          "totalOrders": 2345.0
+        },
+        {
+          "path": "прогнал\\TEST2_40_60.Z01",
+          "vector": [
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            40.0,
+            40.0,
+            40.0,
+            40.0
+          ],
+          "totalOrders": 2004.0
+        },
+        {
+          "path": "прогнал\\TEST2_4_4.Z01",
+          "vector": [
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0
+          ],
+          "totalOrders": 2516.0
+        },
+        {
+          "path": "прогнал\\TEST2_5_3.Z01",
+          "vector": [
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            50.0,
+            50.0,
+            50.0
+          ],
+          "totalOrders": 2693.0
+        },
+        {
+          "path": "прогнал\\TEST2_6_2.Z01",
+          "vector": [
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            50.0,
+            50.0
+          ],
+          "totalOrders": 2894.0
+        },
+        {
+          "path": "прогнал\\TEST2_7_1.Z01",
+          "vector": [
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            60.0
+          ],
+          "totalOrders": 3898.0
+        },
+        {
+          "path": "прогнал\\TEST2_all_20.Z01",
+          "vector": [
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            20.0
+          ],
+          "totalOrders": 4792.0
+        },
+        {
+          "path": "прогнал\\TEST2_all_40.Z01",
+          "vector": [
+            40.0,
+            40.0,
+            40.0,
+            40.0,
+            40.0,
+            40.0,
+            40.0,
+            40.0
+          ],
+          "totalOrders": 2648.0
+        },
+        {
+          "path": "прогнал\\TEST2_all_45.Z01",
+          "vector": [
+            45.0,
+            45.0,
+            45.0,
+            45.0,
+            45.0,
+            45.0,
+            45.0,
+            45.0
+          ],
+          "totalOrders": 2136.0
+        },
+        {
+          "path": "прогнал\\TEST2_all_50.Z01",
+          "vector": [
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0
+          ],
+          "totalOrders": 1776.0
+        },
+        {
+          "path": "прогнал\\TEST2_all_50_one_30.Z01",
+          "vector": [
+            30.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0
+          ],
+          "totalOrders": 1999.0
+        },
+        {
+          "path": "прогнал\\TEST2_all_55.Z01",
+          "vector": [
+            55.0,
+            55.0,
+            55.0,
+            55.0,
+            55.0,
+            55.0,
+            55.0,
+            55.0
+          ],
+          "totalOrders": 1496.0
+        },
+        {
+          "path": "прогнал\\TEST2_all_60.Z01",
+          "vector": [
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0
+          ],
+          "totalOrders": 1288.0
+        },
+        {
+          "path": "прогнал\\TEST2_all_70.Z01",
+          "vector": [
+            70.0,
+            70.0,
+            70.0,
+            70.0,
+            70.0,
+            70.0,
+            70.0,
+            70.0
+          ],
+          "totalOrders": 984.0
+        },
+        {
+          "path": "прогнал\\TEST2_one_45.Z01",
+          "vector": [
+            45.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0
+          ],
+          "totalOrders": 3175.0
+        },
+        {
+          "path": "прогнал\\TEST2_one_50.Z01",
+          "vector": [
+            50.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0
+          ],
+          "totalOrders": 3112.0
+        },
+        {
+          "path": "прогнал\\TEST2_one_55.Z01",
+          "vector": [
+            55.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0
+          ],
+          "totalOrders": 3057.0
+        },
+        {
+          "path": "прогнал\\TEST2_one_60.Z01",
+          "vector": [
+            60.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0
+          ],
+          "totalOrders": 3004.0
+        },
+        {
+          "path": "прогнал\\TEST2_one_price_20.Z01",
+          "vector": [
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            20.0
+          ],
+          "totalOrders": 3487.0
+        },
+        {
+          "path": "прогнал\\TEST2_one_price_40.Z01",
+          "vector": [
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            40.0
+          ],
+          "totalOrders": 3248.0
+        },
+        {
+          "path": "прогнал\\TEST2_one_price_70.Z01",
+          "vector": [
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            70.0
+          ],
+          "totalOrders": 2911.0
+        },
+        {
+          "path": "прогнал\\TEST2_one_proce_100.Z01",
+          "vector": [
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            100.0
+          ],
+          "totalOrders": 2673.0
+        },
+        {
+          "path": "прогнал\\TEST2_prices.Z01",
+          "vector": [
+            20.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            50.0,
+            70.0,
+            100.0
+          ],
+          "totalOrders": 2264.0
+        }
+      ]
+    },
+    {
+      "varied": "price",
+      "count": 2,
+      "fixedInputs": [
+        1,
+        8,
+        "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___",
+        {
+          "capacity": [
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0
+          ],
+          "inventory": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rndPrevious": [
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0,
+            420.0
+          ]
+        },
+        {
+          "capexGross": [
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0
+          ],
+          "marketing": [
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0
+          ],
+          "production": [
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0
+          ],
+          "rnd": [
+            0.0,
+            150.0,
+            421.0,
+            1000.0,
+            2500.0,
+            6000.0,
+            15000.0,
+            40000.0
+          ]
+        }
+      ],
+      "members": [
+        {
+          "path": "прогнал\\TEST2_niokr.Z01",
+          "vector": [
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0
+          ],
+          "totalOrders": 7953.0
+        },
+        {
+          "path": "прогнал\\TEST2_niokr_dif_prices.Z01",
+          "vector": [
+            20.0,
+            30.0,
+            40.0,
+            50.0,
+            60.0,
+            70.0,
+            80.0,
+            90.0
+          ],
+          "totalOrders": 5897.0
+        }
+      ]
+    },
+    {
+      "varied": "price",
+      "count": 3,
+      "fixedInputs": [
+        2,
+        8,
+        "___ ОС(+0) ВМ(+0) ВН(+0) _________________________________ 15% - 70% - 15% ___",
+        {
+          "capacity": [
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0
+          ],
+          "inventory": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rndPrevious": [
+            420.0,
+            570.0,
+            841.0,
+            1420.0,
+            2920.0,
+            6420.0,
+            15420.0,
+            40420.0
+          ]
+        },
+        {
+          "capexGross": [
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0
+          ],
+          "marketing": [
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0,
+            1050.0
+          ],
+          "production": [
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0,
+            525.0
+          ],
+          "rnd": [
+            1.0,
+            151.0,
+            420.0,
+            1001.0,
+            2501.0,
+            6001.0,
+            15001.0,
+            40001.0
+          ]
+        }
+      ],
+      "members": [
+        {
+          "path": "прогнал\\TEST2_niokr2.Z02",
+          "vector": [
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0
+          ],
+          "totalOrders": 9482.0
+        },
+        {
+          "path": "прогнал\\TEST2_niokr2_50price.Z02",
+          "vector": [
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0
+          ],
+          "totalOrders": 6671.0
+        },
+        {
+          "path": "прогнал\\TEST2_niokr2_70price.Z02",
+          "vector": [
+            70.0,
+            70.0,
+            70.0,
+            70.0,
+            70.0,
+            70.0,
+            70.0,
+            70.0
+          ],
+          "totalOrders": 4486.0
+        }
+      ]
+    }
+  ],
+  "priceControls": [
+    {
+      "path": "TEST2_10_50.Z01",
+      "prices": [
+        10.0,
+        10.0,
+        10.0,
+        10.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0
+      ],
+      "avgPrice": 30.0,
+      "nativeOrders": 3296.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 3378.3723660953074,
+      "candidatePriceOnlyOrders": 3394.9957831089323,
+      "existingAbsError": 82.37236609530737,
+      "candidateAbsError": 98.9957831089323
+    },
+    {
+      "path": "TEST2_15_45.Z01",
+      "prices": [
+        15.0,
+        15.0,
+        15.0,
+        15.0,
+        45.0,
+        45.0,
+        45.0,
+        45.0
+      ],
+      "avgPrice": 30.0,
+      "nativeOrders": 3316.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 3378.3723660953074,
+      "candidatePriceOnlyOrders": 3394.9957831089323,
+      "existingAbsError": 62.37236609530737,
+      "candidateAbsError": 78.9957831089323
+    },
+    {
+      "path": "TEST2_20_40.Z01",
+      "prices": [
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        40.0,
+        40.0,
+        40.0,
+        40.0
+      ],
+      "avgPrice": 30.0,
+      "nativeOrders": 3360.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 3378.3723660953074,
+      "candidatePriceOnlyOrders": 3394.9957831089323,
+      "existingAbsError": 18.37236609530737,
+      "candidateAbsError": 34.9957831089323
+    },
+    {
+      "path": "TEST2_25_35.Z01",
+      "prices": [
+        25.0,
+        25.0,
+        25.0,
+        25.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0
+      ],
+      "avgPrice": 30.0,
+      "nativeOrders": 3360.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 3378.3723660953074,
+      "candidatePriceOnlyOrders": 3394.9957831089323,
+      "existingAbsError": 18.37236609530737,
+      "candidateAbsError": 34.9957831089323
+    },
+    {
+      "path": "Новая папка\\TEST2_2_6.Z01",
+      "prices": [
+        20.0,
+        20.0,
+        60.0,
+        60.0,
+        60.0,
+        60.0,
+        60.0,
+        60.0
+      ],
+      "avgPrice": 50.0,
+      "nativeOrders": 2038.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 1775.0557117479473,
+      "candidatePriceOnlyOrders": 1774.5212807456935,
+      "existingAbsError": 262.94428825205273,
+      "candidateAbsError": 263.4787192543065
+    },
+    {
+      "path": "Новая папка\\TEST2_3_5.Z01",
+      "prices": [
+        20.0,
+        20.0,
+        20.0,
+        60.0,
+        60.0,
+        60.0,
+        60.0,
+        60.0
+      ],
+      "avgPrice": 45.0,
+      "nativeOrders": 2270.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 2134.4579177236074,
+      "candidatePriceOnlyOrders": 2133.8152784663225,
+      "existingAbsError": 135.54208227639265,
+      "candidateAbsError": 136.18472153367748
+    },
+    {
+      "path": "Новая папка\\TEST2_4_4.Z01",
+      "prices": [
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        60.0,
+        60.0,
+        60.0,
+        60.0
+      ],
+      "avgPrice": 40.0,
+      "nativeOrders": 2536.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 2623.0375701543453,
+      "candidatePriceOnlyOrders": 2658.5284550745564,
+      "existingAbsError": 87.0375701543453,
+      "candidateAbsError": 122.5284550745564
+    },
+    {
+      "path": "Новая папка\\TEST2_5_3.Z01",
+      "prices": [
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        60.0,
+        60.0,
+        60.0
+      ],
+      "avgPrice": 35.0,
+      "nativeOrders": 2866.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 2963.485078583257,
+      "candidatePriceOnlyOrders": 2978.067026023196,
+      "existingAbsError": 97.48507858325684,
+      "candidateAbsError": 112.06702602319592
+    },
+    {
+      "path": "Новая папка\\TEST2_6_2.Z01",
+      "prices": [
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        60.0,
+        60.0
+      ],
+      "avgPrice": 30.0,
+      "nativeOrders": 3298.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 3378.3723660953074,
+      "candidatePriceOnlyOrders": 3394.9957831089323,
+      "existingAbsError": 80.37236609530737,
+      "candidateAbsError": 96.9957831089323
+    },
+    {
+      "path": "прогнал\\TEST2_1_7.Z01",
+      "prices": [
+        20.0,
+        60.0,
+        60.0,
+        60.0,
+        60.0,
+        60.0,
+        60.0,
+        60.0
+      ],
+      "avgPrice": 55.0,
+      "nativeOrders": 1812.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 1502.3626886682691,
+      "candidatePriceOnlyOrders": 1501.9103596556417,
+      "existingAbsError": 309.63731133173087,
+      "candidateAbsError": 310.08964034435826
+    },
+    {
+      "path": "прогнал\\TEST2_2_6.Z01",
+      "prices": [
+        30.0,
+        30.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0
+      ],
+      "avgPrice": 45.0,
+      "nativeOrders": 2176.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 2134.4579177236074,
+      "candidatePriceOnlyOrders": 2133.8152784663225,
+      "existingAbsError": 41.54208227639265,
+      "candidateAbsError": 42.184721533677475
+    },
+    {
+      "path": "прогнал\\TEST2_3_5.Z01",
+      "prices": [
+        30.0,
+        30.0,
+        30.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0
+      ],
+      "avgPrice": 42.5,
+      "nativeOrders": 2345.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 2359.0050377221605,
+      "candidatePriceOnlyOrders": 2358.2947921685777,
+      "existingAbsError": 14.005037722160523,
+      "candidateAbsError": 13.294792168577715
+    },
+    {
+      "path": "прогнал\\TEST2_40_60.Z01",
+      "prices": [
+        60.0,
+        60.0,
+        60.0,
+        60.0,
+        40.0,
+        40.0,
+        40.0,
+        40.0
+      ],
+      "avgPrice": 50.0,
+      "nativeOrders": 2004.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 1775.0557117479473,
+      "candidatePriceOnlyOrders": 1774.5212807456935,
+      "existingAbsError": 228.94428825205273,
+      "candidateAbsError": 229.4787192543065
+    },
+    {
+      "path": "прогнал\\TEST2_4_4.Z01",
+      "prices": [
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0
+      ],
+      "avgPrice": 40.0,
+      "nativeOrders": 2516.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 2623.0375701543453,
+      "candidatePriceOnlyOrders": 2658.5284550745564,
+      "existingAbsError": 107.0375701543453,
+      "candidateAbsError": 142.5284550745564
+    },
+    {
+      "path": "прогнал\\TEST2_5_3.Z01",
+      "prices": [
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        50.0,
+        50.0,
+        50.0
+      ],
+      "avgPrice": 37.5,
+      "nativeOrders": 2693.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 2794.692342765191,
+      "candidatePriceOnlyOrders": 2808.4437387642843,
+      "existingAbsError": 101.69234276519092,
+      "candidateAbsError": 115.44373876428426
+    },
+    {
+      "path": "прогнал\\TEST2_6_2.Z01",
+      "prices": [
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        50.0,
+        50.0
+      ],
+      "avgPrice": 35.0,
+      "nativeOrders": 2894.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 2963.485078583257,
+      "candidatePriceOnlyOrders": 2978.067026023196,
+      "existingAbsError": 69.48507858325684,
+      "candidateAbsError": 84.06702602319592
+    },
+    {
+      "path": "прогнал\\TEST2_7_1.Z01",
+      "prices": [
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        60.0
+      ],
+      "avgPrice": 25.0,
+      "nativeOrders": 3898.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 3944.678156350184,
+      "candidatePriceOnlyOrders": 3964.0881037661748,
+      "existingAbsError": 46.678156350184054,
+      "candidateAbsError": 66.08810376617475
+    },
+    {
+      "path": "прогнал\\TEST2_all_20.Z01",
+      "prices": [
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        20.0,
+        20.0
+      ],
+      "avgPrice": 20.0,
+      "nativeOrders": 4792.0,
+      "uniform": true,
+      "training": true,
+      "existingPriceOnlyOrders": 4768,
+      "candidatePriceOnlyOrders": 4792,
+      "existingAbsError": 24.0,
+      "candidateAbsError": 0.0
+    },
+    {
+      "path": "прогнал\\TEST2_all_40.Z01",
+      "prices": [
+        40.0,
+        40.0,
+        40.0,
+        40.0,
+        40.0,
+        40.0,
+        40.0,
+        40.0
+      ],
+      "avgPrice": 40.0,
+      "nativeOrders": 2648.0,
+      "uniform": true,
+      "training": false,
+      "existingPriceOnlyOrders": 2624,
+      "candidatePriceOnlyOrders": 2656,
+      "existingAbsError": 24.0,
+      "candidateAbsError": 8.0
+    },
+    {
+      "path": "прогнал\\TEST2_all_45.Z01",
+      "prices": [
+        45.0,
+        45.0,
+        45.0,
+        45.0,
+        45.0,
+        45.0,
+        45.0,
+        45.0
+      ],
+      "avgPrice": 45.0,
+      "nativeOrders": 2136.0,
+      "uniform": true,
+      "training": false,
+      "existingPriceOnlyOrders": 2136,
+      "candidatePriceOnlyOrders": 2136,
+      "existingAbsError": 0.0,
+      "candidateAbsError": 0.0
+    },
+    {
+      "path": "прогнал\\TEST2_all_50.Z01",
+      "prices": [
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0
+      ],
+      "avgPrice": 50.0,
+      "nativeOrders": 1776.0,
+      "uniform": true,
+      "training": true,
+      "existingPriceOnlyOrders": 1776,
+      "candidatePriceOnlyOrders": 1776,
+      "existingAbsError": 0.0,
+      "candidateAbsError": 0.0
+    },
+    {
+      "path": "прогнал\\TEST2_all_50_one_30.Z01",
+      "prices": [
+        30.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0,
+        50.0
+      ],
+      "avgPrice": 47.5,
+      "nativeOrders": 1999.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 1941.7605751792323,
+      "candidatePriceOnlyOrders": 1941.1759529369774,
+      "existingAbsError": 57.23942482076768,
+      "candidateAbsError": 57.82404706302259
+    },
+    {
+      "path": "прогнал\\TEST2_all_55.Z01",
+      "prices": [
+        55.0,
+        55.0,
+        55.0,
+        55.0,
+        55.0,
+        55.0,
+        55.0,
+        55.0
+      ],
+      "avgPrice": 55.0,
+      "nativeOrders": 1496.0,
+      "uniform": true,
+      "training": false,
+      "existingPriceOnlyOrders": 1504,
+      "candidatePriceOnlyOrders": 1504,
+      "existingAbsError": 8.0,
+      "candidateAbsError": 8.0
+    },
+    {
+      "path": "прогнал\\TEST2_all_60.Z01",
+      "prices": [
+        60.0,
+        60.0,
+        60.0,
+        60.0,
+        60.0,
+        60.0,
+        60.0,
+        60.0
+      ],
+      "avgPrice": 60.0,
+      "nativeOrders": 1288.0,
+      "uniform": true,
+      "training": false,
+      "existingPriceOnlyOrders": 1288,
+      "candidatePriceOnlyOrders": 1288,
+      "existingAbsError": 0.0,
+      "candidateAbsError": 0.0
+    },
+    {
+      "path": "прогнал\\TEST2_all_70.Z01",
+      "prices": [
+        70.0,
+        70.0,
+        70.0,
+        70.0,
+        70.0,
+        70.0,
+        70.0,
+        70.0
+      ],
+      "avgPrice": 70.0,
+      "nativeOrders": 984.0,
+      "uniform": true,
+      "training": true,
+      "existingPriceOnlyOrders": 984,
+      "candidatePriceOnlyOrders": 984,
+      "existingAbsError": 0.0,
+      "candidateAbsError": 0.0
+    },
+    {
+      "path": "прогнал\\TEST2_one_45.Z01",
+      "prices": [
+        45.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0
+      ],
+      "avgPrice": 31.875,
+      "nativeOrders": 3175.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 3208.6911625683565,
+      "candidatePriceOnlyOrders": 3224.479656400064,
+      "existingAbsError": 33.6911625683565,
+      "candidateAbsError": 49.47965640006396
+    },
+    {
+      "path": "прогнал\\TEST2_one_50.Z01",
+      "prices": [
+        50.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0
+      ],
+      "avgPrice": 32.5,
+      "nativeOrders": 3112.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 3156.165190987037,
+      "candidatePriceOnlyOrders": 3171.6952286644128,
+      "existingAbsError": 44.16519098703702,
+      "candidateAbsError": 59.69522866441275
+    },
+    {
+      "path": "прогнал\\TEST2_one_55.Z01",
+      "prices": [
+        55.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0
+      ],
+      "avgPrice": 33.125,
+      "nativeOrders": 3057.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 3105.4752950876746,
+      "candidatePriceOnlyOrders": 3120.7559110949087,
+      "existingAbsError": 48.47529508767457,
+      "candidateAbsError": 63.7559110949087
+    },
+    {
+      "path": "прогнал\\TEST2_one_60.Z01",
+      "prices": [
+        60.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0
+      ],
+      "avgPrice": 33.75,
+      "nativeOrders": 3004.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 3056.524434449849,
+      "candidatePriceOnlyOrders": 3071.5641857798423,
+      "existingAbsError": 52.524434449849196,
+      "candidateAbsError": 67.56418577984232
+    },
+    {
+      "path": "прогнал\\TEST2_one_price_20.Z01",
+      "prices": [
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        20.0
+      ],
+      "avgPrice": 28.75,
+      "nativeOrders": 3487.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 3502.8247600172385,
+      "candidatePriceOnlyOrders": 3520.060550037247,
+      "existingAbsError": 15.824760017238532,
+      "candidateAbsError": 33.06055003724714
+    },
+    {
+      "path": "прогнал\\TEST2_one_price_40.Z01",
+      "prices": [
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        40.0
+      ],
+      "avgPrice": 31.25,
+      "nativeOrders": 3248.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 3263.1577113468393,
+      "candidatePriceOnlyOrders": 3279.214210020975,
+      "existingAbsError": 15.157711346839278,
+      "candidateAbsError": 31.21421002097486
+    },
+    {
+      "path": "прогнал\\TEST2_one_price_70.Z01",
+      "prices": [
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        70.0
+      ],
+      "avgPrice": 35.0,
+      "nativeOrders": 2911.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 2963.485078583257,
+      "candidatePriceOnlyOrders": 2978.067026023196,
+      "existingAbsError": 52.485078583256836,
+      "candidateAbsError": 67.06702602319592
+    },
+    {
+      "path": "прогнал\\TEST2_one_proce_100.Z01",
+      "prices": [
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        100.0
+      ],
+      "avgPrice": 38.75,
+      "nativeOrders": 2673.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 2717.875956776417,
+      "candidatePriceOnlyOrders": 2731.2493746607865,
+      "existingAbsError": 44.87595677641684,
+      "candidateAbsError": 58.24937466078654
+    },
+    {
+      "path": "прогнал\\TEST2_prices.Z01",
+      "prices": [
+        20.0,
+        25.0,
+        30.0,
+        35.0,
+        40.0,
+        50.0,
+        70.0,
+        100.0
+      ],
+      "avgPrice": 46.25,
+      "nativeOrders": 2264.0,
+      "uniform": false,
+      "training": false,
+      "existingPriceOnlyOrders": 2034.5293345428377,
+      "candidatePriceOnlyOrders": 2033.9167816273557,
+      "existingAbsError": 229.47066545716234,
+      "candidateAbsError": 230.0832183726443
+    }
+  ],
+  "limitedCurveHypothesis": {
+    "training": [
+      "прогнал\\TEST2_all_20.Z01",
+      "прогнал\\TEST2_all_50.Z01",
+      "прогнал\\TEST2_all_70.Z01"
+    ],
+    "lowExponent": 0.85,
+    "highExponent": 1.75,
+    "breakpoint": 40,
+    "lowCoeff": 61149.41487073203,
+    "highCoeff": 1668317.554279971,
+    "metrics": {
+      "uniformHeldout": {
+        "n": 4,
+        "existingMae": 8.0,
+        "candidateMae": 4.0
+      },
+      "mixedHeldout": {
+        "n": 27,
+        "existingMae": 87.32601471379618,
+        "candidateMae": 100.01505342506032
+      }
+    },
+    "accepted": false,
+    "reason": "Uniform-only coefficient adjustment must not be shipped if independent mixtures worsen. Price-only rows omit allocation/clipping, isolating market-volume assumptions."
+  }
+}

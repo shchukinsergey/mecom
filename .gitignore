@@ -1,0 +1,17 @@
+node_modules/
+dist/
+scripts/screenshots/
+scripts/dosbox/screenshots/
+*.local
+.DS_Store
+dist-server/
+data/server-state.json
+лиги/
+mecom-Test_period-p9.json
+test2/
+.claude/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
