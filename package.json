@@ -14,7 +14,9 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "smoke": "node scripts/smoke.mjs",
+    "smoke:rooms": "node scripts/rooms-smoke.mjs",
     "server": "node dist-server/index.js",
+    "package:amvera": "node scripts/package-amvera.mjs",
     "start": "npm run build && npm run server",
     "online:share": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/start-online.ps1"
   },

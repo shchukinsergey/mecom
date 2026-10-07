@@ -9,7 +9,7 @@ import { chromium } from 'playwright-core';
 import { mkdirSync, readFileSync } from 'node:fs';
 import JSZip from 'jszip';
 
-const URL = process.env.MECOM_URL ?? 'http://127.0.0.1:5173/';
+const URL = (process.env.MECOM_URL ?? 'http://127.0.0.1:5173/').replace(/#.*$/, '') + '#local';
 const SHOTS = process.env.MECOM_SHOTS ?? 'scripts/screenshots';
 mkdirSync(SHOTS, { recursive: true });
 
@@ -46,7 +46,7 @@ function contrastRatio(foreground, background) {
 }
 
 const browser = await chromium.launch({
-  channel: 'chrome',
+  channel: process.env.MECOM_BROWSER_CHANNEL ?? 'chrome',
   args: ['--no-sandbox'],
 });
 const page = await browser.newPage({ viewport: { width: 1500, height: 1000 } });

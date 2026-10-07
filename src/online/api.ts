@@ -1,3 +1,4 @@
+import { accountRequest } from './roomsApi';
 import type { LeagueSnapshot } from '../state/persistence';
 import type { FirmDecision, FirmOpeningState, LeagueConfig, PeriodMacroParams, FirmPeriodResult } from '../engine/types';
 
@@ -36,7 +37,16 @@ export const updateMacro = (token: string, id: string, macro: Partial<PeriodMacr
 export const calculateGame = (token: string, id: string) => request<OnlineGame>(`/admin/games/${encodeURIComponent(id)}/calculate`, { method: 'POST', headers: adminHeaders(token) });
 export const rotateRejoinToken = (token: string, id: string, firmId: string) => request<{ rejoinToken: string }>(`/admin/games/${encodeURIComponent(id)}/firms/${encodeURIComponent(firmId)}/rejoin-token`, { method: 'POST', headers: adminHeaders(token) });
 export const kickFirm = (token: string, id: string, firmId: string) => request<{ ok: true }>(`/admin/games/${encodeURIComponent(id)}/firms/${encodeURIComponent(firmId)}`, { method: 'DELETE', headers: adminHeaders(token) });
-export const getPlayerMe = (token: string) => request<PlayerMe>('/player/me', { headers: playerHeaders(token) });
-export const saveDecision = (token: string, decision: Partial<FirmDecision>) => request<void>('/player/decision', { method: 'PUT', headers: playerHeaders(token), body: JSON.stringify(decision) });
-export const submitDecision = (token: string) => request<void>('/player/submit', { method: 'POST', headers: playerHeaders(token) });
-export const getGameStatus = (token: string, id: string) => request<GameStatus>(`/games/${encodeURIComponent(id)}/status`, { headers: playerHeaders(token) });
+const accountPath = (token: string) => `/rooms/${encodeURIComponent(token.slice('account:'.length))}`;
+export const getPlayerMe = (token: string) => token.startsWith('account:') ? accountRequest<PlayerMe>(`${accountPath(token)}/me`) : request<PlayerMe>('/player/me', { headers: playerHeaders(token) });
+export const saveDecision = (token: string, decision: Partial<FirmDecision>, expectedPeriod?: number) => {
+  if (!token.startsWith('account:')) return request<void>('/player/decision', { method: 'PUT', headers: playerHeaders(token), body: JSON.stringify(decision) });
+  if (!Number.isInteger(expectedPeriod) || expectedPeriod! < 0) return Promise.reject(new Error('Не указан текущий период. Обновите страницу.'));
+  return accountRequest<void>(`${accountPath(token)}/decision`, { method: 'PUT', body: JSON.stringify({ periodIndex: expectedPeriod, decision }) });
+};
+export const submitDecision = (token: string, expectedPeriod?: number) => {
+  if (!token.startsWith('account:')) return request<void>('/player/submit', { method: 'POST', headers: playerHeaders(token) });
+  if (!Number.isInteger(expectedPeriod) || expectedPeriod! < 0) return Promise.reject(new Error('Не указан текущий период. Обновите страницу.'));
+  return accountRequest<void>(`${accountPath(token)}/submit`, { method: 'POST', body: JSON.stringify({ periodIndex: expectedPeriod }) });
+};
+export const getGameStatus = (token: string, id: string) => token.startsWith('account:') ? accountRequest<GameStatus>(`${accountPath(token)}/status`) : request<GameStatus>(`/games/${encodeURIComponent(id)}/status`, { headers: playerHeaders(token) });

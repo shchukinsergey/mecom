@@ -56,8 +56,9 @@ try {
 
   $env:MECOM_ADMIN_TOKEN = $AdminToken
   $env:MECOM_SERVER_PORT = [string]$Port
+  $env:MECOM_MODE = 'legacy'
   try { $Server = Start-Process -FilePath 'node.exe' -ArgumentList @('dist-server/index.js') -WorkingDirectory $ProjectRoot -PassThru -WindowStyle Hidden -RedirectStandardOutput $ServerOut -RedirectStandardError $ServerErr }
-  finally { Remove-Item Env:MECOM_ADMIN_TOKEN, Env:MECOM_SERVER_PORT -ErrorAction SilentlyContinue }
+  finally { Remove-Item Env:MECOM_ADMIN_TOKEN, Env:MECOM_SERVER_PORT, Env:MECOM_MODE -ErrorAction SilentlyContinue }
   $Healthy = $false
   for ($i = 0; $i -lt 45; $i++) {
     $Server.Refresh()

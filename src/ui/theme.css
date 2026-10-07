@@ -1,3 +1,25 @@
+/* Account rooms */
+.room-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.room-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; margin: 20px 0; }
+.room-list .online-card { margin: 0; }
+.room-auth { max-width: 540px; margin: 30px auto; }
+.room-auth label, .room-settings label { display: block; font-weight: 600; margin-top: 12px; }
+.room-warning { color: var(--warn); background: #fff7e6; padding: 14px; border-radius: 10px; }
+.room-settings { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 14px; padding: 12px 0; }
+.room-share { display: flex; gap: 8px; }
+.room-share input { min-width: 0; }
+.room-roster { list-style: none; padding: 0; }
+.room-roster li { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--border); padding: 12px 0; }
+.room-owner { border-top: 1px solid var(--border); margin-top: 22px; padding-top: 12px; }
+.room-modal-backdrop { position: fixed; inset: 0; z-index: 100; background: #10182899; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.room-modal { width: min(100%, 680px); max-height: 90vh; overflow: auto; box-shadow: 0 20px 80px #10182866; }
+.online-page fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.online-page details { margin: 18px 0; }
+.online-page summary { cursor: pointer; font-weight: 600; }
+button[aria-pressed='true'] { background: var(--accent); color: white; border-color: var(--accent); }
+button:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 560px) { .room-share { flex-direction: column; } .room-modal-backdrop { padding: 10px; } }
+
 /* Светлая нейтральная тема; отчёты сохраняют моноширинную вёрстку. */
 
 :root {

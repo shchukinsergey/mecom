@@ -4,12 +4,14 @@ import { LeagueList } from './screens/LeagueList';
 import { LeagueSetup } from './screens/LeagueSetup';
 import { PeriodScreen } from './screens/PeriodScreen';
 import { HistoryScreen } from './screens/HistoryScreen';
+import { OnlineRooms } from './screens/OnlineRooms';
 import { OnlineAdmin } from './screens/OnlineAdmin';
 import { OnlinePlayer } from './screens/OnlinePlayer';
 import { parseAdminBootstrap } from '../online/adminAccess';
 
 type AppRoute =
   | { kind: 'local' }
+  | { kind: 'rooms' }
   | { kind: 'admin'; gameId?: string; adminToken?: string; publicOrigin?: string }
   | { kind: 'player'; inviteToken?: string; rejoinToken?: string };
 
@@ -25,7 +27,8 @@ function routeFromHash(): AppRoute {
   if (hash === 'play') return { kind: 'player' };
   if (hash.startsWith('join/')) return { kind: 'player', inviteToken: hash.slice('join/'.length) };
   if (hash.startsWith('firm/')) return { kind: 'player', rejoinToken: hash.slice('firm/'.length) };
-  return { kind: 'local' };
+  if (hash === 'local') return { kind: 'local' };
+  return { kind: 'rooms' };
 }
 
 export function App() {
@@ -39,6 +42,8 @@ export function App() {
     window.addEventListener('hashchange', updateRoute);
     return () => window.removeEventListener('hashchange', updateRoute);
   }, []);
+
+  if (route.kind === 'rooms') return <OnlineRooms onLocal={() => { window.location.hash = 'local'; }} />;
 
   if (route.kind === 'admin') {
     return <OnlineAdmin initialGameId={route.gameId} initialAdminToken={route.adminToken} initialPublicOrigin={route.publicOrigin} onBack={() => { window.location.hash = ''; }} />;
@@ -59,7 +64,7 @@ export function App() {
         <h1>М Э К О М</h1>
         <span className="hint">режим ведущего</span>
         <div className="spacer" />
-        <button onClick={() => { window.location.hash = 'admin'; }}>Онлайн-игра</button>
+        <button onClick={() => { window.location.hash = 'rooms'; }}>Онлайн-комнаты</button>
 
         {snapshot && (
           <>
