@@ -1,4 +1,4 @@
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 import { mkdtemp, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -199,6 +199,115 @@ test("room authorization, link visibility, membership and public DTO privacy", a
     "closed",
   );
 });
+test("last submission advances exactly once without early advancement", async () => {
+  const { owner, a, b, route } = await game();
+  await call(route + "/start", "POST", {}, owner);
+  const id = route.split("/").at(-1)!;
+  for (const cookie of [a, b])
+    expect((await call(route + "/decision", "PUT", { periodIndex: 1, decision: conservative }, cookie)).status).toBe(200);
+  expect((await call(route + "/submit", "POST", { periodIndex: 1 }, a)).status).toBe(200);
+  expect(db.room(id)!.snapshot.league.results).toHaveLength(1);
+  const responses = await Promise.all([
+    call(route + "/submit", "POST", { periodIndex: 1 }, b),
+    call(route + "/submit", "POST", { periodIndex: 1 }, b),
+  ]);
+  expect(responses.map(r => r.status).sort()).toEqual([200, 409]);
+  const room = db.room(id)!;
+  expect(room.snapshot.league.results).toHaveLength(2);
+  expect(room.phase).toBe("collecting");
+  expect(room.members.every(m => !m.submitted && m.decision === null)).toBe(true);
+  expect(Object.values(room.snapshot.league.confirmedByPeriod[1])).toEqual([true, true]);
+  expect((await call(route + "/calculate", "POST", { periodIndex: 1, force: false }, owner)).status).toBe(409);
+});
+
+test("ongoing five-member period three survives restart and final submission persists period four", async () => {
+  const { owner, a, b, route } = await game();
+  const c = await register("Gamma"), d = await register("Delta");
+  for (const [cookie, firmName] of [[owner, "Host firm"], [c, "Three"], [d, "Four"]])
+    expect((await call(route + "/join", "POST", { firmName }, cookie)).status).toBe(200);
+  const players = [a, b, owner, c, d];
+  await call(route + "/start", "POST", {}, owner);
+  for (let i = 1; i < 3; i++) {
+    for (const cookie of players)
+      expect((await call(route + "/decision", "PUT", { periodIndex: i, decision: conservative }, cookie)).status).toBe(200);
+    expect((await call(route + "/calculate", "POST", { periodIndex: i, force: true }, owner)).status).toBe(200);
+  }
+  for (const cookie of players)
+    expect((await call(route + "/decision", "PUT", { periodIndex: 3, decision: conservative }, cookie)).status).toBe(200);
+  for (const cookie of players.slice(0, 4))
+    expect((await call(route + "/submit", "POST", { periodIndex: 3 }, cookie)).status).toBe(200);
+  const id = route.split("/").at(-1)!;
+  const before = db.room(id)!;
+  expect(before.snapshot.league.results).toHaveLength(3);
+  expect(before.members.filter(m => m.submitted)).toHaveLength(4);
+  const restart = async () => {
+    await new Promise<void>(resolve => server.close(() => resolve()));
+    db.close();
+    db = new RoomDatabase(join(directory, "rooms.sqlite"));
+    server = createAccountServer(db);
+    await listenAccounts(server, 0);
+    base = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
+  };
+  await restart();
+  expect(db.room(id)).toEqual(before);
+  expect((await call(route + "/me", "GET", undefined, d)).body.currentPeriodIndex).toBe(3);
+  expect((await call(route + "/submit", "POST", { periodIndex: 3 }, d)).status).toBe(200);
+  const advanced = db.room(id)!;
+  expect(advanced.snapshot.league.results).toHaveLength(4);
+  expect(advanced.snapshot.league.results.slice(0, 3)).toEqual(before.snapshot.league.results);
+  expect(advanced.members.every(m => !m.submitted && m.decision === null)).toBe(true);
+  await restart();
+  expect(db.room(id)).toEqual(advanced);
+  expect((await call(route + "/submit", "POST", { periodIndex: 3 }, d)).status).toBe(409);
+  const me = (await call(route + "/me", "GET", undefined, d)).body;
+  expect(me.currentPeriodIndex).toBe(4);
+  expect(me.reports).toHaveLength(4);
+  expect(me.recentResults.every((f: { firmId: string }) => f.firmId === me.firmId)).toBe(true);
+  const dto = (await call(route, "GET", undefined, a)).body;
+  for (const firm of dto.firms)
+    expect(Object.keys(firm).sort()).toEqual(["firmId", "firmName", "submitted", "currentRif"].sort());
+});
+
+test("invalid submitted budget prevents last-submit calculation and leaves flags unchanged", async () => {
+  const { owner, a, b, route } = await game();
+  await call(route + "/start", "POST", {}, owner);
+  const id = route.split("/").at(-1)!;
+  for (const cookie of [a, b])
+    await call(route + "/decision", "PUT", { periodIndex: 1, decision: conservative }, cookie);
+  await call(route + "/submit", "POST", { periodIndex: 1 }, a);
+  db.transaction(() => {
+    const room = db.room(id)!;
+    room.members[0].decision = { ...conservative, marketing: 50000, rnd: 50000, capexGross: 50000 };
+    db.saveRoom(room);
+  });
+  const before = db.room(id);
+  expect((await call(route + "/submit", "POST", { periodIndex: 1 }, b)).status).toBe(409);
+  expect(db.room(id)).toEqual(before);
+});
+
+test("calculation write failure rolls back final submission, results and audit", async () => {
+  const { owner, a, b, route } = await game();
+  await call(route + "/start", "POST", {}, owner);
+  const id = route.split("/").at(-1)!;
+  for (const cookie of [a, b])
+    await call(route + "/decision", "PUT", { periodIndex: 1, decision: conservative }, cookie);
+  await call(route + "/submit", "POST", { periodIndex: 1 }, a);
+  const before = db.room(id);
+  const writeAudit = db.audit.bind(db);
+  const audit = vi.spyOn(db, "audit");
+  audit.mockImplementationOnce((...args) => { writeAudit(...args); throw new Error("synthetic write failure"); });
+  expect((await call(route + "/submit", "POST", { periodIndex: 1 }, b)).status).toBe(500);
+  expect(db.room(id)).toEqual(before);
+  audit.mockRestore();
+  expect((await call(route + "/submit", "POST", { periodIndex: 1 }, b)).status).toBe(200);
+  const raw = new (await import("node:sqlite")).DatabaseSync(join(directory, "rooms.sqlite"));
+  try {
+    const rows = raw.prepare("SELECT period_index, forced, affected_firms FROM audit WHERE room_id=?").all(id);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ period_index: 1, forced: 0, affected_firms: "[]" });
+  } finally { raw.close(); }
+});
+
 test("full eight-period game persists private histories and rejects stale parallel calculations", async () => {
   const { owner, a, b, route } = await game();
   await call(route + "/start", "POST", {}, owner);
@@ -225,7 +334,7 @@ test("full eight-period game persists private histories and rejects stale parall
       expect(
         (await call(route + "/submit", "POST", { periodIndex: i }, cookie))
           .status,
-      ).toBe(200);
+      ).toBe(cookie === a ? 200 : 409);
       expect(
         (
           await call(
@@ -237,10 +346,11 @@ test("full eight-period game persists private histories and rejects stale parall
         ).status,
       ).toBe(409);
     }
+    expect((await call(route, "GET", undefined, owner)).body.currentPeriodIndex).toBe(i + 1);
     expect(
       (await call(route + "/calculate-preview", "GET", undefined, owner)).body
         .canCalculate,
-    ).toBe(true);
+    ).toBe(false);
     const responses = await Promise.all([
       call(
         route + "/calculate",
@@ -255,7 +365,7 @@ test("full eight-period game persists private histories and rejects stale parall
         owner,
       ),
     ]);
-    expect(responses.map((r) => r.status).sort()).toEqual([200, 409]);
+    expect(responses.map((r) => r.status).sort()).toEqual([409, 409]);
   }
   const me = (await call(route + "/me", "GET", undefined, a)).body;
   expect(me.phase).toBe("complete");

@@ -317,6 +317,41 @@ function preview(room: StoredRoom): CalculatePreview {
     firms,
   };
 }
+// Both automatic submission and the owner's fallback run inside db.transaction.
+function calculate(room: StoredRoom, db: RoomDatabase, force: boolean): void {
+  const p = preview(room);
+  if (force ? !p.canForce : !p.canCalculate)
+    throw new HttpError(409, "Valid decisions required");
+  const i = period(room), l = room.snapshot.league;
+  const decisions = Object.fromEntries(
+    room.members.map(m => [m.firmId, { ...(m.decision ?? previous(room, m))!, firmId: m.firmId }]),
+  );
+  const confirmed = Object.fromEntries(room.members.map(m => [m.firmId, m.submitted]));
+  const affected = room.members.filter(m => !m.submitted).map(m => m.firmId);
+  const result = computePeriod({
+    periodIndex: i,
+    config: l.config,
+    macro: l.macroByPeriod[i],
+    firms: l.firms,
+    opening: room.snapshot.opening,
+    decisions,
+    previousIndustry: l.results.at(-1)?.industry,
+  });
+  l.decisionsByPeriod[i] = decisions;
+  l.confirmedByPeriod[i] = confirmed;
+  l.results.push(result);
+  room.snapshot.opening = nextOpeningState(room.snapshot.opening, result);
+  for (const m of room.members) {
+    m.decision = null;
+    m.submitted = false;
+  }
+  if (i + 1 >= 8) room.phase = "complete";
+  else {
+    l.decisionsByPeriod[i + 1] = {};
+    l.confirmedByPeriod[i + 1] = {};
+  }
+  db.audit(room.id, i, force, affected);
+}
 function initialize(room: StoredRoom): void {
   const l = room.snapshot.league;
   l.firms = room.members.map((m) => ({
@@ -539,53 +574,17 @@ async function handle(
         if (!valid(room, m, m.decision))
           throw new HttpError(409, "Save a valid current decision first");
         m.submitted = true;
+        if (room.members.every(member => member.submitted))
+          calculate(room, db, false);
       }
       db.saveRoom(room);
       return { ok: true };
     } else if (action === "calculate") {
       owner(room, user);
-      const i = current(room, b);
+      current(room, b);
       if (typeof b.force !== "boolean")
         throw new HttpError(400, "force must be boolean");
-      const p = preview(room);
-      if (b.force ? !p.canForce : !p.canCalculate)
-        throw new HttpError(409, "Valid decisions required");
-      const l = room.snapshot.league;
-      const decisions = Object.fromEntries(
-        room.members.map((m) => [
-          m.firmId,
-          { ...(m.decision ?? previous(room, m))!, firmId: m.firmId },
-        ]),
-      );
-      const confirmed = Object.fromEntries(
-        room.members.map((m) => [m.firmId, m.submitted]),
-      );
-      const affected = room.members
-        .filter((m) => !m.submitted)
-        .map((m) => m.firmId);
-      const result = computePeriod({
-        periodIndex: i,
-        config: l.config,
-        macro: l.macroByPeriod[i],
-        firms: l.firms,
-        opening: room.snapshot.opening,
-        decisions,
-        previousIndustry: l.results.at(-1)?.industry,
-      });
-      l.decisionsByPeriod[i] = decisions;
-      l.confirmedByPeriod[i] = confirmed;
-      l.results.push(result);
-      room.snapshot.opening = nextOpeningState(room.snapshot.opening, result);
-      for (const m of room.members) {
-        m.decision = null;
-        m.submitted = false;
-      }
-      if (i + 1 >= 8) room.phase = "complete";
-      else {
-        l.decisionsByPeriod[i + 1] = {};
-        l.confirmedByPeriod[i + 1] = {};
-      }
-      db.audit(room.id, i, b.force, affected);
+      calculate(room, db, b.force);
     }
     db.saveRoom(room);
     return detail(room, user);

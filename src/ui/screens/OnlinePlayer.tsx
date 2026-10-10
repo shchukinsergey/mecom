@@ -10,6 +10,7 @@ import { OnlinePeriodSummary } from '../components/OnlinePeriodSummary';
 import { OnlineFirmRoster } from '../components/OnlineFirmRoster';
 import { getPlayerInsights } from '../../online/playerInsights';
 import { computeCapex } from '../../engine/capex';
+import { ProductionCapacityButton } from '../components/ProductionCapacityButton';
 
 export interface OnlinePlayerProps { initialInviteToken?: string; initialRejoinToken?: string; accountRoomId?: string; onUnauthorized?: () => void; onBack: () => void; }
 const money = (value: number) => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }).format(value) + ' $';
@@ -109,6 +110,7 @@ export function OnlinePlayer({ initialInviteToken, initialRejoinToken, accountRo
         return <div className={`field online-decision-field${fieldErrors[key] ? ' invalid' : ''}`} key={key} role="group" aria-labelledby={labelId}>
           <label id={labelId} htmlFor={`player-${key}`}>{label}{key === 'price' ? ' · $ за штуку' : key === 'production' ? ' · шт.' : ' · $'}</label>
           <input id={`player-${key}`} type="number" min="0" step={key === 'production' ? '1' : 'any'} max={key === 'production' && me?.openingState ? me.openingState.machines : key === 'price' ? undefined : '50000'} required aria-invalid={Boolean(fieldErrors[key])} aria-describedby={describedBy} onChange={e => { dirtyRef.current = true; setForm(v => ({...v,[key]:e.target.value})); }} value={form[key]} disabled={loading || me?.submitted || me?.phase !== 'collecting'} />
+          {key === 'production' && <ProductionCapacityButton capacity={me?.openingState?.machines} disabled={loading || Boolean(me?.submitted) || me?.phase !== 'collecting'} onSelect={production => { dirtyRef.current = true; setForm(v => ({ ...v, production: String(production) })); }} />}
           {fieldErrors[key] && <p className="decision-field-error" id={errorId}>{fieldErrors[key]}</p>}
           <DecisionFieldHelp field={key} id={helpId} />
         </div>;
