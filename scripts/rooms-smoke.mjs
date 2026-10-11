@@ -62,11 +62,13 @@ async function joinFirm(page, firm, owner = false) {
   await page.getByRole('button', { name: owner ? 'Играть самому' : 'Присоединиться', exact: true }).click();
   await page.locator('#join-firm').fill(firm);
   await page.getByRole('button', { name: 'Создать фирму', exact: true }).click();
-  await page.getByRole('heading', { name: 'Кабинет участника', exact: true }).waitFor();
+  await page.locator('.player-cabinet').waitFor();
+  await page.getByRole('heading', { name: firm, exact: true }).waitFor();
 }
 async function openPlayer(page) {
   const button = page.getByRole('button', { name: 'Открыть мой кабинет', exact: true });
   if (await button.count()) await button.click();
+  await page.getByRole('tab', { name: 'Решения', exact: true }).click();
   await page.locator('#player-price:not(:disabled)').waitFor();
 }
 async function decision(page, submit) {
@@ -102,6 +104,10 @@ try {
   await a.page.getByRole('button', { name: 'Принудительный расчёт…', exact: true }).waitFor();
   await b.page.reload();
   await decision(a.page, true); await decision(b.page, false);
+  await a.page.getByRole('tab', { name: 'Обзор', exact: true }).click();
+  await a.page.getByRole('heading', { name: 'Как идёт игра', exact: true }).waitFor();
+  assert.equal(await a.page.locator('main').count(), 1);
+  await a.page.getByRole('button', { name: 'На главную', exact: true }).click();
   assert.equal(await a.page.getByRole('button', { name: 'Рассчитать период — все готовы', exact: true }).isDisabled(), true);
   checked('Period zero reports, own decisions, normal calculation blocked while friend is not ready');
   await a.page.getByRole('button', { name: 'Принудительный расчёт…', exact: true }).click();
@@ -119,7 +125,7 @@ try {
   await decision(a.page, true); await decision(b.page, true);
   // Readiness is intentionally polled. Reload to avoid timing assumptions.
   await a.page.reload();
-  await a.page.getByRole('button', { name: 'Рассчитать период — все готовы', exact: true }).click();
+  assert.equal(await a.page.getByRole('button', { name: 'Рассчитать период — все готовы', exact: true }).isDisabled(), true);
   await a.page.waitForFunction(() => document.body.innerText.includes('период 3'));
   const ownerMe = (await api(a.context, `/rooms/${id}/me`)).body;
   const friendMe = (await api(b.context, `/rooms/${id}/me`)).body;
@@ -128,7 +134,7 @@ try {
   assert(friendMe.recentResults.every(result => result.firmId === friendMe.firmId));
   const roomData = (await api(a.context, `/rooms/${id}`)).body;
   assert(!('snapshot' in roomData)); assert(roomData.firms.every(firm => !('decision' in firm)));
-  checked('Normal calculation and private report histories; no rival private data in owner DTO');
+  checked('Automatic calculation on final submission and private report histories; no rival private data in owner DTO');
   await register(outsider.page, 'smoke_outsider');
   assert.equal((await api(outsider.context, `/rooms/${id}/me`)).status, 403);
   assert.equal((await api(b.context, `/rooms/${id}/calculate`, 'POST', { periodIndex: 3, force: true })).status, 403);
@@ -140,6 +146,7 @@ try {
   assert(!(await api(outsider.context, '/rooms?scope=open')).body.rooms.some(room => room.id === hidden.body.id));
   assert.equal((await api(outsider.context, `/rooms/${hidden.body.id}`)).status, 200);
   checked('Link-only room excluded from public catalogue and accessible by shared link');
+  await b.page.getByRole('button', { name: 'На главную', exact: true }).click();
   await b.page.getByRole('button', { name: 'Выйти', exact: true }).click();
   await b.page.locator('#account-login').fill('SMOKE_FRIEND');
   await b.page.locator('#account-password').fill('Disposable-test-password-42');

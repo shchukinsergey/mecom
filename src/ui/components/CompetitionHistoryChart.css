@@ -1,0 +1,58 @@
+.competition-history { min-width: 0; background: var(--bg-panel, #fff); border: 1px solid var(--border, #e1e6ef); border-radius: 18px; padding: 26px; color: var(--text, #172033); }
+.competition-history__header { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+.competition-history__eyebrow { font-size: 10px; letter-spacing: .13em; font-weight: 750; color: var(--text-dim, #667085); }
+.competition-history .competition-history__header h2 { font-size: clamp(24px, 3vw, 32px); letter-spacing: -.04em; line-height: 1.15; margin: 8px 0; }
+.competition-history__header p, .competition-history__hint { margin: 8px 0 0; color: var(--text-dim, #667085); font-size: 12px; }
+.competition-history__completed { color: #16836a; background: #eff9f5; padding: 6px 10px; border-radius: 8px; font-size: 11px; white-space: nowrap; }
+.competition-history__metrics { display: flex; flex-wrap: wrap; gap: 6px; margin: 22px 0; }
+.competition-history .competition-history__metrics button { border-radius: 9px; padding: 8px 12px; font-size: 12px; font-weight: 650; background: #f6f8fb; border-color: transparent; color: var(--text-dim, #667085); }
+.competition-history .competition-history__metrics button[aria-pressed='true'] { background: #172033; color: #fff; border-color: #172033; }
+.competition-history__summary { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 20px; padding: 18px 0; border-top: 1px solid var(--border, #e1e6ef); border-bottom: 1px solid var(--border, #e1e6ef); margin-bottom: 24px; }
+.competition-history__summary > div { min-width: 0; }
+.competition-history__summary span { font-size: 12px; color: var(--text-dim, #667085); }
+.competition-history__summary strong { display: block; font-size: clamp(20px, 2.5vw, 26px); font-weight: 700; letter-spacing: -.025em; margin-top: 6px; font-variant-numeric: tabular-nums; }
+.competition-history .competition-history__badge { display: inline-block; background: #edf2ff; color: #3469d6; font-size: 10px; font-weight: 750; padding: 2px 6px; border-radius: 5px; margin-right: 7px; }
+.competition-history .competition-history__positive { color: #16836a; }
+.competition-history .competition-history__negative { color: #c43d4b; }
+.competition-history__chart { width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
+.competition-history__chart svg { display: block; width: 100%; height: 320px; }
+.competition-history__chart text { font-family: inherit; font-size: 13px; fill: var(--text-dim, #667085); }
+.competition-history__chart .competition-history__axis-title { font-size: 12px; font-weight: 650; }
+.competition-history__grid { stroke: var(--border, #e1e6ef); stroke-dasharray: 3 5; vector-effect: non-scaling-stroke; }
+.competition-history__zero { stroke: #9ca8bc; vector-effect: non-scaling-stroke; }
+.competition-history__cursor { stroke: #c2cad8; stroke-dasharray: 4 5; pointer-events: none; }
+.competition-history__chart rect[role='button'] { cursor: crosshair; }
+.competition-history__chart rect:focus-visible { outline: none; stroke: var(--accent, #0052ff); stroke-width: 2; stroke-dasharray: 4 4; }
+.competition-history__legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 18px; }
+.competition-history .competition-history__legend button { display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px; font-size: 12px; border-radius: 8px; background: var(--bg-panel, #fff); color: var(--text, #172033); border: 1px solid var(--border, #e1e6ef); }
+.competition-history .competition-history__legend button[aria-pressed='true'] { background: var(--bg-panel, #fff); color: var(--text, #172033); border-color: var(--border, #e1e6ef); }
+.competition-history .competition-history__legend .competition-history__hidden-team { opacity: .5; text-decoration: line-through; }
+.competition-history__swatch { display: inline-block; width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.competition-history__values { border: 1px solid var(--border, #e1e6ef); border-radius: 12px; background: #f8fafc; padding: 14px 16px; }
+.competition-history__values > strong { font-size: 13px; }
+.competition-history__values > strong span { font-weight: 400; color: var(--text-dim, #667085); }
+.competition-history__values dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px 24px; margin: 12px 0 0; }
+.competition-history__values dl > div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 12px; }
+.competition-history__values dt { display: flex; align-items: center; gap: 7px; overflow-wrap: anywhere; }
+.competition-history__values dd { margin: 0; font-weight: 650; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.competition-history__table { margin-top: 14px; font-size: 12px; }
+.competition-history__table summary { cursor: pointer; color: var(--text-dim, #667085); }
+.competition-history__table > div { overflow-x: auto; margin-top: 12px; }
+.competition-history__table table { width: 100%; border-collapse: collapse; }
+.competition-history__table caption { text-align: left; font-weight: 650; margin-bottom: 8px; }
+.competition-history__table td, .competition-history__table th { padding: 8px 12px; border-bottom: 1px solid var(--border, #e1e6ef); text-align: left; white-space: nowrap; }
+.competition-history__empty { display: grid; place-content: center; min-height: 250px; text-align: center; color: var(--text-dim, #667085); padding: 20px; border: 1px dashed var(--border, #e1e6ef); border-radius: 12px; }
+.competition-history button:focus-visible, .competition-history summary:focus-visible { outline: 3px solid var(--accent, #0052ff); outline-offset: 3px; }
+@media (max-width: 640px) {
+  .competition-history { padding: 18px 14px; border-radius: 14px; }
+  .competition-history__completed { display: none; }
+  .competition-history__metrics { margin: 18px 0; }
+  .competition-history .competition-history__metrics button { padding: 7px 9px; font-size: 11px; }
+  .competition-history__summary { grid-template-columns: 1fr 1fr; gap: 14px; }
+  .competition-history__summary > div:first-child { grid-column: 1 / -1; }
+  .competition-history__summary strong { font-size: 21px; }
+  .competition-history__chart svg { height: 250px; }
+  .competition-history__chart text { font-size: 12px; }
+  .competition-history__chart .competition-history__axis-title { font-size: 12px; }
+  .competition-history__values dl { grid-template-columns: 1fr; }
+}

@@ -4,10 +4,11 @@ import { ProductionCapacityButton } from './ProductionCapacityButton';
 import { createElement } from 'react';
 import { OnlinePlayer } from '../screens/OnlinePlayer';
 
-test('player renders the shortcut beside production, disabled before opening state loads', () => {
+test('player waits for opening state before exposing decision controls', () => {
   const html = renderToStaticMarkup(createElement(OnlinePlayer, { accountRoomId: 'synthetic-room', onBack: () => {} }));
-  expect(html).toContain('80% мощности');
-  expect(html).toMatch(/id="player-production"[\s\S]*?<button type="button" disabled="">80% мощности<\/button>/);
+  expect(html).toContain('Загружаем вашу компанию');
+  expect(html).not.toContain('id="player-production"');
+  expect(html).not.toContain('80% мощности');
 });
 
 test.each([[525, 420], [526, 421], [0, 0], [0.8, 0], [1, 1]])('capacity %s selects integer production %s on click only', (capacity, expected) => {

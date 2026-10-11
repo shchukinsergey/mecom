@@ -73,6 +73,10 @@ describe('online game engine HTTP integration', () => {
       expect.objectContaining({ firmId: first.firmId, firmName: 'North', submitted: false, currentRif: expect.any(Number) }),
       expect.objectContaining({ firmId: second.firmId, firmName: 'South', submitted: false, currentRif: expect.any(Number) }),
     ]));
+    expect(status.history).toEqual((await repository.read()).games[created.gameId].snapshot!.league.results.map(p => ({
+      periodIndex: p.periodIndex,
+      firms: p.firms.map(f => ({ firmId: f.firmId, firmName: f.firmName, rif: f.rif.total, netProfit: f.netProfit, marketShareSold: f.marketShareSold, revenue: f.revenue, retainedEarnings: f.retainedEarnings })),
+    })));
     expect(JSON.stringify(status)).not.toContain('rejoinToken');
     for (const headers of [firstHeaders, secondHeaders]) {
       expect((await fetch(`${base}/api/player/decision`, { method: 'PUT', headers, body: JSON.stringify(decision) })).status).toBe(200);
@@ -83,6 +87,11 @@ describe('online game engine HTTP integration', () => {
     const calculatedResult = await json(calculated);
     expect(calculatedResult.firms).toHaveLength(2);
     const updatedStatus = await json(await fetch(`${base}/api/games/${created.gameId}/status`, { headers: firstHeaders }));
+    expect(updatedStatus.history).toEqual((await repository.read()).games[created.gameId].snapshot!.league.results.map(p => ({
+      periodIndex: p.periodIndex,
+      firms: p.firms.map(f => ({ firmId: f.firmId, firmName: f.firmName, rif: f.rif.total, netProfit: f.netProfit, marketShareSold: f.marketShareSold, revenue: f.revenue, retainedEarnings: f.retainedEarnings })),
+    })));
+    expect(updatedStatus.history.map((p: { periodIndex: number }) => p.periodIndex)).toEqual([0, 1]);
     for (const result of calculatedResult.firms) {
       expect(updatedStatus.firms).toEqual(expect.arrayContaining([
         expect.objectContaining({ firmId: result.firmId, currentRif: result.rif.total }),

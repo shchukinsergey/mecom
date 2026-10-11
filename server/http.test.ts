@@ -3,6 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { createLocalServer, listenLocal } from './http.ts';
+import type { GameStatus } from '../src/online/api.ts';
 import { JsonRepository } from './repository.ts';
 
 let directory = '';
@@ -134,8 +135,10 @@ describe('local HTTP API', () => {
     expect((await fetch(path, { method: 'DELETE', headers: auth })).status).toBe(200);
     expect((await fetch(`${base}/api/player/me`, { headers: { 'x-mecom-player': target.rejoinToken } })).status).toBe(401);
 
-    const status = await (await fetch(`${base}/api/games/${game.gameId}/status`, { headers: { 'x-mecom-player': remaining.rejoinToken } })).json() as { firms: { firmId: string }[] };
+    const status = await (await fetch(`${base}/api/games/${game.gameId}/status`, { headers: { 'x-mecom-player': remaining.rejoinToken } })).json() as GameStatus;
     expect(status.firms.map(firm => firm.firmId)).toEqual([remaining.firmId]);
+    expect(status.history?.map(p => p.periodIndex)).toEqual([0]);
+    expect(status.history?.[0].firms.map(firm => firm.firmId)).toEqual([target.firmId, remaining.firmId]);
     const state = await (await fetch(`${base}/api/state`, { headers: auth })).json() as {
       games: Record<string, { snapshot: { league: { firms: { id: string }[]; decisionsByPeriod: Record<string, unknown>[] } } }>;
     };

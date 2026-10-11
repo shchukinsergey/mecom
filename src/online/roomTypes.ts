@@ -1,6 +1,19 @@
 import type { OnlineGameSettings } from './gameSettings';
 import type { PeriodMacroParams } from '../engine/types';
 
+export interface PublicHistoryPeriod {
+  periodIndex: number;
+  firms: Array<{
+    firmId: string;
+    firmName: string;
+    rif: number;
+    netProfit: number;
+    marketShareSold: number;
+    revenue: number;
+    retainedEarnings: number;
+  }>;
+}
+
 export interface AccountUser { id: string; login: string; }
 export type RoomVisibility = 'public' | 'link';
 export type RoomPhase = 'lobby' | 'collecting' | 'complete' | 'closed';

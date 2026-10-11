@@ -10,6 +10,7 @@ import type { League, PeriodMacroParams } from '../src/engine/types.ts';
 import { makeFirmDecision, makeFirmStart, makeMacroParams, DEFAULT_LEAGUE_CONFIG } from '../src/engine/config.ts';
 import { computePeriod, initialOpeningState, nextOpeningState } from '../src/engine/computePeriod.ts';
 import { renderFirmExport } from '../src/report/index.ts';
+import { buildPublicHistory } from './publicHistory.ts';
 import { validateOnlineDecision } from './decisionValidation.ts';
 
 const MAX_BODY_BYTES = 1_048_576;
@@ -109,7 +110,7 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, repo: Js
       submitted: f.submitted,
       // RIF is already published for every firm in the industry report; expose only that score.
       currentRif: latestResults?.find(result => result.firmId === f.firmId)?.rif.total ?? null,
-    })) });
+    })), history: buildPublicHistory(own.snapshot?.league.results ?? []) });
   }
   const adminGameMatch = path.match(/^\/api\/admin\/games\/([^/]+)$/);
   if (req.method === 'GET' && adminGameMatch) { requireAdmin(req, admin); const g = (await repo.read()).games[adminGameMatch[1]]; if (!g) throw new ApiError(404, 'Game not found'); return sendJson(res, 200, adminDto(g)); }

@@ -199,6 +199,42 @@ test("room authorization, link visibility, membership and public DTO privacy", a
     "closed",
   );
 });
+test("status returns all saved public history to members and owner only", async () => {
+  const { owner, a, outsider, route } = await game();
+  expect((await call(route + "/status", "GET", undefined, a)).body.history).toEqual([]);
+  expect((await call(route + "/start", "POST", {}, owner)).status).toBe(200);
+  expect((await call(route + "/calculate", "POST", { periodIndex: 1, force: true }, owner)).status).toBe(200);
+  const id = route.split("/").at(-1)!;
+  const room = db.room(id)!;
+  // Seed a saved historical firm absent from the current roster.
+  for (const p of room.snapshot.league.results) {
+    p.firms.push({ ...structuredClone(p.firms[1]), firmId: "removed-historical", firmName: "Saved removed" });
+  }
+  const saved = structuredClone(room.snapshot.league.results);
+  const removed = { firmId: "removed-historical" };
+  db.transaction(() => db.saveRoom(room));
+  const expectedHistory = saved.map(p => ({
+    periodIndex: p.periodIndex,
+    firms: p.firms.map(f => ({
+      firmId: f.firmId, firmName: f.firmName, rif: f.rif.total,
+      netProfit: f.netProfit, marketShareSold: f.marketShareSold,
+      revenue: f.revenue, retainedEarnings: f.retainedEarnings,
+    })),
+  }));
+  for (const cookie of [a, owner]) {
+    const response = await call(route + "/status", "GET", undefined, cookie);
+    expect(response.status).toBe(200);
+    expect(response.body.history).toEqual(expectedHistory);
+    expect(Object.keys(response.body).sort()).toEqual(["gameId", "phase", "currentPeriodIndex", "firms", "history"].sort());
+    expect(response.body.currentPeriodIndex).toBe(2);
+    expect(response.body.firms.map((f: { firmId: string }) => f.firmId)).not.toContain(removed.firmId);
+    expect(response.body.history.map((p: { periodIndex: number }) => p.periodIndex)).toEqual([0, 1]);
+  }
+  expect((await call(route + "/status")).status).toBe(401);
+  expect((await call(route + "/status", "GET", undefined, outsider)).status).toBe(403);
+  expect(db.room(id)!.snapshot.league.results).toEqual(saved);
+});
+
 test("last submission advances exactly once without early advancement", async () => {
   const { owner, a, b, route } = await game();
   await call(route + "/start", "POST", {}, owner);

@@ -33,6 +33,7 @@ import {
 } from "../src/engine/computePeriod.ts";
 import { renderIndustryReport, renderFirmExport } from "../src/report/index.ts";
 import { validDecision, type Decision } from "./repository.ts";
+import { buildPublicHistory } from "./publicHistory.ts";
 import { validateOnlineDecision } from "./decisionValidation.ts";
 export interface AccountServerOptions {
   webRoot?: string;
@@ -505,6 +506,7 @@ async function handle(
         phase: room.phase,
         currentPeriodIndex: period(room),
         firms: publicFirms(room),
+        history: buildPublicHistory(room.snapshot.league.results),
       };
       return send(res, 200, status);
     }

@@ -1,4 +1,5 @@
 import { accountRequest } from './roomsApi';
+import type { PublicHistoryPeriod } from './roomTypes';
 import type { LeagueSnapshot } from '../state/persistence';
 import type { FirmDecision, FirmOpeningState, LeagueConfig, PeriodMacroParams, FirmPeriodResult } from '../engine/types';
 
@@ -7,7 +8,7 @@ export interface OnlineFirm { firmId: string; firmName: string; submitted: boole
 export interface OnlineGame { gameId: string; name: string; inviteToken?: string; inviteTokenHash?: string; open: boolean; phase: 'lobby' | 'collecting' | 'complete' | 'closed'; firms: Array<{firmId:string;firmName:string;submitted:boolean;decision?:Partial<FirmDecision>|null}>; snapshot?: LeagueSnapshot | null; }
 export interface PlayerMe { gameId: string; firmId: string; firmName: string; phase: 'lobby' | 'collecting' | 'complete' | 'closed'; currentPeriodIndex: number; submitted: boolean; decision?: Partial<FirmDecision> | null; openingState?: FirmOpeningState | null; periodMacro?: PeriodMacroParams | null; config?: LeagueConfig | null; recentResults?: FirmPeriodResult[]; report?: string | null; reports?: Array<{ periodIndex: number; report: string }>; }
 export interface JoinResult { gameId: string; firmId: string; firmName: string; rejoinToken: string; }
-export interface GameStatus { gameId: string; phase: 'lobby' | 'collecting' | 'complete' | 'closed'; currentPeriodIndex: number; firms: OnlineFirm[]; }
+export interface GameStatus { gameId: string; phase: 'lobby' | 'collecting' | 'complete' | 'closed'; currentPeriodIndex: number; firms: OnlineFirm[]; history?: PublicHistoryPeriod[]; }
 export type ApiError = Error & { status?: number };
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   let response: Response;
