@@ -19,7 +19,9 @@ export interface PlayerDecisionsProps {
   onSave: () => void;
   onSubmit: () => void;
 }
-const format = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 });
+const format = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 });
+const decimalFormat = new Intl.NumberFormat('en-US', { useGrouping: false, maximumFractionDigits: 2 });
+const roundedMoney = (value: number) => Number(decimalFormat.format(value));
 const money = (value: number) => `${format.format(value)} $`;
 const quantity = (value: number) => `${format.format(value)} шт.`;
 const signedMoney = (value: number) => `${value > 0 ? '+' : ''}${money(value)}`;
@@ -42,13 +44,30 @@ function CapacityCard({ production, capacity }: { production: number | null; cap
 }
 
 function FundingVisual({ view, budget, capexCapacity }: { view: ReturnType<typeof buildFundingView>; budget: DecisionBudget; capexCapacity: number | undefined }) {
+  // Allocate displayed rounding to the residual, not to both credit parts.
+  // Native amounts and bar proportions remain untouched.
+  const ordinaryAvailable = roundedMoney(view.ordinaryRemaining);
+  const expressAvailable = view.availableCredit - ordinaryAvailable;
+  const ordinaryNeeded = roundedMoney(view.ordinaryUsed);
+  const expressNeeded = roundedMoney(view.ordinaryUsed + view.expressUsed) - ordinaryNeeded;
+  const fundingSegments = view.fundingSegments.map(segment => ({ ...segment, value: segment.key === 'base' ? ordinaryNeeded : segment.key === 'extra' ? expressNeeded : segment.value }));
   return <div className={`pc-funding pc-funding-state-${view.classification}`} data-funding-status={view.classification}>
-    <div className="pc-metrics pc-budget-metrics"><div><span>Всего расходов</span><strong>{money(view.totalSpending)}</strong></div><div><span>Текущие ресурсы</span><strong>{money(view.resourcesAvailable)}</strong></div></div>
-    <h4>Источники покрытия расходов</h4>
-    <div className="pc-track pc-funding-track" role="progressbar" aria-label="Покрытие входного бюджета" aria-valuemin={0} aria-valuemax={100} aria-valuenow={view.coveragePercent} aria-valuetext={`${view.status}; свои средства ${money(view.cashUsed)}; обычный кредит ${money(view.ordinaryUsed)}; экспресс-кредит ${money(view.expressUsed)}; недостаток ${money(view.shortage)}`}>
+    <div className="pc-metrics pc-budget-metrics"><div><span>Расходы по решению</span><strong>{money(view.totalSpending)}</strong></div><div><span>Всего доступно с кредитами</span><strong>{money(view.resourcesAvailable)}</strong></div></div>
+    <dl className="pc-budget-resources pc-budget-list pc-financial-list">
+      {([
+        ['Свои деньги на начало периода', view.openingCash],
+        ['Доступный обычный кредит', ordinaryAvailable],
+        ['Доступный экспресс-кредит', expressAvailable],
+      ] as const).map(([label, value]) => <div key={label} className="pc-row"><dt>{label}</dt><dd>{money(value)}</dd></div>)}
+    </dl>
+    <p className="pc-budget-note">Доступные кредиты — потенциальные новые заимствования, а не уже взятый долг. Всего доступно = свои деньги + доступный обычный кредит + доступный экспресс-кредит.</p>
+    {(!Number.isInteger(view.ordinaryRemaining) || !Number.isInteger(view.expressRemaining)) && <p className="pc-budget-note">Доступный кредит округляется до целых долларов в проверке бюджета; остаток обычного кредита ограничен базовым лимитом без округления. Поэтому дробный остаток, в том числе при равных лимитах, может попасть в экспресс-часть. Это не прогноз итогового долга. Суммы показаны до двух знаков; округление частей согласовано с итогом.</p>}
+    <h4>Потребность в покрытии входного бюджета</h4>
+    <div className="pc-track pc-funding-track" role="progressbar" aria-label="Покрытие входного бюджета" aria-valuemin={0} aria-valuemax={100} aria-valuenow={view.coveragePercent} aria-valuetext={`${view.status}; свои средства ${money(view.cashUsed)}; потребность в новом обычном кредите ${money(ordinaryNeeded)}; потребность в новом экспресс-кредите ${money(expressNeeded)}; недостаток ${money(view.shortage)}`}>
       {view.fundingSegments.filter(segment => segment.value > 0).map(segment => <span key={segment.key} className={`pc-segment pc-${segment.key} pc-funding-${segment.key}`} style={{ width: `${segment.percent}%` }} aria-hidden="true" />)}
     </div>
-    <div className="pc-legend pc-funding-legend">{view.fundingSegments.map(segment => <div key={segment.key} className="pc-legend-item"><span className={`pc-dot pc-finance-dot pc-${segment.key} pc-funding-${segment.key}`} aria-hidden="true" /><span>{segment.label}</span><strong>{money(segment.value)}</strong></div>)}</div>
+    <div className="pc-legend pc-funding-legend">{fundingSegments.map(segment => <div key={segment.key} className="pc-legend-item"><span className={`pc-dot pc-finance-dot pc-${segment.key} pc-funding-${segment.key}`} aria-hidden="true" /><span>{segment.label}</span><strong>{money(segment.value)}</strong></div>)}</div>
+    {view.openingCash < 0 && <p className="pc-budget-note">Дефицит денег на начало периода: {money(-view.openingCash)}. Потребность в покрытии учитывает этот дефицит; это не дополнительные расходы по решению.</p>}
     <h4>Расходы</h4>
     <div className="pc-track pc-expense-track" role="img" aria-label={`Структура положительных расходов; всего ${money(view.positiveExpenseTotal)}`}>
       {view.expenses.filter(expense => expense.value > 0).map(expense => <span key={expense.key} className={`pc-segment pc-${expense.key} pc-expense-${expense.key}`} style={{ width: `${expense.percent}%` }} aria-hidden="true" />)}
@@ -59,11 +78,9 @@ function FundingVisual({ view, budget, capexCapacity }: { view: ReturnType<typeo
     </dl>
     {view.cashRelease > 0 && <p className="pc-budget-note">Амортизация превышает инвестиции: расходы входного бюджета уменьшены на {money(view.cashRelease)}. Шкала показывает только положительные расходы; это не поступление денег.</p>}
     {capexCapacity != null && Number.isFinite(capexCapacity) && <div className="pc-budget-next pc-row"><span>Мощность следующего периода</span><strong>{quantity(capexCapacity)}</strong></div>}
-    <h4>Ресурсы и текущий долг</h4>
+    <h4>Уже взятые кредиты</h4>
     <dl className="pc-budget-list pc-financial-list">
       {([
-        ['Деньги на начало периода', view.openingCash], ['Доступный кредит', view.availableCredit],
-        ['Остаток обычного кредита', view.ordinaryRemaining], ['Остаток экспресс-кредита', view.expressRemaining],
         ['Текущий долг', view.currentDebt], ['Уже взятый обычный кредит', view.existingOrdinaryDebt], ['Уже взятый экспресс-кредит', view.existingExpressDebt],
       ] as const).map(([label, value]) => <div key={label} className="pc-row"><dt>{label}</dt><dd>{money(value)}</dd></div>)}
     </dl>

@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import type { PlayerMe, GameStatus } from '../../online/api';
 import type { FirmPeriodResult } from '../../engine/types';
 import type { PublicHistoryPeriod } from '../../online/roomTypes';
+import { DEFAULT_LEAGUE_CONFIG } from '../../engine/config';
 import { PlayerMarket } from './PlayerMarket';
 import { PlayerOverview } from './PlayerOverview';
 import { PlayerReports } from './PlayerReports';
@@ -40,6 +41,17 @@ const result = (overrides: Partial<FirmPeriodResult> = {}): FirmPeriodResult => 
 // Own fixtures are shared across the view behavior tests.
 
 describe('PlayerOverview', () => {
+  it('renders loss and utilization observations only when actual own results justify them', () => {
+    const current = result({ unfulfilledOrders: 0, netProfit: -125.55, produced: 90, capacityUtilization: 0.9 });
+    const html = renderToStaticMarkup(<PlayerOverview me={{ ...me, recentResults: [current] }} status={status} onDecisions={() => {}} />);
+    expect(html).toContain('Убыток за период');
+    expect(html).toContain('-125,55 $');
+    expect(html).toContain('Загрузка и себестоимость');
+    expect(html).toContain('90,0%');
+    const customized = renderToStaticMarkup(<PlayerOverview me={{ ...me, recentResults: [current], config: { ...DEFAULT_LEAGUE_CONFIG, costOptimalCu: 90 } }} status={status} onDecisions={() => {}} />);
+    expect(customized).toContain('Убыток за период');
+    expect(customized).not.toContain('Загрузка и себестоимость');
+  });
   it.each([
     [0, 0, 'Все заказы выполнены, склад пуст'],
     [10, 0, 'Спрос удовлетворён не полностью'],
@@ -84,21 +96,16 @@ describe('PlayerOverview', () => {
 
 describe('PlayerReports', () => {
   const original = 'Компания: Моя компания\nДата: 2026-10-01\n  ПРЕДУПРЕЖДЕНИЕ: кредит\n\nОТРАСЛЬ\nПолный отраслевой блок\n';
-  it('renders exactly four sections with model units and keeps the complete original report selectable', () => {
+  it('shows only the complete original report with the industry block, even for recent periods', () => {
     const html = renderToStaticMarkup(<PlayerReports me={{ ...me, recentResults: [result(), result({ periodIndex: 1, marketShareSold: 20 })], reports: [{ periodIndex: 2, report: original }, { periodIndex: 0, report: 'Старый отчёт' }] }} selectedPeriod={2} onSelect={() => {}} />);
-    expect((html.match(/class="pc-report-section"/g) ?? [])).toHaveLength(4);
-    for (const title of ['Прибыли и убытки', 'Баланс компании', 'Принятые решения', 'Производство и продажи']) expect(html).toContain(title);
-    expect(html).not.toContain('Состав РИФ');
-    expect(html).not.toContain('Дополнительные показатели');
-    expect(html).toContain('25 %');
-    expect(html).toContain('+5 п.п.');
-    expect(html).toContain('80 %');
-    expect(html).toContain('387,6 $');
     expect(html).toContain(original);
-    expect(html).toContain('Исходный отчёт');
-    expect((html.match(/<option\b/g) ?? [])).toHaveLength(3);
-    expect(html.indexOf('value="2"')).toBeLessThan(html.indexOf('value="1"'));
-    expect(html.indexOf('value="1"')).toBeLessThan(html.indexOf('value="0"'));
+    expect(html).not.toContain('<table');
+    expect(html).not.toContain('hidden=""');
+    expect(html).not.toContain('Вид отчёта');
+    expect(html).not.toContain('Таблицы');
+    expect(html).not.toContain('pc-report-section');
+    expect((html.match(/<option\b/g) ?? [])).toHaveLength(2);
+    expect(html.indexOf('value="2"')).toBeLessThan(html.indexOf('value="0"'));
   });
   it('shows older periods as their exact text, with no invented structured values', () => {
     const old = 'СТАРЫЙ ОТЧЁТ\n   1  2  3\n';
@@ -107,7 +114,6 @@ describe('PlayerReports', () => {
     expect(html).not.toContain('pc-report-section');
     expect(html).not.toContain('387,6');
     expect(html).not.toContain('hidden=""');
-    expect(html).toContain('доступен только исходный текст');
     expect(html).toContain('value="0" selected=""');
   });
   it('does not use another company result or create comparisons over period gaps', () => {
@@ -115,15 +121,15 @@ describe('PlayerReports', () => {
     expect(html).not.toContain('987');
     expect(html).not.toContain('Период 99');
     expect(html).not.toContain('<th scope="col" class="pc-numeric">Изменение');
-    expect(html).toContain('Без сравнения с предыдущим периодом');
+    expect(html).not.toContain('Изменение');
   });
   it('preserves an unindexed legacy report and handles missing report text honestly', () => {
     const legacy = renderToStaticMarkup(<PlayerReports me={{ ...me, report: original }} selectedPeriod={null} onSelect={() => {}} />);
     expect(legacy).toContain(original);
     expect(legacy).not.toContain('pc-report-section');
     const missing = renderToStaticMarkup(<PlayerReports me={{ ...me, recentResults: [result()] }} selectedPeriod={2} onSelect={() => {}} />);
-    expect(missing).toContain('Исходный отчёт недоступен');
-    expect(missing).toContain('pc-report-section');
+    expect(missing).toContain('Отчёты появятся после расчёта периода');
+    expect(missing).not.toContain('pc-report-section');
     const empty = renderToStaticMarkup(<PlayerReports me={me} selectedPeriod={null} onSelect={() => {}} />);
     expect(empty).toContain('Отчёты появятся после расчёта периода');
   });
@@ -143,7 +149,7 @@ describe('PlayerMarket', () => {
     expect(html).not.toContain('987');
     expect(html).toContain('периода 3');
     expect(html).toContain('Бывшая команда');
-    expect(html.indexOf('pc-market-table')).toBeLessThan(html.indexOf('competition-history'));
+    expect(html).not.toContain('competition-history');
   });
   it('does not fabricate a rank delta across missing periods and preserves removed teams', () => {
     const html = renderToStaticMarkup(<PlayerMarket me={me} status={{ ...status, firms: [], history: [history[0], { ...history[1], periodIndex: 4 }] }} />);

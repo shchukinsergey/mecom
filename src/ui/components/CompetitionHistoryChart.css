@@ -20,21 +20,16 @@
 .competition-history__chart .competition-history__axis-title { font-size: 12px; font-weight: 650; }
 .competition-history__grid { stroke: var(--border, #e1e6ef); stroke-dasharray: 3 5; vector-effect: non-scaling-stroke; }
 .competition-history__zero { stroke: #9ca8bc; vector-effect: non-scaling-stroke; }
-.competition-history__cursor { stroke: #c2cad8; stroke-dasharray: 4 5; pointer-events: none; }
-.competition-history__chart rect[role='button'] { cursor: crosshair; }
-.competition-history__chart rect:focus-visible { outline: none; stroke: var(--accent, #0052ff); stroke-width: 2; stroke-dasharray: 4 4; }
+.competition-history__point { cursor: pointer; pointer-events: all; }
+.competition-history__point:focus-visible { outline: none; stroke: var(--accent, #0052ff); stroke-width: 2; vector-effect: non-scaling-stroke; }
 .competition-history__legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 18px; }
 .competition-history .competition-history__legend button { display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px; font-size: 12px; border-radius: 8px; background: var(--bg-panel, #fff); color: var(--text, #172033); border: 1px solid var(--border, #e1e6ef); }
 .competition-history .competition-history__legend button[aria-pressed='true'] { background: var(--bg-panel, #fff); color: var(--text, #172033); border-color: var(--border, #e1e6ef); }
 .competition-history .competition-history__legend .competition-history__hidden-team { opacity: .5; text-decoration: line-through; }
 .competition-history__swatch { display: inline-block; width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-.competition-history__values { border: 1px solid var(--border, #e1e6ef); border-radius: 12px; background: #f8fafc; padding: 14px 16px; }
-.competition-history__values > strong { font-size: 13px; }
-.competition-history__values > strong span { font-weight: 400; color: var(--text-dim, #667085); }
-.competition-history__values dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px 24px; margin: 12px 0 0; }
-.competition-history__values dl > div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 12px; }
-.competition-history__values dt { display: flex; align-items: center; gap: 7px; overflow-wrap: anywhere; }
-.competition-history__values dd { margin: 0; font-weight: 650; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.competition-history__tooltip { position: fixed; z-index: 100; display: grid; gap: 5px; width: max-content; box-sizing: border-box; max-width: 260px; overflow: hidden; pointer-events: none; border: 1px solid var(--border, #e1e6ef); border-radius: 10px; background: var(--bg-panel, #fff); color: var(--text, #172033); padding: 10px 12px; font-size: 12px; line-height: 1.4; box-shadow: 0 4px 16px rgb(0 0 0 / .12); overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.competition-history__tooltip > strong { display: flex; align-items: center; gap: 7px; }
+.competition-history__tooltip > span { display: block; }
 .competition-history__table { margin-top: 14px; font-size: 12px; }
 .competition-history__table summary { cursor: pointer; color: var(--text-dim, #667085); }
 .competition-history__table > div { overflow-x: auto; margin-top: 12px; }
@@ -54,5 +49,5 @@
   .competition-history__chart svg { height: 250px; }
   .competition-history__chart text { font-size: 12px; }
   .competition-history__chart .competition-history__axis-title { font-size: 12px; }
-  .competition-history__values dl { grid-template-columns: 1fr; }
+
 }

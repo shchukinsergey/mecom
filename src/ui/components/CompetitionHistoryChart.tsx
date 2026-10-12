@@ -63,10 +63,26 @@ export function buildHistoryChartModel(history: PublicHistoryPeriod[], metric: H
   return { periods, series, min, max, x, y, own };
 }
 
+/** Coordinates and radius are in screen pixels, independent of SVG/mobile scaling. */
+export function nearestHistoryPoint<T extends { x: number; y: number }>(points: readonly T[], x: number, y: number, radius = 40): T | null {
+  let nearest: T | null = null;
+  let distance = radius;
+  for (const point of points) {
+    const candidateDistance = Math.hypot(point.x - x, point.y - y);
+    if (candidateDistance <= radius && (!nearest || candidateDistance < distance)) {
+      nearest = point;
+      distance = candidateDistance;
+    }
+  }
+  return nearest;
+}
+
 export function CompetitionHistoryChart({ history, ownFirmId }: { history: PublicHistoryPeriod[]; ownFirmId: string }) {
   const [metric, setMetric] = useState<HistoryMetric>('rif');
   const [hidden, setHidden] = useState<Set<string>>(() => new Set());
-  const [selectedPeriod, setSelectedPeriod] = useState<number | null>(null);
+  const [activePoint, setActivePoint] = useState<{ firmId: string; periodIndex: number; target: SVGCircleElement } | null>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const [tooltipPosition, setTooltipPosition] = useState<{ left: number; top: number; maxWidth: number; maxHeight: number } | null>(null);
   const id = useId();
   const chartRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(900);
@@ -82,13 +98,64 @@ export function CompetitionHistoryChart({ history, ownFirmId }: { history: Publi
   }, [model.periods.length]);
   const label = metrics.find(m => m.key === metric)!.label;
   const latest = model.periods.at(-1);
-  const selected = model.periods.find(p => p.periodIndex === selectedPeriod) ?? latest;
   const visible = model.series.filter(s => !hidden.has(s.firmId));
-  const toggle = (firmId: string) => setHidden(current => {
-    const next = new Set(current);
-    if (next.has(firmId)) next.delete(firmId); else next.add(firmId);
-    return next;
-  });
+  const activeSeries = activePoint && visible.find(s => s.firmId === activePoint.firmId);
+  const selected = activeSeries?.points.find(p => p.periodIndex === activePoint?.periodIndex);
+  const clearPoint = () => { setActivePoint(null); setTooltipPosition(null); };
+  const showPoint = (firmId: string, periodIndex: number, target: SVGCircleElement) => {
+    if (activePoint?.target === target && activePoint.firmId === firmId && activePoint.periodIndex === periodIndex) return;
+    setTooltipPosition(null);
+    setActivePoint({ firmId, periodIndex, target });
+  };
+  const showNearbyPoint = (svg: SVGSVGElement, x: number, y: number) => {
+    const candidates = Array.from(svg.querySelectorAll<SVGCircleElement>('.competition-history__point')).reverse().map(target => {
+      const bounds = target.getBoundingClientRect();
+      return { target, x: bounds.left + bounds.width / 2, y: bounds.top + bounds.height / 2 };
+    });
+    const nearest = nearestHistoryPoint(candidates, x, y);
+    if (!nearest) { clearPoint(); return; }
+    showPoint(nearest.target.dataset.firmId!, Number(nearest.target.dataset.periodIndex), nearest.target);
+  };
+  useEffect(() => {
+    if (!activePoint || !selected || !tooltipRef.current || !chartRef.current) return;
+    const chart = chartRef.current.getBoundingClientRect();
+    const point = activePoint.target.getBoundingClientRect();
+    const left = Math.max(8, chart.left + 8);
+    const right = Math.min(window.innerWidth - 8, chart.right - 8);
+    const top = Math.max(8, chart.top + 8);
+    const bottom = Math.min(window.innerHeight - 8, chart.bottom - 8);
+    if (right <= left || bottom <= top || point.right < left || point.left > right || point.bottom < top || point.top > bottom) {
+      setActivePoint(null); setTooltipPosition(null); return;
+    }
+    const tooltip = tooltipRef.current;
+    tooltip.style.maxWidth = `${right - left}px`;
+    tooltip.style.maxHeight = `${bottom - top}px`;
+    const bounds = tooltip.getBoundingClientRect();
+    const preferredLeft = point.right + 10 + bounds.width <= right ? point.right + 10 : point.left - bounds.width - 10;
+    setTooltipPosition({
+      left: Math.max(left, Math.min(preferredLeft, right - bounds.width)),
+      top: Math.max(top, Math.min(point.top - bounds.height / 2, bottom - bounds.height)),
+      maxWidth: right - left, maxHeight: bottom - top,
+    });
+    const dismiss = () => { setActivePoint(null); setTooltipPosition(null); };
+    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') dismiss(); };
+    window.addEventListener('resize', dismiss);
+    window.addEventListener('scroll', dismiss, true);
+    window.addEventListener('keydown', escape);
+    return () => {
+      window.removeEventListener('resize', dismiss);
+      window.removeEventListener('scroll', dismiss, true);
+      window.removeEventListener('keydown', escape);
+    };
+  }, [activePoint, selected]);
+  const toggle = (firmId: string) => {
+    if (activePoint?.firmId === firmId) clearPoint();
+    setHidden(current => {
+      const next = new Set(current);
+      if (next.has(firmId)) next.delete(firmId); else next.add(firmId);
+      return next;
+    });
+  };
   return <section className="online-card competition-history" aria-labelledby={`${id}-heading`}>
     <header className="competition-history__header">
       <div><span className="competition-history__eyebrow">РЕЗУЛЬТАТЫ ВСЕХ КОМАНД</span><h2 id={`${id}-heading`}>Как идёт игра</h2>
@@ -96,7 +163,7 @@ export function CompetitionHistoryChart({ history, ownFirmId }: { history: Publi
       <span className="competition-history__completed">Только рассчитанные периоды</span>
     </header>
     <div className="competition-history__metrics" role="group" aria-label="Показатель графика">
-      {metrics.map(m => <button type="button" key={m.key} aria-pressed={m.key === metric} onClick={() => setMetric(m.key)}>{m.label}</button>)}
+      {metrics.map(m => <button type="button" key={m.key} aria-pressed={m.key === metric} onClick={() => { clearPoint(); setMetric(m.key); }}>{m.label}</button>)}
     </div>
     {latest && <div className="competition-history__summary">
       <div><span className="competition-history__badge">Вы</span><span>{label} · период {latest.periodIndex}</span><strong>{model.own ? formatHistoryValue(model.own.value, metric) : 'Нет данных'}</strong></div>
@@ -104,8 +171,10 @@ export function CompetitionHistoryChart({ history, ownFirmId }: { history: Publi
       <div><span>К предыдущему периоду</span><strong className={model.own?.delta == null ? '' : model.own.delta > 0 ? 'competition-history__positive' : model.own.delta < 0 ? 'competition-history__negative' : ''}>{model.own?.delta == null ? 'Нет сравнения' : formatHistoryValue(model.own.delta, metric, true)}</strong></div>
     </div>}
     {!latest ? <div className="competition-history__empty"><strong>Пока нет рассчитанных периодов</strong><p>Здесь будут линии всех команд — от периода 0 до последних результатов.</p></div> : <>
-      <div ref={chartRef} className="competition-history__chart" onMouseLeave={() => setSelectedPeriod(null)}>
-        <svg viewBox={`0 0 ${width} 320`} preserveAspectRatio="none" style={{ minWidth: model.periods.length > 6 ? model.periods.length * 100 : 0 }} role="group" aria-label={`История результатов: ${label}`}>
+      <div ref={chartRef} className="competition-history__chart" onMouseLeave={clearPoint} onClick={event => { if (event.target === event.currentTarget) clearPoint(); }}>
+        <svg viewBox={`0 0 ${width} 320`} preserveAspectRatio="none" style={{ minWidth: model.periods.length > 6 ? model.periods.length * 100 : 240 }} role="group" aria-label={`История результатов: ${label}`}
+          onMouseMove={event => showNearbyPoint(event.currentTarget, event.clientX, event.clientY)}
+          onClick={event => { if (!(event.target instanceof SVGCircleElement)) showNearbyPoint(event.currentTarget, event.clientX, event.clientY); }}>
           <text x="64" y="17" className="competition-history__axis-title">{label}{metric === 'marketShareSold' ? ', %' : metric === 'rif' ? '' : ', $'}</text>
           {Array.from({ length: 5 }, (_, index) => {
             const value = model.min + (model.max - model.min) * index / 4;
@@ -114,36 +183,46 @@ export function CompetitionHistoryChart({ history, ownFirmId }: { history: Publi
           })}
           {model.min < 0 && model.max > 0 && <line x1="64" x2={width - 44} y1={model.y(0)} y2={model.y(0)} className="competition-history__zero" />}
           {visible.filter(s => s.firmId !== ownFirmId).concat(visible.filter(s => s.firmId === ownFirmId)).map(s => <g key={s.firmId} data-firm-id={s.firmId}>
-            <path d={s.path} fill="none" stroke={s.color} strokeWidth={s.firmId === ownFirmId ? 4 : 2.5} vectorEffect="non-scaling-stroke" />
-            {s.points.map(point => <circle key={point.periodIndex} cx={point.x} cy={point.y} r={s.firmId === ownFirmId ? 5 : 4} fill="var(--bg-panel, #fff)" stroke={s.color} strokeWidth={s.firmId === ownFirmId ? 3 : 2} vectorEffect="non-scaling-stroke" />)}
+            <path d={s.path} fill="none" stroke={s.color} strokeWidth={s.firmId === ownFirmId ? 4 : 2.5} vectorEffect="non-scaling-stroke" pointerEvents="none" />
+            {s.points.map(point => {
+              const pointLabel = `${s.firmName} · Период ${point.periodIndex} · ${label}: ${formatHistoryValue(point.value, metric)}`;
+              // Cap hit areas before a neighboring series; ties remain separately focusable.
+              const nearest = Math.min(...visible.flatMap(series => series.points.map(other => Math.hypot(other.x - point.x, other.y - point.y))).filter(distance => distance > 0));
+              const isActive = activePoint?.firmId === s.firmId && activePoint.periodIndex === point.periodIndex;
+              return <g key={point.periodIndex}>
+                <circle cx={point.x} cy={point.y} r={s.firmId === ownFirmId ? 5 : 4} fill="var(--bg-panel, #fff)" stroke={s.color} strokeWidth={s.firmId === ownFirmId ? 3 : 2} vectorEffect="non-scaling-stroke" pointerEvents="none" />
+                <circle className="competition-history__point" data-firm-id={s.firmId} data-period-index={point.periodIndex} cx={point.x} cy={point.y} r={Math.min(9, nearest / 2)} fill="transparent" tabIndex={0} role="button" aria-label={pointLabel} aria-describedby={isActive && selected ? `${id}-tooltip` : undefined}
+                  onMouseEnter={event => showPoint(s.firmId, point.periodIndex, event.currentTarget)}
+                  onFocus={event => showPoint(s.firmId, point.periodIndex, event.currentTarget)} onBlur={clearPoint}
+                  onClick={event => showPoint(s.firmId, point.periodIndex, event.currentTarget)} onKeyDown={event => {
+                    if (event.key === 'Escape') { clearPoint(); return; }
+                    if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showPoint(s.firmId, point.periodIndex, event.currentTarget); return; }
+                    if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
+                      event.preventDefault();
+                      const targets = Array.from(event.currentTarget.ownerSVGElement?.querySelectorAll<SVGCircleElement>('circle[tabindex]') ?? []);
+                      const index = targets.indexOf(event.currentTarget);
+                      const next = event.key === 'Home' ? 0 : event.key === 'End' ? targets.length - 1 : Math.max(0, Math.min(targets.length - 1, index + (event.key === 'ArrowLeft' ? -1 : 1)));
+                      targets[next]?.focus();
+                    }
+                  }}><title>{pointLabel}</title></circle>
+              </g>;
+            })}
           </g>)}
-          {selected && <line x1={model.x(model.periods.indexOf(selected))} x2={model.x(model.periods.indexOf(selected))} y1="26" y2="274" className="competition-history__cursor" />}
-          {model.periods.map((period, index) => <g key={period.periodIndex}>
-            <text x={model.x(index)} y="299" textAnchor="middle">Период {period.periodIndex}</text>
-            <rect x={model.x(index) - (model.periods.length > 1 ? Math.min(40, (width - 108) / (2 * (model.periods.length - 1))) : 40)} y="25" width={model.periods.length > 1 ? Math.min(80, (width - 108) / (model.periods.length - 1)) : 80} height="250" fill="transparent" tabIndex={0} role="button" aria-label={`Показать значения за период ${period.periodIndex}`} aria-describedby={`${id}-values`} onMouseEnter={() => setSelectedPeriod(period.periodIndex)} onFocus={() => setSelectedPeriod(period.periodIndex)} onClick={() => setSelectedPeriod(period.periodIndex)} onKeyDown={event => {
-              if (event.key === 'Escape') { setSelectedPeriod(null); return; }
-              if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelectedPeriod(period.periodIndex); return; }
-              if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
-                event.preventDefault();
-                const targets = event.currentTarget.ownerSVGElement?.querySelectorAll<SVGRectElement>('rect[tabindex]');
-                const next = event.key === 'Home' ? 0 : event.key === 'End' ? model.periods.length - 1 : Math.max(0, Math.min(model.periods.length - 1, index + (event.key === 'ArrowLeft' ? -1 : 1)));
-                targets?.[next]?.focus();
-              }
-            }}><title>{`Период ${period.periodIndex}: ${visible.map(s => `${s.firmName}: ${formatHistoryValue(period.firms.find(f => f.firmId === s.firmId)?.[metric] ?? NaN, metric)}`).join('; ')}`}</title></rect>
-          </g>)}
+          {model.periods.map((period, index) => <text key={period.periodIndex} x={model.x(index)} y="299" textAnchor="middle">Период {period.periodIndex}</text>)}
         </svg>
       </div>
+      {activeSeries && selected && <div ref={tooltipRef} id={`${id}-tooltip`} role="tooltip" className="competition-history__tooltip" style={{ ...tooltipPosition, visibility: tooltipPosition ? 'visible' : 'hidden' }}>
+        <strong><span className="competition-history__swatch" style={{ backgroundColor: activeSeries.color }} />{activeSeries.firmName}</strong>
+        <span>Период {selected.periodIndex}</span>
+        <span>{label}: <b>{formatHistoryValue(selected.value, metric)}</b></span>
+      </div>}
       <div className="competition-history__legend" role="group" aria-label="Показать или скрыть команды">
         {model.series.map(s => <button type="button" key={s.firmId} aria-pressed={!hidden.has(s.firmId)} onClick={() => toggle(s.firmId)} className={hidden.has(s.firmId) ? 'competition-history__hidden-team' : ''}>
           <span className="competition-history__swatch" style={{ backgroundColor: s.color }} />{s.firmName}{s.firmId === ownFirmId && <span className="competition-history__badge">Вы</span>}
         </button>)}
       </div>
-      <div id={`${id}-values`} className="competition-history__values" aria-live="polite" aria-atomic="true">
-        <strong>Период {selected?.periodIndex} <span>· {label}</span></strong>
-        <dl>{visible.map(s => <div key={s.firmId}><dt><span className="competition-history__swatch" style={{ backgroundColor: s.color }} />{s.firmName}{s.firmId === ownFirmId && ' · Вы'}</dt><dd>{formatHistoryValue(selected?.firms.find(f => f.firmId === s.firmId)?.[metric] ?? NaN, metric)}</dd></div>)}</dl>
-        {visible.length === 0 && <p>Все команды скрыты. Выберите команду в легенде.</p>}
-      </div>
-      <p className="competition-history__hint">Наведите на период или выберите его клавишей Tab. ← → — соседний период. Нажмите на команду, чтобы скрыть её линию.</p>
+      {visible.length === 0 && <p>Все команды скрыты. Выберите команду в легенде.</p>}
+      <p className="competition-history__hint">Наведите рядом с точкой, коснитесь её или выберите клавишей Tab. ← → — соседняя точка, Esc — закрыть подсказку. Нажмите на команду, чтобы скрыть её линию.</p>
       <details className="competition-history__table"><summary>Все значения в таблице</summary><div><table><caption>История результатов: {label}</caption><thead><tr><th scope="col">Период</th>{visible.map(s => <th scope="col" key={s.firmId}>{s.firmName}{s.firmId === ownFirmId && ' · Вы'}</th>)}</tr></thead><tbody>{model.periods.map(p => <tr key={p.periodIndex}><th scope="row">{p.periodIndex}</th>{visible.map(s => <td key={s.firmId}>{formatHistoryValue(p.firms.find(f => f.firmId === s.firmId)?.[metric] ?? NaN, metric)}</td>)}</tr>)}</tbody></table></div></details>
     </>}
   </section>;

@@ -8,7 +8,7 @@ import { checkDecisionBudget } from '../../engine/decisionBudget';
 import { computeCapex } from '../../engine/capex';
 import { PlayerOverview } from '../components/PlayerOverview';
 import { PlayerDecisions } from '../components/PlayerDecisions';
-import { PlayerMarket } from '../components/PlayerMarket';
+
 import { PlayerReports } from '../components/PlayerReports';
 import '../components/PlayerCabinet.css';
 
@@ -17,7 +17,6 @@ const quantity = (value: number) => new Intl.NumberFormat('ru-RU', { maximumFrac
 const phaseLabels = { lobby: 'Ожидаем начала игры', collecting: 'Приём решений', complete: 'Период завершён', closed: 'Игра закрыта' } as const;
 const tabs = [
   ['overview', 'Обзор'], ['decisions', 'Решения'],
-  ['market', 'Рынок и конкуренты'], ['reports', 'Отчёты'],
 ] as const;
 type PlayerTab = typeof tabs[number][0];
 export function OnlinePlayer({ initialInviteToken, initialRejoinToken, accountRoomId, onUnauthorized, onBack }: OnlinePlayerProps) {
@@ -129,9 +128,11 @@ export function OnlinePlayer({ initialInviteToken, initialRejoinToken, accountRo
         if (target) { e.preventDefault(); changeTab(target); document.getElementById(`pc-tab-${target}`)?.focus(); }
       }}>{label}</button>)}</nav>
       <section className="pc-section" id="pc-panel-overview" role="tabpanel" aria-labelledby="pc-tab-overview" hidden={tab !== 'overview'}><PlayerOverview me={me} status={status} onDecisions={() => changeTab('decisions')} /></section>
-      <section className="pc-section" id="pc-panel-decisions" role="tabpanel" aria-labelledby="pc-tab-decisions" hidden={tab !== 'decisions'}><PlayerDecisions me={me} form={form} loading={loading} fieldErrors={fieldErrors} budget={budget} capexCapacity={capexPreview?.capacityNext} invalidDecision={invalidDecision} onChange={(key, value) => { dirtyRef.current = true; setForm(v => ({ ...v, [key]: value })); }} onSave={() => void doSave()} onSubmit={() => void doSubmit()} /></section>
-      <section className="pc-section" id="pc-panel-market" role="tabpanel" aria-labelledby="pc-tab-market" hidden={tab !== 'market'}><PlayerMarket me={me} status={status} /></section>
-      <section className="pc-section" id="pc-panel-reports" role="tabpanel" aria-labelledby="pc-tab-reports" hidden={tab !== 'reports'}><PlayerReports me={me} selectedPeriod={selectedReportPeriod} onSelect={setSelectedReportPeriod} /></section>
+      <section className="pc-section pc-decision-workspace" id="pc-panel-decisions" role="tabpanel" aria-labelledby="pc-tab-decisions" hidden={tab !== 'decisions'}>
+        <div className="pc-report-jump"><button type="button" onClick={() => document.getElementById('pc-company-reports')?.scrollIntoView({ block: 'start', behavior: 'auto' })}>К отчёту ↓</button></div>
+        <PlayerDecisions me={me} form={form} loading={loading} fieldErrors={fieldErrors} budget={budget} capexCapacity={capexPreview?.capacityNext} invalidDecision={invalidDecision} onChange={(key, value) => { dirtyRef.current = true; setForm(v => ({ ...v, [key]: value })); }} onSave={() => void doSave()} onSubmit={() => void doSubmit()} />
+        <PlayerReports me={me} selectedPeriod={selectedReportPeriod} onSelect={setSelectedReportPeriod} onBackToDecision={() => document.getElementById('pc-panel-decisions')?.scrollIntoView({ block: 'start', behavior: 'auto' })} />
+      </section>
     </>}
   </main>;
 }

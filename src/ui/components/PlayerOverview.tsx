@@ -1,7 +1,7 @@
 import type { GameStatus, PlayerMe } from '../../online/api';
 import { getPlayerInsights, type PlayerInsightKind } from '../../online/playerInsights';
 import { CompetitionHistoryChart } from './CompetitionHistoryChart';
-import { formatPlayerValue, playerPublicPeriods, playerPublicRank, PlayerRankChange } from './PlayerMarket';
+import { formatPlayerValue, playerPublicPeriods, playerPublicRank, PlayerRankChange, PlayerMarket } from './PlayerMarket';
 
 const signalTitles: Record<PlayerInsightKind, string> = {
   'unfulfilled-orders': 'Не все заказы выполнены',
@@ -9,6 +9,8 @@ const signalTitles: Record<PlayerInsightKind, string> = {
   'price-near-unit-cost': 'Цена близка к себестоимости',
   'bank-interest-burden': 'Расходы на кредит',
   'investment-capacity-change': 'Мощность снижается',
+  'net-loss': 'Убыток за период',
+  'above-economical-utilization': 'Загрузка и себестоимость',
 };
 
 function MetricChange({ value, previous, unit = '', inverse = false }: { value: number | undefined; previous: number | undefined; unit?: string; inverse?: boolean }) {
@@ -29,7 +31,7 @@ export function PlayerOverview({ me, status, onDecisions }: { me: PlayerMe; stat
   const rank = playerPublicRank(latestPublic, me.firmId);
   const oldRank = playerPublicRank(previousPublic, me.firmId);
   const rankDelta = rank !== null && oldRank !== null ? oldRank - rank : null;
-  const insights = latest ? getPlayerInsights(latest, previous ?? null) : [];
+  const insights = latest ? getPlayerInsights(latest, previous ?? null, me.config?.costOptimalCu) : [];
   const macro = me.periodMacro;
   const phases = { lobby: 'Ожидаем начала игры', collecting: 'Приём решений', complete: 'Период завершён', closed: 'Игра закрыта' };
   const salesKnown = latest && Number.isFinite(latest.unfulfilledOrders) && Number.isFinite(latest.inventoryEnd);
@@ -68,6 +70,7 @@ export function PlayerOverview({ me, status, onDecisions }: { me: PlayerMe; stat
         </div>
       </section>
     </div>
+    <PlayerMarket me={me} status={status} />
     <div className="pc-market-history"><h2>Компания на фоне рынка</h2><CompetitionHistoryChart history={periods} ownFirmId={me.firmId} /></div>
   </section>;
 }

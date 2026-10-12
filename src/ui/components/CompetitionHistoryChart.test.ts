@@ -2,7 +2,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import type { PublicHistoryPeriod } from '../../online/roomTypes';
-import { CompetitionHistoryChart, buildHistoryChartModel, formatHistoryValue } from './CompetitionHistoryChart';
+import { CompetitionHistoryChart, buildHistoryChartModel, formatHistoryValue, nearestHistoryPoint } from './CompetitionHistoryChart';
 
 const firm = (firmId: string, rif: number) => ({ firmId, firmName: firmId === 'mine' ? 'Север' : 'Юг', rif, netProfit: -120, marketShareSold: 25, revenue: 400, retainedEarnings: -40 });
 const history: PublicHistoryPeriod[] = [
@@ -12,6 +12,19 @@ const history: PublicHistoryPeriod[] = [
 const render = (data: PublicHistoryPeriod[] = history) => renderToStaticMarkup(createElement(CompetitionHistoryChart, { history: data, ownFirmId: 'mine' }));
 
 describe('CompetitionHistoryChart', () => {
+  it('selects the closest point within 40 screen pixels, not just its tiny hit circle', () => {
+    const points = [{ x: 100, y: 100, firmId: 'mine' }, { x: 100, y: 120, firmId: 'other' }];
+    expect(nearestHistoryPoint(points, 72, 100)).toBe(points[0]);
+    expect(nearestHistoryPoint(points, 72, 118)).toBe(points[1]);
+    expect(nearestHistoryPoint(points, 60, 100)).toBe(points[0]);
+    expect(nearestHistoryPoint(points, 59, 100)).toBeNull();
+  });
+  it('keeps ties deterministic and never selects absent or nonfinite points', () => {
+    const points = [{ x: 100, y: 100 }, { x: 100, y: 100 }];
+    expect(nearestHistoryPoint(points, 100, 100)).toBe(points[0]);
+    expect(nearestHistoryPoint([], 100, 100)).toBeNull();
+    expect(nearestHistoryPoint([{ x: NaN, y: 100 }], 100, 100)).toBeNull();
+  });
   it.each([0, 1, 107, NaN])('keeps chart geometry positive while a hidden tab reports width %s', width => {
     const model = buildHistoryChartModel(history, 'rif', 'mine', width);
     expect(Number.isFinite(model.x(0))).toBe(true);
@@ -65,10 +78,29 @@ describe('CompetitionHistoryChart', () => {
     expect(render([])).toContain('Пока нет рассчитанных периодов');
     expect(buildHistoryChartModel([history[0]], 'rif', 'mine').own?.delta).toBeNull();
   });
-  it('makes every period keyboard accessible with all public values and a data table', () => {
+  it('does not show a persistent all-company values panel or an idle tooltip', () => {
     const html = render();
+    expect(html).not.toContain('competition-history__values');
+    expect(html).not.toContain('role="tooltip"');
+    expect(html).toContain('<details class="competition-history__table">');
+  });
+  it('creates no phantom point labels for missing or nonfinite public results', () => {
+    const html = render([history[0], { periodIndex: 1, firms: [firm('other', NaN)] }, { periodIndex: 2, firms: [firm('other', 42)] }]);
+    expect(html.match(/role="button"/g)).toHaveLength(3);
+    expect(html).toContain('aria-label="Юг · Период 2 · РИФ: 42,0"');
+    expect(html).not.toMatch(/aria-label="(?:Север|Юг) · Период 1/);
+    expect(html).not.toContain('aria-label="Север · Период 2');
+    expect(html).not.toMatch(/NaN|Infinity/);
+  });
+  it('makes individual public points keyboard accessible with company, period and metric labels', () => {
+    const html = render();
+    expect(html.match(/role="button"/g)).toHaveLength(4);
     expect(html).toContain('tabindex="0"');
-    expect(html).toContain('Показать значения за период 0');
+    expect(html).toContain('min-width:240px');
+    expect(html).toContain('aria-label="Север · Период 0 · РИФ: 10,0"');
+    expect(html).toContain('aria-label="Юг · Период 1 · РИФ: 30,0"');
+    expect(html).not.toContain('<rect');
+    expect(html).not.toContain('Показать значения за период');
     expect(html).toContain('<table');
     expect(html).toContain('История результатов: РИФ');
     expect(html).toContain('aria-pressed="true"');

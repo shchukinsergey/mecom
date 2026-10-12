@@ -31,9 +31,9 @@ export function buildFundingView(
   ];
   const positiveExpenseTotal = expenses.reduce((sum, expense) => sum + Math.max(0, expense.value), 0);
   const fundingSegments = [
-    { key: 'cash', label: 'Свои средства', value: cashUsed },
-    { key: 'base', label: 'Обычный кредит', value: ordinaryUsed },
-    { key: 'extra', label: 'Экспресс-кредит', value: expressUsed },
+    { key: 'cash', label: 'Используемые свои средства', value: cashUsed },
+    { key: 'base', label: 'Потребность в новом обычном кредите', value: ordinaryUsed },
+    { key: 'extra', label: 'Потребность в новом экспресс-кредите', value: expressUsed },
     { key: 'shortage', label: 'Недостаток средств', value: shortage },
   ].map(segment => ({ ...segment, percent: clampPercent(ratio(segment.value, fundingTotal)) }));
   return {

@@ -18,6 +18,61 @@ const nativeBudget: DecisionBudget = { type: 'entry-budget-check', openingCash: 
 const liveMe: PlayerMe = { ...me, openingState: { machines: 500, loan: 100, cash: 200.99 } as FirmOpeningState, periodMacro: { loanLimitBase: 600 } as PeriodMacroParams };
 
 describe('PlayerDecisions', () => {
+  it('names decision spending and shows available resources separately from new credit needs', () => {
+    const html = render({ me: liveMe, budget: { ...nativeBudget, totalSpending: 1200, remainingBudget: 0, overspend: false } });
+    expect(html).toContain('Расходы по решению');
+    expect(html).toContain('Всего доступно с кредитами');
+    const resources = html.match(/<dl class="pc-budget-resources[^\"]*">([\s\S]*?)<\/dl>/)?.[1];
+    expect(resources).toContain('Свои деньги на начало периода');
+    expect(resources).toContain('200 $');
+    expect(resources).toContain('Доступный обычный кредит');
+    expect(resources).toContain('Доступный экспресс-кредит');
+    expect(resources?.match(/500 \$/g)).toHaveLength(2);
+    expect(html).toContain('потенциальные новые заимствования');
+    expect(html).toContain('Потребность в новом экспресс-кредите');
+    expect(html).toContain('Текущий долг');
+    expect(html).not.toContain('Всего расходов');
+    expect(html).not.toContain('Текущие ресурсы');
+  });
+
+  it('keeps fractional resources and borrowing needs visible to two decimal places', () => {
+    const html = render({ me: { ...liveMe, openingState: { ...liveMe.openingState!, loan: 100.25 } }, budget: nativeBudget });
+    expect(html).toContain('499,75 $');
+    expect(html).toContain('500,25 $');
+    expect(html).toContain('100,25 $');
+  });
+
+  it('reconciles displayed cents instead of independently rounding both credit segments up', () => {
+    const html = render({ me: { ...liveMe, openingState: { ...liveMe.openingState!, loan: 100.255 } }, budget: nativeBudget });
+    const resources = html.match(/<dl class="pc-budget-resources[^\"]*">([\s\S]*?)<\/dl>/)?.[1];
+    expect(resources).toContain('499,75 $');
+    expect(resources).toContain('500,25 $');
+    expect(resources).not.toContain('500,26 $');
+    const needs = html.match(/<div class="pc-legend pc-funding-legend">([\s\S]*?)<h4>/)?.[1];
+    expect(needs).toContain('499,75 $');
+    expect(needs).toContain('500,25 $');
+  });
+
+  it('explains fractional credit residuals without suppressing native express usage', () => {
+    const html = render({ me: { ...liveMe, openingState: { ...liveMe.openingState!, loan: 20.25 }, periodMacro: { loanLimitBase: 80, loanLimitAbs: 80 } as PeriodMacroParams }, budget: { ...nativeBudget, openingCash: 100, availableCredit: 60, resourcesAvailable: 160, totalSpending: 160, remainingBudget: 0, overspend: false } });
+    expect(html).toContain('data-funding-status="extra"');
+    expect(html).toContain('0,25 $');
+    expect(html).toContain('Доступный кредит округляется');
+    expect(html).toContain('не прогноз итогового долга');
+  });
+
+  it('identifies negative opening cash as a budget liability rather than extra decision spending', () => {
+    const html = render({ me: liveMe, budget: { ...nativeBudget, openingCash: -100, resourcesAvailable: 900, totalSpending: 300, remainingBudget: 600, overspend: false } });
+    expect(html).toContain('Дефицит денег на начало периода');
+    expect(html).toContain('не дополнительные расходы по решению');
+  });
+  it('does not apply a nonnegative-spending reconciliation formula to a signed investment release', () => {
+    const html = render({ me: liveMe, budget: { ...nativeBudget, openingCash: -100, resourcesAvailable: 900, costOfProduction: 0, netInvestment: -200, totalSpending: -200, remainingBudget: 1100, overspend: false } });
+    expect(html).toContain('Дефицит денег на начало периода');
+    expect(html).toContain('не дополнительные расходы по решению');
+    expect(html).not.toContain('Расходы по решению = свои использованные средства');
+  });
+
   it.each([
     { loading: true }, { invalidDecision: true }, { me: { ...me, submitted: true } },
     ...(['lobby', 'complete', 'closed'] as const).map(phase => ({ me: { ...me, phase } })),

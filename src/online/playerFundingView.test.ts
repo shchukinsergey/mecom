@@ -63,6 +63,47 @@ describe('buildFundingView', () => {
     expect(view.remainingBudget).toBe(native.remainingBudget);
   });
 
+  it.each([
+    [20.25, 159, 59.75, 0.25, 59, 0],
+    [20.25, 160, 59.75, 0.25, 59.75, 0.25],
+    [20.75, 159, 59, 0, 59, 0],
+    [20.5, 160, 59.5, 0.5, 59.5, 0.5],
+  ])('retains the native rounding residual when absolute and base limits coincide (loan %s, spending %s)', (loan, spending, ordinaryRemaining, expressRemaining, ordinaryUsed, expressUsed) => {
+    const opening = { machines: 10, period0Machines: 10, cash: 100.99, loan, amortFundRemainder: 0 } as FirmOpeningState;
+    const macro = { loanLimitAbs: 80, loanLimitBase: 80 } as PeriodMacroParams;
+    const config = { machineCost: 100, machineLifespanPeriods: 10, costK1: 0, costK2: 10, costOptimalCu: 80, costCuUp: 100, costCuDown: 100 } as LeagueConfig;
+    const native = checkDecisionBudget(opening, { price: 30, production: 0, marketing: spending, rnd: 0, capexGross: 100 }, macro, config);
+    const view = buildFundingView(native, opening, macro);
+    expect(view).toMatchObject({ ordinaryRemaining, expressRemaining, ordinaryUsed, expressUsed });
+    expect(view.ordinaryRemaining + view.expressRemaining).toBe(native.availableCredit);
+    expect(view.openingCash + view.ordinaryRemaining + view.expressRemaining).toBe(native.resourcesAvailable);
+    expect(view.cashUsed + view.ordinaryUsed + view.expressUsed + view.shortage).toBe(native.totalSpending);
+    if (view.fundingNeed <= view.ordinaryRemaining) expect(view.expressUsed).toBe(0);
+  });
+
+  it.each([
+    [100.9, 20.25, 0], [100.9, 20.25, 180], [100.9, 20.25, 181],
+    [100.9, 20.25, 200], [-100.9, 20.25, 0], [-100.9, 20.25, 40],
+    [-100.9, 20.25, 300], [0, 80.25, 0], [0, 80.25, 21],
+  ])('reconciles native resources and funding including opening liabilities (cash %s, loan %s, spending %s)', (cash, loan, spending) => {
+    const opening = { machines: 10, period0Machines: 10, cash, loan, amortFundRemainder: 0 } as FirmOpeningState;
+    const macro = { loanLimitAbs: 100.75, loanLimitBase: 80 } as PeriodMacroParams;
+    const config = { machineCost: 100, machineLifespanPeriods: 10, costK1: 0, costK2: 10, costOptimalCu: 80, costCuUp: 100, costCuDown: 100 } as LeagueConfig;
+    const native = checkDecisionBudget(opening, { price: 30, production: 0, marketing: spending, rnd: 0, capexGross: 100 }, macro, config);
+    const view = buildFundingView(native, opening, macro);
+    expect(view.resourcesAvailable).toBe(view.openingCash + view.ordinaryRemaining + view.expressRemaining);
+    const openingLiability = Math.max(0, -view.openingCash);
+    expect(view.cashUsed + view.ordinaryUsed + view.expressUsed + view.shortage - openingLiability).toBeCloseTo(view.totalSpending, 10);
+    expect(view.cashUsed).toBeGreaterThanOrEqual(0);
+    if (view.fundingNeed <= view.ordinaryRemaining) expect(view.expressUsed).toBe(0);
+    expect(view.remainingBudget).toBe(native.remainingBudget);
+  });
+
+  it('does not hide legitimate express funding when expenses equal all resources', () => {
+    const view = buildFundingView(budget(1200), { loan: 100 }, { loanLimitBase: 600 });
+    expect(view).toMatchObject({ remainingBudget: 0, classification: 'extra', cashUsed: 200, ordinaryUsed: 500, expressUsed: 500, shortage: 0 });
+  });
+
   it('avoids NaN bars when net spending is zero or negative', () => {
     for (const spending of [0, -100]) {
       const view = buildFundingView({ ...budget(spending), costOfProduction: 0, netInvestment: spending }, { loan: 100 }, { loanLimitBase: 600 });

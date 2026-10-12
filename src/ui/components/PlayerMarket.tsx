@@ -1,6 +1,6 @@
 import type { GameStatus, PlayerMe } from '../../online/api';
 import type { PublicHistoryPeriod } from '../../online/roomTypes';
-import { CompetitionHistoryChart } from './CompetitionHistoryChart';
+
 
 /** Missing results stay missing; ranking always refers to one calculated period. */
 export function playerPublicPeriods(status: GameStatus | null): PublicHistoryPeriod[] {
@@ -43,7 +43,7 @@ export function PlayerMarket({ me, status }: { me: PlayerMe; status: GameStatus 
   });
   const currentPeriod = status?.currentPeriodIndex ?? me.currentPeriodIndex;
   return <section className="pc-market">
-    <header className="pc-section-head"><div><h2>Рынок и конкуренты</h2>
+    <header className="pc-section-head"><div><h2>Рейтинг компаний</h2>
       <p className="pc-muted">{latest ? `Результаты периода ${latest.periodIndex}.` : 'Рейтинг появится после расчёта периода.'} Статус решений — для текущего периода {currentPeriod}.</p>
     </div></header>
     {!status && <p className="pc-empty" role="status">Данные рынка пока недоступны.</p>}
@@ -64,6 +64,6 @@ export function PlayerMarket({ me, status }: { me: PlayerMe; status: GameStatus 
         }) : <tr><td colSpan={4} className="pc-empty">Компании пока не присоединились к игре.</td></tr>}</tbody>
       </table>
     </div>
-    <div className="pc-market-history"><CompetitionHistoryChart history={periods} ownFirmId={me.firmId} /></div>
+
   </section>;
 }
