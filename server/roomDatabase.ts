@@ -6,7 +6,11 @@ import type {
   RoomPhase,
   RoomVisibility,
 } from "../src/online/roomTypes.ts";
-import type { OnlineGameSettings } from "../src/online/gameSettings.ts";
+import {
+  ensureOnlineFinalMacro,
+  ONLINE_PLAYABLE_PERIODS,
+  type OnlineGameSettings,
+} from "../src/online/gameSettings.ts";
 import type { LeagueSnapshot } from "../src/state/persistence.ts";
 import type { Decision } from "./repository.ts";
 export interface StoredMember {
@@ -47,6 +51,27 @@ export class RoomDatabase {
       CREATE TABLE IF NOT EXISTS members(room_id TEXT NOT NULL REFERENCES rooms(id),user_id TEXT NOT NULL REFERENCES users(id),firm_id TEXT NOT NULL UNIQUE,firm_name TEXT NOT NULL,firm_name_key TEXT NOT NULL,decision TEXT,submitted INTEGER NOT NULL,PRIMARY KEY(room_id,user_id),UNIQUE(room_id,firm_name_key));
       CREATE INDEX IF NOT EXISTS members_user ON members(user_id);
       CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY,room_id TEXT NOT NULL REFERENCES rooms(id),period_index INTEGER NOT NULL,forced INTEGER NOT NULL,affected_firms TEXT NOT NULL,created_at INTEGER NOT NULL);`);
+    // Recover only the old off-by-one ending: period zero plus played 1..7.
+    // Do not saveRoom here: member drafts/submission flags and audits are historical data.
+    try {
+      this.transaction(() => {
+        const candidates = this.db.prepare("SELECT id,snapshot FROM rooms WHERE phase='complete'").all();
+        const update = this.db.prepare("UPDATE rooms SET phase='collecting',snapshot=? WHERE id=? AND phase='complete'");
+        for (const row of candidates) {
+          const snapshot = JSON.parse(String(row.snapshot)) as LeagueSnapshot;
+          const l = snapshot.league;
+          if (!Array.isArray(l?.results) || l.results.length !== ONLINE_PLAYABLE_PERIODS ||
+              !l.results.every((result, index) => result?.periodIndex === index)) continue;
+          ensureOnlineFinalMacro(l);
+          l.decisionsByPeriod[ONLINE_PLAYABLE_PERIODS] ??= {};
+          l.confirmedByPeriod[ONLINE_PLAYABLE_PERIODS] ??= {};
+          update.run(JSON.stringify(snapshot), row.id);
+        }
+      });
+    } catch (error) {
+      this.db.close();
+      throw error;
+    }
   }
   close(): void {
     this.db.close();

@@ -117,6 +117,22 @@ describe('online game engine HTTP integration', () => {
       expect(report.report).toContain('North');
     }
     expect((await repository.read()).games[created.gameId].snapshot?.league.results).toHaveLength(2);
+    // Initial result zero must not consume one of the eight player decisions.
+    for (let periodIndex = 2; periodIndex <= 8; periodIndex++) {
+      const current = await json(await fetch(`${base}/api/player/me`, { headers: firstHeaders }));
+      expect(current.phase).toBe('collecting');
+      expect(current.currentPeriodIndex).toBe(periodIndex);
+      for (const headers of [firstHeaders, secondHeaders]) {
+        expect((await fetch(`${base}/api/player/decision`, { method: 'PUT', headers,
+          body: JSON.stringify({ price: 50, production: 0, marketing: 0, capexGross: 0, rnd: 0 }) })).status).toBe(200);
+        expect((await fetch(`${base}/api/player/submit`, { method: 'POST', headers })).status).toBe(200);
+      }
+      expect((await fetch(`${base}/api/admin/games/${created.gameId}/calculate`, { method: 'POST', headers: admin })).status).toBe(200);
+    }
+    const completed = await json(await fetch(`${base}/api/player/me`, { headers: firstHeaders }));
+    expect(completed.phase).toBe('complete');
+    expect(completed.reports.map((report: { periodIndex: number }) => report.periodIndex)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+    expect((await fetch(`${base}/api/admin/games/${created.gameId}/calculate`, { method: 'POST', headers: admin })).status).toBe(409);
   });
 
   it('rotates the invite key and refuses the previously issued invite', async () => {

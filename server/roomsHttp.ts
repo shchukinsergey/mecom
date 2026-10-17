@@ -22,7 +22,9 @@ import type {
 import type { PlayerMe, GameStatus } from "../src/online/api.ts";
 import {
   buildOnlineGameSnapshot,
+  ensureOnlineFinalMacro,
   DEFAULT_ONLINE_GAME_SETTINGS,
+  ONLINE_PLAYABLE_PERIODS,
   type OnlineGameSettings,
 } from "../src/online/gameSettings.ts";
 import { makeFirmDecision, makeFirmStart } from "../src/engine/config.ts";
@@ -346,8 +348,9 @@ function calculate(room: StoredRoom, db: RoomDatabase, force: boolean): void {
     m.decision = null;
     m.submitted = false;
   }
-  if (i + 1 >= 8) room.phase = "complete";
+  if (i >= ONLINE_PLAYABLE_PERIODS) room.phase = "complete";
   else {
+    if (i + 1 === ONLINE_PLAYABLE_PERIODS) ensureOnlineFinalMacro(l);
     l.decisionsByPeriod[i + 1] = {};
     l.confirmedByPeriod[i + 1] = {};
   }

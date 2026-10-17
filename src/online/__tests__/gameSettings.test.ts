@@ -11,8 +11,8 @@ describe('online game financial settings', () => {
     expect(config.serviceFee).toBe(0.01);
     expect(config.periodsPerYear).toBe(4);
     expect(config.depositRate).toBe(0.1);
-    expect(macroByPeriod).toHaveLength(8);
-    expect(macroByPeriod.map(macro => macro.periodIndex)).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
+    expect(macroByPeriod).toHaveLength(9);
+    expect(macroByPeriod.map(macro => macro.periodIndex)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
     expect(macroByPeriod.every(macro =>
       macro.taxRate === 0.25 && macro.bankRateBase === 0.1 && macro.bankRateExtra === 0.4 &&
       macro.loanLimitBase === 50000 && macro.loanLimitAbs === 100000,

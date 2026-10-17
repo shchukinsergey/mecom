@@ -347,7 +347,7 @@ test("calculation write failure rolls back final submission, results and audit",
 test("full eight-period game persists private histories and rejects stale parallel calculations", async () => {
   const { owner, a, b, route } = await game();
   await call(route + "/start", "POST", {}, owner);
-  for (let i = 1; i < 8; i++) {
+  for (let i = 1; i <= 8; i++) {
     for (const cookie of [a, b]) {
       expect(
         (await call(route + "/submit", "POST", { periodIndex: i }, cookie))
@@ -405,11 +405,11 @@ test("full eight-period game persists private histories and rejects stale parall
   }
   const me = (await call(route + "/me", "GET", undefined, a)).body;
   expect(me.phase).toBe("complete");
-  expect(me.reports).toHaveLength(8);
-  expect(me.currentPeriodIndex).toBe(8);
+  expect(me.reports).toHaveLength(9);
+  expect(me.currentPeriodIndex).toBe(9);
   const stored = db.room(route.split("/").at(-1)!)!;
-  expect(stored.snapshot.league.results).toHaveLength(8);
-  expect(stored.snapshot.league.confirmedByPeriod[7][me.firmId]).toBe(true);
+  expect(stored.snapshot.league.results.map(p => p.periodIndex)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+  expect(stored.snapshot.league.confirmedByPeriod[8][me.firmId]).toBe(true);
   expect(
     (
       await call(
@@ -421,6 +421,96 @@ test("full eight-period game persists private histories and rejects stale parall
     ).status,
   ).toBe(409);
 });
+test.each(["lobby", "collecting", "existing-eight"])("legacy %s snapshot advances through period eight without resetting saved macros", async (variant) => {
+  const { owner, a, b, route } = await game();
+  const id = route.split("/").at(-1)!;
+  const seedLegacy = () => db.transaction(() => {
+    const room = db.room(id)!;
+    const l = room.snapshot.league;
+    l.macroByPeriod = l.macroByPeriod.slice(0, 8);
+    l.macroByPeriod[7] = { ...l.macroByPeriod[7], taxRate: 0.13, bankRateBase: 0.07, scenarioNewsText: "Period seven only" };
+    if (variant === "existing-eight")
+      l.macroByPeriod[8] = { ...l.macroByPeriod[7], periodIndex: 8, taxRate: 0.19, scenarioNewsText: "Saved period eight news" };
+    db.saveRoom(room);
+  });
+  if (variant === "lobby") seedLegacy();
+  await call(route + "/start", "POST", {}, owner);
+  if (variant !== "lobby") seedLegacy();
+  const initial = db.room(id)!.snapshot.league;
+  for (let i = 1; i <= 7; i++)
+    expect((await call(route + "/calculate", "POST", { periodIndex: i, force: true }, owner)).status).toBe(200);
+  const before = db.room(id)!;
+  expect(before.phase).toBe("collecting");
+  expect(before.snapshot.league.macroByPeriod.slice(0, 8)).toEqual(initial.macroByPeriod.slice(0, 8));
+  expect(before.snapshot.league.config).toEqual(initial.config);
+  expect(before.snapshot.league.macroByPeriod[8]).toEqual(variant === "existing-eight"
+    ? initial.macroByPeriod[8]
+    : { ...initial.macroByPeriod[7], periodIndex: 8, scenarioNewsText: "" });
+  if (variant === "lobby") {
+    for (const cookie of [a, b])
+      expect((await call(route + "/decision", "PUT", { periodIndex: 8, decision: conservative }, cookie)).status).toBe(200);
+    expect((await call(route + "/submit", "POST", { periodIndex: 8 }, a)).status).toBe(200);
+    const responses = await Promise.all([1, 2].map(() => call(route + "/submit", "POST", { periodIndex: 8 }, b)));
+    expect(responses.map(r => r.status).sort()).toEqual([200, 409]);
+  } else {
+    const responses = await Promise.all([1, 2].map(() => call(route + "/calculate", "POST", { periodIndex: 8, force: true }, owner)));
+    expect(responses.map(r => r.status).sort()).toEqual([200, 409]);
+  }
+  const completed = db.room(id)!;
+  expect(completed.phase).toBe("complete");
+  expect(completed.snapshot.league.results).toHaveLength(9);
+  expect(completed.snapshot.league.results.at(-1)!.periodIndex).toBe(8);
+  expect(completed.snapshot.league.results.slice(0, 8)).toEqual(before.snapshot.league.results);
+  expect((await call(route + "/submit", "POST", { periodIndex: 8 }, b)).status).toBe(409);
+  expect((await call(route + "/calculate", "POST", { periodIndex: 8, force: true }, owner)).status).toBe(409);
+});
+
+test("recovered completed period seven resumes only period eight after restart", async () => {
+  const { owner, a, b, route } = await game();
+  const id = route.split("/").at(-1)!;
+  await call(route + "/start", "POST", {}, owner);
+  for (let i = 1; i <= 7; i++) {
+    for (const cookie of [a, b])
+      expect((await call(route + "/decision", "PUT", { periodIndex: i, decision: conservative }, cookie)).status).toBe(200);
+    expect((await call(route + "/calculate", "POST", { periodIndex: i, force: true }, owner)).status).toBe(200);
+  }
+  db.transaction(() => {
+    const room = db.room(id)!;
+    room.phase = "complete";
+    room.snapshot.league.macroByPeriod.length = 8;
+    room.snapshot.league.decisionsByPeriod.length = 8;
+    room.snapshot.league.confirmedByPeriod.length = 8;
+    db.saveRoom(room);
+  });
+  const historical = db.room(id)!;
+  await new Promise<void>(resolve => server.close(() => resolve()));
+  db.close();
+  db = new RoomDatabase(join(directory, "rooms.sqlite"));
+  server = createAccountServer(db);
+  await listenAccounts(server, 0);
+  base = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
+  const recovered = db.room(id)!;
+  expect(recovered.phase).toBe("collecting");
+  expect(recovered.snapshot.opening).toEqual(historical.snapshot.opening);
+  expect(recovered.members).toEqual(historical.members);
+  expect((await call(route + "/me", "GET", undefined, a)).body.currentPeriodIndex).toBe(8);
+  expect((await call(route + "/calculate", "POST", { periodIndex: 7, force: true }, owner)).status).toBe(409);
+  for (const cookie of [a, b])
+    expect((await call(route + "/decision", "PUT", { periodIndex: 8, decision: conservative }, cookie)).status).toBe(200);
+  expect((await call(route + "/submit", "POST", { periodIndex: 8 }, a)).status).toBe(200);
+  expect((await call(route + "/submit", "POST", { periodIndex: 8 }, b)).status).toBe(200);
+  const completed = db.room(id)!;
+  expect(completed.phase).toBe("complete");
+  expect(completed.snapshot.league.results).toHaveLength(9);
+  expect(completed.snapshot.league.results.at(-1)!.periodIndex).toBe(8);
+  expect(completed.snapshot.league.results.slice(0, 8)).toEqual(historical.snapshot.league.results);
+  expect(completed.snapshot.league.decisionsByPeriod.slice(0, 8)).toEqual(historical.snapshot.league.decisionsByPeriod);
+  expect(completed.snapshot.league.confirmedByPeriod.slice(0, 8)).toEqual(historical.snapshot.league.confirmedByPeriod);
+  const raw = new (await import("node:sqlite")).DatabaseSync(join(directory, "rooms.sqlite"));
+  try { expect(raw.prepare("SELECT period_index FROM audit WHERE room_id=? ORDER BY id").all(id).map(row => row.period_index)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]); }
+  finally { raw.close(); }
+});
+
 test("forced calculation chooses saved draft then previous, and invalid current draft rolls back atomically", async () => {
   const { owner, a, route } = await game();
   await call(route + "/start", "POST", {}, owner);

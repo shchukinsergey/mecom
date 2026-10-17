@@ -2,6 +2,9 @@ import { DEFAULT_LEAGUE_CONFIG, makeMacroParams } from '../engine/config';
 import type { League, LeagueConfig } from '../engine/types';
 import type { LeagueSnapshot } from '../state/persistence';
 
+/** Period zero is the initial snapshot, not a playable period. */
+export const ONLINE_PLAYABLE_PERIODS = 8;
+
 export interface OnlineGameSettings {
   loanRepayment: LeagueConfig['featureFlags']['loanRepayment'];
   bankInterestFormula: LeagueConfig['featureFlags']['bankInterestFormula'];
@@ -28,6 +31,18 @@ export const DEFAULT_ONLINE_GAME_SETTINGS: OnlineGameSettings = {
   loanLimitAbs: 100000,
 };
 
+/** Extend legacy 0..7 plans without replacing saved financial or RIF rules. */
+export function ensureOnlineFinalMacro(league: League): void {
+  if (league.macroByPeriod[ONLINE_PLAYABLE_PERIODS]) return;
+  const previous = league.macroByPeriod[ONLINE_PLAYABLE_PERIODS - 1];
+  if (!previous) throw new Error('Missing prior online period macro');
+  league.macroByPeriod[ONLINE_PLAYABLE_PERIODS] = {
+    ...structuredClone(previous),
+    periodIndex: ONLINE_PLAYABLE_PERIODS,
+    scenarioNewsText: '',
+  };
+}
+
 /** Build an empty online-game snapshot with the chosen settings preloaded for all periods. */
 export function buildOnlineGameSnapshot(
   name: string,
@@ -44,7 +59,7 @@ export function buildOnlineGameSnapshot(
       loanRepayment: settings.loanRepayment,
     },
   };
-  const macroByPeriod = Array.from({ length: 8 }, (_, periodIndex) => ({
+  const macroByPeriod = Array.from({ length: ONLINE_PLAYABLE_PERIODS + 1 }, (_, periodIndex) => ({
     ...makeMacroParams(periodIndex),
     taxRate: settings.taxRatePercent / 100,
     bankRateBase: settings.bankRateBasePercent / 100,
