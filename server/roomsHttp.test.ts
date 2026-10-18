@@ -200,6 +200,37 @@ test("room authorization, link visibility, membership and public DTO privacy", a
     "closed",
   );
 });
+
+test("a room created with one bot initializes and calculates the bot as a firm", async () => {
+  await setup();
+  const owner = await register("BotOwner");
+  const human = await register("BotHuman");
+  const created = await call("/api/rooms", "POST", {
+    name: "Bot room", visibility: "public", addBot: true,
+  }, owner);
+  expect(created.status).toBe(201);
+  expect(created.body.firms).toHaveLength(1);
+  expect(created.body.firms[0]).toMatchObject({ firmName: "Бот", isBot: true });
+  expect(created.body.playerCount).toBe(1);
+  const id = created.body.id as string;
+  const route = `/api/rooms/${id}`;
+
+  expect((await call(route + "/join", "POST", { firmName: "Human firm" }, human)).status).toBe(200);
+  const started = await call(route + "/start", "POST", {}, owner);
+  expect(started.status).toBe(200);
+  expect(started.body.firms.find((firm: { isBot?: boolean }) => firm.isBot)?.submitted).toBe(true);
+
+  const decision = {
+    price: 35, production: 0, marketing: 0, capexGross: 0, rnd: 0,
+  };
+  const savedDecision = await call(route + "/decision", "PUT", { periodIndex: 1, decision }, human);
+  expect(savedDecision.status, JSON.stringify(savedDecision.body)).toBe(200);
+  expect((await call(route + "/submit", "POST", { periodIndex: 1 }, human)).status).toBe(200);
+  const stored = db.room(id)!;
+  const botId = created.body.firms[0].firmId as string;
+  expect(stored.snapshot.league.decisionsByPeriod[1][botId]).toBeDefined();
+  expect(stored.snapshot.league.results[1].firms.find(firm => firm.firmId === botId)?.netProfit).toEqual(expect.any(Number));
+});
 test("status returns all saved public history to members and owner only", async () => {
   const { owner, a, outsider, route } = await game();
   expect((await call(route + "/status", "GET", undefined, a)).body.history).toEqual([]);

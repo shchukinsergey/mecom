@@ -27,6 +27,7 @@ export interface StoredRoom {
   ownerLogin: string;
   visibility: RoomVisibility;
   phase: RoomPhase;
+  botFirmId?: string | null;
   settings: OnlineGameSettings;
   snapshot: LeagueSnapshot;
   members: StoredMember[];
@@ -46,11 +47,13 @@ export class RoomDatabase {
       CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,login TEXT NOT NULL,login_key TEXT NOT NULL UNIQUE,salt TEXT NOT NULL,password_hash TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS sessions(token_hash TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),expires INTEGER NOT NULL);
       CREATE INDEX IF NOT EXISTS session_expiry ON sessions(expires);
-      CREATE TABLE IF NOT EXISTS rooms(id TEXT PRIMARY KEY,owner_id TEXT NOT NULL REFERENCES users(id),name TEXT NOT NULL,visibility TEXT NOT NULL,phase TEXT NOT NULL,settings TEXT NOT NULL,snapshot TEXT NOT NULL);
+      CREATE TABLE IF NOT EXISTS rooms(id TEXT PRIMARY KEY,owner_id TEXT NOT NULL REFERENCES users(id),name TEXT NOT NULL,visibility TEXT NOT NULL,phase TEXT NOT NULL,settings TEXT NOT NULL,snapshot TEXT NOT NULL,bot_firm_id TEXT);
       CREATE INDEX IF NOT EXISTS rooms_owner ON rooms(owner_id);
       CREATE TABLE IF NOT EXISTS members(room_id TEXT NOT NULL REFERENCES rooms(id),user_id TEXT NOT NULL REFERENCES users(id),firm_id TEXT NOT NULL UNIQUE,firm_name TEXT NOT NULL,firm_name_key TEXT NOT NULL,decision TEXT,submitted INTEGER NOT NULL,PRIMARY KEY(room_id,user_id),UNIQUE(room_id,firm_name_key));
       CREATE INDEX IF NOT EXISTS members_user ON members(user_id);
       CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY,room_id TEXT NOT NULL REFERENCES rooms(id),period_index INTEGER NOT NULL,forced INTEGER NOT NULL,affected_firms TEXT NOT NULL,created_at INTEGER NOT NULL);`);
+    const roomColumns = this.db.prepare("PRAGMA table_info(rooms)").all().map(row => String(row.name));
+    if (!roomColumns.includes("bot_firm_id")) this.db.exec("ALTER TABLE rooms ADD COLUMN bot_firm_id TEXT");
     // Recover only the old off-by-one ending: period zero plus played 1..7.
     // Do not saveRoom here: member drafts/submission flags and audits are historical data.
     try {
@@ -172,6 +175,7 @@ export class RoomDatabase {
       ownerLogin: String(row.ownerLogin),
       visibility: row.visibility as RoomVisibility,
       phase: row.phase as RoomPhase,
+      ...(row.bot_firm_id ? { botFirmId: String(row.bot_firm_id) } : {}),
       settings: JSON.parse(String(row.settings)),
       snapshot: JSON.parse(String(row.snapshot)),
       members,
@@ -194,7 +198,7 @@ export class RoomDatabase {
   }
   insertRoom(room: StoredRoom): void {
     this.db
-      .prepare("INSERT INTO rooms VALUES(?,?,?,?,?,?,?)")
+      .prepare("INSERT INTO rooms(id,owner_id,name,visibility,phase,settings,snapshot,bot_firm_id) VALUES(?,?,?,?,?,?,?,?)")
       .run(
         room.id,
         room.ownerId,
@@ -203,6 +207,7 @@ export class RoomDatabase {
         room.phase,
         JSON.stringify(room.settings),
         JSON.stringify(room.snapshot),
+        room.botFirmId ?? null,
       );
   }
   saveRoom(room: StoredRoom): void {

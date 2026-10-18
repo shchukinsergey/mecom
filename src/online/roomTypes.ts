@@ -32,6 +32,7 @@ export interface RoomSummary {
 export interface RoomFirm {
   firmId: string;
   firmName: string;
+  isBot?: true;
   submitted: boolean;
   currentRif: number | null;
   nativeBankrupt?: true;
@@ -47,6 +48,7 @@ export interface CreateRoomInput {
   name: string;
   visibility: RoomVisibility;
   settings?: OnlineGameSettings;
+  addBot?: boolean;
 }
 export interface CalculatePreview {
   periodIndex: number;
