@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type { GameStatus, PlayerMe } from '../../online/api';
 import { getPlayerInsights, type PlayerInsightKind } from '../../online/playerInsights';
 import { CompetitionHistoryChart } from './CompetitionHistoryChart';
@@ -20,6 +21,8 @@ function MetricChange({ value, previous, unit = '', inverse = false }: { value: 
 }
 
 export function PlayerOverview({ me, status, onDecisions }: { me: PlayerMe; status: GameStatus | null; onDecisions: () => void }) {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => { const timer = window.setInterval(() => setNow(Date.now()), 1000); return () => window.clearInterval(timer); }, []);
   const results = (me.recentResults ?? []).filter(r => r.firmId === me.firmId).slice().sort((a, b) => a.periodIndex - b.periodIndex);
   const latest = results.at(-1);
   const candidate = results.at(-2);
@@ -64,6 +67,8 @@ export function PlayerOverview({ me, status, onDecisions }: { me: PlayerMe; stat
       </section>
       <section className="pc-next-step"><h2>{me.phase === 'collecting' ? me.submitted ? 'Решение уже отправлено' : `Решение на период ${me.currentPeriodIndex}` : phases[me.phase]}</h2>
         <p>{me.phase === 'closed' ? 'Решения больше не принимаются. Результаты и отчёты остаются доступны.' : me.phase === 'lobby' ? 'Решения будут доступны после начала игры.' : me.phase === 'complete' ? 'Период рассчитан. Дождитесь следующего этапа игры.' : me.submitted ? 'Параметры отправлены. Ожидаем остальных участников.' : 'Подготовьте выпуск, цену и инвестиции.'}</p>
+        {me.timerMode && <p className="pc-muted">{me.timerMode === 'fast' ? 'Быстрый режим · 7 минут' : me.timerMode === 'standard' ? 'Стандартный режим · 24 часа' : 'Без ограничения'}{me.deadlineAt ? ` · срок до ${new Date(me.deadlineAt).toLocaleString()} · осталось ${formatRemaining(me.deadlineAt - now)}` : ''}</p>}
+        {me.autoTurn && <p role="status">Решение за период {me.autoTurn.periodIndex} отправлено автоматически{me.autoTurn.bankrupt ? ' — фирма объявлена банкротом.' : me.autoTurn.cleared.length ? `. Обнулены расходы: ${me.autoTurn.cleared.map(field => autoClearedLabels[field]).join(', ')}.` : '.'}</p>}
         <button className="pc-primary" type="button" onClick={onDecisions}>{me.phase === 'collecting' && !me.submitted ? 'Открыть параметры решения' : 'Посмотреть решение'}</button>
         <div className="pc-macro"><h3>Условия периода {macro?.periodIndex ?? me.currentPeriodIndex}</h3>
           {macro ? <><p>Налог {formatPlayerValue(macro.taxRate * 100, '%')}; базовая ставка банка {formatPlayerValue(macro.bankRateBase * 100, '%')}.</p>{macro.scenarioNewsText && <p className="pc-news">{macro.scenarioNewsText}</p>}</> : <p className="pc-muted">Условия периода недоступны.</p>}
@@ -74,3 +79,6 @@ export function PlayerOverview({ me, status, onDecisions }: { me: PlayerMe; stat
     <div className="pc-market-history"><h2>Компания на фоне рынка</h2><CompetitionHistoryChart history={periods} ownFirmId={me.firmId} /></div>
   </section>;
 }
+
+const autoClearedLabels: Record<NonNullable<PlayerMe['autoTurn']>['cleared'][number], string> = { marketing: 'маркетинг', rnd: 'НИОКР', capexGross: 'инвестиции', production: 'производство' };
+function formatRemaining(milliseconds: number) { const total = Math.max(0, Math.ceil(milliseconds / 1000)); const hours = Math.floor(total / 3600); const minutes = Math.floor((total % 3600) / 60); const seconds = total % 60; return `${hours ? `${hours} ч ` : ''}${minutes} мин ${seconds} с`; }

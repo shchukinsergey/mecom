@@ -12,8 +12,8 @@ let directory: string;
 let db: RoomDatabase | undefined;
 let raw: DatabaseSync | undefined;
 afterEach(async () => {
-  raw?.close(); raw = undefined;
   db?.close(); db = undefined;
+  raw?.close(); raw = undefined;
   if (directory) await rm(directory, { recursive: true, force: true });
 });
 async function fixture() {
@@ -40,7 +40,8 @@ async function fixture() {
     snapshot.opening = nextOpeningState(snapshot.opening, result);
   }
   const room: StoredRoom = { id: "affected", name: l.name, ownerId: "owner", ownerLogin: "Owner",
-    phase: "complete", visibility: "link", settings: { ...DEFAULT_ONLINE_GAME_SETTINGS, taxRatePercent: 17 }, snapshot,
+    phase: "complete", visibility: "link", timerMode: "standard", deadlineAt: null, autoBankruptcy: false,
+    settings: { ...DEFAULT_ONLINE_GAME_SETTINGS, taxRatePercent: 17 }, snapshot,
     members: [{ userId: "owner", firmId: "one", firmName: "one", submitted: true,
       decision: { price: 35, production: 0, marketing: 0, capexGross: 0, rnd: 0 } }] };
   db.transaction(() => { db!.insertRoom(room); db!.saveRoom(room); db!.audit(room.id, 7, true, ["two"]); });
@@ -52,7 +53,7 @@ function tables() {
     [table, raw!.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all()]));
 }
 
-test("startup reopens only exact completed 0..7 histories and preserves all saved data across restarts", async () => {
+test("startup preserves completed and closed games, and gives active legacy rooms a full deadline", async () => {
   const { file, room } = await fixture();
   const existing = structuredClone(room);
   existing.id = "existing-eight";
@@ -62,7 +63,8 @@ test("startup reopens only exact completed 0..7 histories and preserves all save
   existing.snapshot.league.decisionsByPeriod[8] = { one: makeFirmDecision("one", 2) };
   existing.snapshot.league.confirmedByPeriod[8] = { one: true };
   const excluded: StoredRoom[] = [];
-  for (const phase of ["closed", "lobby", "collecting"] as const) excluded.push({ ...structuredClone(room), id: phase, phase, members: [] });
+  for (const phase of ["closed", "lobby", "collecting"] as const) excluded.push({ ...structuredClone(room), id: phase, phase,
+    deadlineAt: null, members: [] });
   for (const shape of ["full", "short", "duplicate", "reordered", "wrong-last", "wrong-first"]) {
     const other = { ...structuredClone(room), id: shape, members: [] };
     const results = other.snapshot.league.results;
@@ -76,45 +78,43 @@ test("startup reopens only exact completed 0..7 histories and preserves all save
   }
   db!.transaction(() => { for (const other of [existing, ...excluded]) db!.insertRoom(other); });
   // Keep historical results serialized identically and detect every persisted room update.
-  const historyJson = JSON.stringify(room.snapshot.league.results);
   const protectedBefore = tables();
   const excludedBefore = raw!.prepare("SELECT * FROM rooms WHERE id NOT IN ('affected','existing-eight') ORDER BY id").all();
   raw!.exec("CREATE TABLE recovery_writes(room_id TEXT); CREATE TRIGGER track_recovery AFTER UPDATE ON rooms BEGIN INSERT INTO recovery_writes VALUES(new.id); END;");
   db!.close(); db = undefined;
   db = new RoomDatabase(file);
-  const recovered = db.room(room.id)!;
-  const expected = structuredClone(room);
-  expected.phase = "collecting";
-  expected.snapshot.league.macroByPeriod[8] = { ...structuredClone(room.snapshot.league.macroByPeriod[7]), periodIndex: 8, scenarioNewsText: "" };
-  expected.snapshot.league.decisionsByPeriod[8] = {};
-  expected.snapshot.league.confirmedByPeriod[8] = {};
-  expect(recovered).toEqual(expected);
-  expect(JSON.stringify(recovered.snapshot.league.results)).toBe(historyJson);
-  expect(db.room(existing.id)).toEqual({ ...existing, phase: "collecting" });
+  expect(db.room(room.id)).toEqual(room);
+  expect(db.room(existing.id)).toEqual(existing);
   expect(tables()).toEqual(protectedBefore);
-  expect(raw!.prepare("SELECT * FROM rooms WHERE id NOT IN ('affected','existing-eight') ORDER BY id").all()).toEqual(excludedBefore);
-  expect(raw!.prepare("SELECT room_id FROM recovery_writes ORDER BY room_id").all()).toEqual([{ room_id: "affected" }, { room_id: "existing-eight" }]);
+  const afterExcluded = raw!.prepare("SELECT * FROM rooms WHERE id NOT IN ('affected','existing-eight') ORDER BY id").all() as Array<Record<string, unknown>>;
+  expect(afterExcluded).toHaveLength(excludedBefore.length);
+  for (let i = 0; i < afterExcluded.length; i++) {
+    if (afterExcluded[i].id === "collecting") {
+      expect(afterExcluded[i].deadline_at).toBeGreaterThan(Date.now());
+      expect({ ...afterExcluded[i], deadline_at: null }).toEqual(excludedBefore[i]);
+    } else expect(afterExcluded[i]).toEqual(excludedBefore[i]);
+  }
+  expect(raw!.prepare("SELECT room_id FROM recovery_writes ORDER BY room_id").all()).toEqual([{ room_id: "collecting" }]);
   const allRooms = raw!.prepare("SELECT * FROM rooms ORDER BY id").all();
   db.close(); db = undefined;
   db = new RoomDatabase(file);
   expect(raw!.prepare("SELECT * FROM rooms ORDER BY id").all()).toEqual(allRooms);
-  expect(raw!.prepare("SELECT count(*) AS n FROM recovery_writes").get()!.n).toBe(2);
+  expect(raw!.prepare("SELECT count(*) AS n FROM recovery_writes").get()!.n).toBe(1);
   expect(tables()).toEqual(protectedBefore);
 });
 
-test("startup recovery rolls back every candidate if any room write fails", async () => {
+test("startup never reopens or writes completed games", async () => {
   const { file, room } = await fixture();
   const second = { ...structuredClone(room), id: "second", members: [] };
   db!.transaction(() => db!.insertRoom(second));
-  raw!.exec("CREATE TRIGGER reject_recovery BEFORE UPDATE ON rooms WHEN old.id='second' BEGIN SELECT RAISE(ABORT, 'synthetic recovery failure'); END;");
+  raw!.exec("CREATE TABLE completed_writes(room_id TEXT); CREATE TRIGGER track_completed AFTER UPDATE ON rooms BEGIN INSERT INTO completed_writes VALUES(new.id); END;");
   const before = raw!.prepare("SELECT * FROM rooms ORDER BY id").all();
   const protectedBefore = tables();
   db!.close(); db = undefined;
-  expect(() => { db = new RoomDatabase(file); }).toThrow("synthetic recovery failure");
-  expect(raw!.prepare("SELECT * FROM rooms ORDER BY id").all()).toEqual(before);
-  expect(tables()).toEqual(protectedBefore);
-  raw!.exec("DROP TRIGGER reject_recovery");
   db = new RoomDatabase(file);
-  expect(db.room(room.id)!.phase).toBe("collecting");
-  expect(db.room(second.id)!.phase).toBe("collecting");
+  expect(db.room(room.id)!.phase).toBe("complete");
+  expect(db.room(second.id)!.phase).toBe("complete");
+  expect(raw!.prepare("SELECT * FROM rooms ORDER BY id").all()).toEqual(before);
+  expect(raw!.prepare("SELECT room_id FROM completed_writes").all()).toEqual([]);
+  expect(tables()).toEqual(protectedBefore);
 });

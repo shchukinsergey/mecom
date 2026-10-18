@@ -18,6 +18,7 @@ export interface PublicHistoryPeriod {
 export interface AccountUser { id: string; login: string; }
 export type RoomVisibility = 'public' | 'link';
 export type RoomPhase = 'lobby' | 'collecting' | 'complete' | 'closed';
+export type RoomTimerMode = 'fast' | 'standard' | 'unlimited';
 export interface RoomSummary {
   id: string;
   name: string;
@@ -28,6 +29,8 @@ export interface RoomSummary {
   currentPeriodIndex: number;
   playerCount: number;
   ownFirmId: string | null;
+  timerMode: RoomTimerMode;
+  deadlineAt: number | null;
 }
 export interface RoomFirm {
   firmId: string;
@@ -35,6 +38,8 @@ export interface RoomFirm {
   submitted: boolean;
   currentRif: number | null;
   nativeBankrupt?: true;
+  autoSubmitted?: true;
+  autoBankrupt?: true;
 }
 export interface RoomDetail extends RoomSummary {
   nativeBankruptcyAvailable?: boolean;
@@ -46,6 +51,7 @@ export interface RoomDetail extends RoomSummary {
 export interface CreateRoomInput {
   name: string;
   visibility: RoomVisibility;
+  timerMode?: RoomTimerMode;
   settings?: OnlineGameSettings;
 }
 export interface CalculatePreview {

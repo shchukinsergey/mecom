@@ -5,12 +5,9 @@ import type {
   AccountUser,
   RoomPhase,
   RoomVisibility,
+  RoomTimerMode,
 } from "../src/online/roomTypes.ts";
-import {
-  ensureOnlineFinalMacro,
-  ONLINE_PLAYABLE_PERIODS,
-  type OnlineGameSettings,
-} from "../src/online/gameSettings.ts";
+import { type OnlineGameSettings } from "../src/online/gameSettings.ts";
 import type { LeagueSnapshot } from "../src/state/persistence.ts";
 import type { Decision } from "./repository.ts";
 export interface StoredMember {
@@ -27,6 +24,9 @@ export interface StoredRoom {
   ownerLogin: string;
   visibility: RoomVisibility;
   phase: RoomPhase;
+  timerMode: RoomTimerMode;
+  deadlineAt: number | null;
+  autoBankruptcy: boolean;
   settings: OnlineGameSettings;
   snapshot: LeagueSnapshot;
   members: StoredMember[];
@@ -46,32 +46,18 @@ export class RoomDatabase {
       CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,login TEXT NOT NULL,login_key TEXT NOT NULL UNIQUE,salt TEXT NOT NULL,password_hash TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS sessions(token_hash TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),expires INTEGER NOT NULL);
       CREATE INDEX IF NOT EXISTS session_expiry ON sessions(expires);
-      CREATE TABLE IF NOT EXISTS rooms(id TEXT PRIMARY KEY,owner_id TEXT NOT NULL REFERENCES users(id),name TEXT NOT NULL,visibility TEXT NOT NULL,phase TEXT NOT NULL,settings TEXT NOT NULL,snapshot TEXT NOT NULL);
+      CREATE TABLE IF NOT EXISTS rooms(id TEXT PRIMARY KEY,owner_id TEXT NOT NULL REFERENCES users(id),name TEXT NOT NULL,visibility TEXT NOT NULL,phase TEXT NOT NULL,settings TEXT NOT NULL,snapshot TEXT NOT NULL,timer_mode TEXT NOT NULL DEFAULT 'standard',deadline_at INTEGER,auto_bankruptcy INTEGER NOT NULL DEFAULT 0);
       CREATE INDEX IF NOT EXISTS rooms_owner ON rooms(owner_id);
       CREATE TABLE IF NOT EXISTS members(room_id TEXT NOT NULL REFERENCES rooms(id),user_id TEXT NOT NULL REFERENCES users(id),firm_id TEXT NOT NULL UNIQUE,firm_name TEXT NOT NULL,firm_name_key TEXT NOT NULL,decision TEXT,submitted INTEGER NOT NULL,PRIMARY KEY(room_id,user_id),UNIQUE(room_id,firm_name_key));
       CREATE INDEX IF NOT EXISTS members_user ON members(user_id);
-      CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY,room_id TEXT NOT NULL REFERENCES rooms(id),period_index INTEGER NOT NULL,forced INTEGER NOT NULL,affected_firms TEXT NOT NULL,created_at INTEGER NOT NULL);`);
-    // Recover only the old off-by-one ending: period zero plus played 1..7.
-    // Do not saveRoom here: member drafts/submission flags and audits are historical data.
-    try {
-      this.transaction(() => {
-        const candidates = this.db.prepare("SELECT id,snapshot FROM rooms WHERE phase='complete'").all();
-        const update = this.db.prepare("UPDATE rooms SET phase='collecting',snapshot=? WHERE id=? AND phase='complete'");
-        for (const row of candidates) {
-          const snapshot = JSON.parse(String(row.snapshot)) as LeagueSnapshot;
-          const l = snapshot.league;
-          if (!Array.isArray(l?.results) || l.results.length !== ONLINE_PLAYABLE_PERIODS ||
-              !l.results.every((result, index) => result?.periodIndex === index)) continue;
-          ensureOnlineFinalMacro(l);
-          l.decisionsByPeriod[ONLINE_PLAYABLE_PERIODS] ??= {};
-          l.confirmedByPeriod[ONLINE_PLAYABLE_PERIODS] ??= {};
-          update.run(JSON.stringify(snapshot), row.id);
-        }
-      });
-    } catch (error) {
-      this.db.close();
-      throw error;
-    }
+      CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY,room_id TEXT NOT NULL REFERENCES rooms(id),period_index INTEGER NOT NULL,forced INTEGER NOT NULL,affected_firms TEXT NOT NULL,created_at INTEGER NOT NULL);
+      CREATE TABLE IF NOT EXISTS auto_turns(room_id TEXT NOT NULL REFERENCES rooms(id),period_index INTEGER NOT NULL,firm_id TEXT NOT NULL,cleared_fields TEXT NOT NULL,bankrupt INTEGER NOT NULL,created_at INTEGER NOT NULL,PRIMARY KEY(room_id,period_index,firm_id));`);
+    const roomColumns = this.db.prepare("PRAGMA table_info(rooms)").all().map(row => String(row.name));
+    if (!roomColumns.includes("timer_mode")) this.db.exec("ALTER TABLE rooms ADD COLUMN timer_mode TEXT NOT NULL DEFAULT 'standard'");
+    if (!roomColumns.includes("deadline_at")) this.db.exec("ALTER TABLE rooms ADD COLUMN deadline_at INTEGER");
+    if (!roomColumns.includes("auto_bankruptcy")) this.db.exec("ALTER TABLE rooms ADD COLUMN auto_bankruptcy INTEGER NOT NULL DEFAULT 0");
+    this.db.prepare("UPDATE rooms SET deadline_at=? WHERE phase='collecting' AND timer_mode='standard' AND deadline_at IS NULL").run(Date.now() + 86400000);
+
   }
   close(): void {
     this.db.close();
@@ -172,6 +158,9 @@ export class RoomDatabase {
       ownerLogin: String(row.ownerLogin),
       visibility: row.visibility as RoomVisibility,
       phase: row.phase as RoomPhase,
+      timerMode: (row.timer_mode ?? "standard") as RoomTimerMode,
+      deadlineAt: row.deadline_at === null || row.deadline_at === undefined ? null : Number(row.deadline_at),
+      autoBankruptcy: !!row.auto_bankruptcy,
       settings: JSON.parse(String(row.settings)),
       snapshot: JSON.parse(String(row.snapshot)),
       members,
@@ -192,9 +181,20 @@ export class RoomDatabase {
             .all(userId, userId);
     return rows.map((row) => String(row.id));
   }
+  dueRoomIds(now: number): string[] {
+    return this.db.prepare("SELECT id FROM rooms WHERE phase='collecting' AND deadline_at IS NOT NULL AND deadline_at<=? ORDER BY deadline_at").all(now).map(row => String(row.id));
+  }
+  recordAutoTurn(roomId: string, periodIndex: number, firmId: string, cleared: string[], bankrupt: boolean): void {
+    this.db.prepare("INSERT OR REPLACE INTO auto_turns(room_id,period_index,firm_id,cleared_fields,bankrupt,created_at) VALUES(?,?,?,?,?,?)")
+      .run(roomId, periodIndex, firmId, JSON.stringify(cleared), Number(bankrupt), Date.now());
+  }
+  autoTurn(roomId: string, periodIndex: number, firmId: string): { periodIndex: number; cleared: Array<'marketing' | 'rnd' | 'capexGross' | 'production'>; bankrupt: boolean } | undefined {
+      const row = this.db.prepare("SELECT cleared_fields,bankrupt FROM auto_turns WHERE room_id=? AND period_index=? AND firm_id=?").get(roomId, periodIndex, firmId);
+      return row ? { periodIndex, cleared: JSON.parse(String(row.cleared_fields)) as Array<'marketing' | 'rnd' | 'capexGross' | 'production'>, bankrupt: !!row.bankrupt } : undefined;
+  }
   insertRoom(room: StoredRoom): void {
     this.db
-      .prepare("INSERT INTO rooms VALUES(?,?,?,?,?,?,?)")
+      .prepare("INSERT INTO rooms(id,owner_id,name,visibility,phase,settings,snapshot,timer_mode,deadline_at,auto_bankruptcy) VALUES(?,?,?,?,?,?,?,?,?,?)")
       .run(
         room.id,
         room.ownerId,
@@ -203,12 +203,15 @@ export class RoomDatabase {
         room.phase,
         JSON.stringify(room.settings),
         JSON.stringify(room.snapshot),
+        room.timerMode ?? "standard",
+        room.deadlineAt ?? null,
+        Number(room.autoBankruptcy ?? false),
       );
   }
   saveRoom(room: StoredRoom): void {
     this.db
-      .prepare("UPDATE rooms SET phase=?,snapshot=? WHERE id=?")
-      .run(room.phase, JSON.stringify(room.snapshot), room.id);
+      .prepare("UPDATE rooms SET phase=?,snapshot=?,timer_mode=?,deadline_at=?,auto_bankruptcy=? WHERE id=?")
+      .run(room.phase, JSON.stringify(room.snapshot), room.timerMode ?? "standard", room.deadlineAt ?? null, Number(room.autoBankruptcy ?? false), room.id);
     for (const m of room.members)
       this.db
         .prepare(

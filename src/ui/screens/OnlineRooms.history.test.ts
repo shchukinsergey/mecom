@@ -14,7 +14,7 @@ vi.mock('react', async importOriginal => {
       const overrides: Record<number, unknown> = {
         0: { id: 'own-user', login: 'test_user' }, 1: false, 5: 'test-room',
         8: { id: 'test-room', name: 'Test room', ownFirmId: 'own-firm', firms: [], isOwner: false, phase: 'collecting', currentPeriodIndex: 4 },
-        18: true,
+        20: true,
       };
       return [Object.hasOwn(overrides, index) ? overrides[index] : typeof initial === 'function' ? initial() : initial, vi.fn()];
     },

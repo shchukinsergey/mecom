@@ -18,6 +18,7 @@ import type {
   RoomDetail,
   RoomSummary,
   CalculatePreview,
+  RoomTimerMode,
 } from "../src/online/roomTypes.ts";
 import type { PlayerMe, GameStatus } from "../src/online/api.ts";
 import {
@@ -65,6 +66,12 @@ export function createAccountServer(
   server.keepAliveTimeout = 5000;
   server.maxHeadersCount = 64;
   server.maxRequestsPerSocket = 1000;
+  const expirySweep = setInterval(() => {
+    try { processExpiredRooms(database); } catch { /* retry at the next sweep */ }
+  }, 1000);
+  expirySweep.unref();
+  server.once("close", () => clearInterval(expirySweep));
+  try { processExpiredRooms(database); } catch { /* retry after server startup */ }
   return server;
 }
 export async function listenAccounts(
@@ -235,12 +242,14 @@ function nativeBankrupt(room: StoredRoom, firmId: string): boolean {
     !!room.snapshot.opening[firmId]?.nativeBankruptcy;
 }
 const retiredDecision = { price: 0, production: 0, marketing: 0, capexGross: 0, rnd: 0 };
-function publicFirms(room: StoredRoom): RoomDetail["firms"] {
+function publicFirms(room: StoredRoom, db: RoomDatabase): RoomDetail["firms"] {
   return room.members.map((m) => ({
     firmId: m.firmId,
     firmName: m.firmName,
     submitted: m.submitted,
     ...(nativeBankrupt(room, m.firmId) ? { nativeBankrupt: true as const } : {}),
+    ...(db.autoTurn(room.id, period(room) - 1, m.firmId) ? { autoSubmitted: true as const } : {}),
+    ...(db.autoTurn(room.id, period(room) - 1, m.firmId)?.bankrupt ? { autoBankrupt: true as const } : {}),
     currentRif:
       room.snapshot.league.results
         .at(-1)
@@ -258,13 +267,15 @@ function summary(room: StoredRoom, user: AccountUser): RoomSummary {
     currentPeriodIndex: period(room),
     playerCount: room.members.length,
     ownFirmId: room.members.find((m) => m.userId === user.id)?.firmId ?? null,
+    timerMode: room.timerMode,
+    deadlineAt: room.deadlineAt,
   };
 }
-function detail(room: StoredRoom, user: AccountUser): RoomDetail {
+function detail(room: StoredRoom, user: AccountUser, db: RoomDatabase): RoomDetail {
   const l = room.snapshot.league;
   return {
     ...summary(room, user),
-    firms: publicFirms(room),
+    firms: publicFirms(room, db),
     ...(room.phase === "collecting" && l.config.featureFlags.bankruptcyMode === "native"
       ? { nativeBankruptcyAvailable: true } : {}),
     settings: room.settings,
@@ -274,7 +285,7 @@ function detail(room: StoredRoom, user: AccountUser): RoomDetail {
       : null,
   };
 }
-function player(room: StoredRoom, m: StoredMember): PlayerMe {
+function player(room: StoredRoom, m: StoredMember, db: RoomDatabase): PlayerMe {
   const l = room.snapshot.league,
     reports = l.results.flatMap((p) => {
       const f = p.firms.find((f) => f.firmId === m.firmId);
@@ -293,6 +304,9 @@ function player(room: StoredRoom, m: StoredMember): PlayerMe {
     firmName: m.firmName,
     phase: room.phase,
     currentPeriodIndex: period(room),
+    timerMode: room.timerMode,
+    deadlineAt: room.deadlineAt,
+    autoTurn: db.autoTurn(room.id, period(room) - 1, m.firmId) ?? null,
     submitted: m.submitted,
     decision: room.phase === "lobby" ? null : (m.decision ?? previous(room, m)),
     openingState:
@@ -331,7 +345,7 @@ function preview(room: StoredRoom): CalculatePreview {
   };
 }
 // Both automatic submission and the owner's fallback run inside db.transaction.
-function calculate(room: StoredRoom, db: RoomDatabase, force: boolean): void {
+function calculate(room: StoredRoom, db: RoomDatabase, force: boolean, autoFirmIds: string[] = []): void {
   if (room.members.every(m => nativeBankrupt(room, m.firmId)))
     throw new HttpError(409, "No active firms remain; period cannot be calculated");
   const p = preview(room);
@@ -342,7 +356,7 @@ function calculate(room: StoredRoom, db: RoomDatabase, force: boolean): void {
     room.members.map(m => [m.firmId, { ...(nativeBankrupt(room, m.firmId) ? retiredDecision : (m.decision ?? previous(room, m))!), firmId: m.firmId }]),
   );
   const confirmed = Object.fromEntries(room.members.map(m => [m.firmId, m.submitted]));
-  const affected = room.members.filter(m => !nativeBankrupt(room, m.firmId) && !m.submitted).map(m => m.firmId);
+  const affected = [...new Set([...autoFirmIds, ...room.members.filter(m => !nativeBankrupt(room, m.firmId) && !m.submitted).map(m => m.firmId)])];
   const result = computePeriod({
     periodIndex: i,
     config: l.config,
@@ -367,7 +381,51 @@ function calculate(room: StoredRoom, db: RoomDatabase, force: boolean): void {
     l.decisionsByPeriod[i + 1] = {};
     l.confirmedByPeriod[i + 1] = {};
   }
+  room.deadlineAt = room.phase === "collecting" && room.timerMode !== "unlimited"
+    ? Date.now() + (room.timerMode === "fast" ? 7 * 60_000 : 86400000)
+    : null;
   db.audit(room.id, i, force, affected);
+}
+export function processExpiredRooms(db: RoomDatabase, now = Date.now()): void {
+  for (const id of db.dueRoomIds(now)) db.transaction(() => {
+    const room = db.room(id);
+    if (!room || room.phase !== "collecting" || room.deadlineAt === null || room.deadlineAt > now) return;
+    const league = room.snapshot.league, index = period(room), autoIds: string[] = [];
+    const autoTurns: Array<{ firmId: string; cleared: Array<'marketing' | 'rnd' | 'capexGross' | 'production'>; bankrupt: boolean }> = [];
+    for (const m of room.members.filter(member => !nativeBankrupt(room, member.firmId) && !member.submitted)) {
+      let decision = previous(room, m);
+      if (!decision) return;
+      const cleared: Array<'marketing' | 'rnd' | 'capexGross' | 'production'> = [];
+      if (!valid(room, m, decision)) {
+        for (const field of ["marketing", "rnd", "capexGross", "production"] as const) {
+          decision = { ...decision, [field]: 0 };
+          cleared.push(field);
+          if (valid(room, m, decision)) break;
+        }
+      }
+      if (!valid(room, m, decision)) {
+        if (!room.autoBankruptcy || league.config.featureFlags.bankruptcyMode !== "native") return;
+        room.snapshot.opening[m.firmId] = declareNativeBankruptcyOpening(room.snapshot.opening[m.firmId], league.config, index);
+        m.decision = { ...retiredDecision };
+        league.decisionsByPeriod[index] ??= {};
+        league.decisionsByPeriod[index][m.firmId] = { ...retiredDecision, firmId: m.firmId };
+        league.confirmedByPeriod[index] ??= {};
+        league.confirmedByPeriod[index][m.firmId] = false;
+        autoTurns.push({ firmId: m.firmId, cleared, bankrupt: true });
+      } else {
+        m.decision = decision;
+        autoIds.push(m.firmId);
+        autoTurns.push({ firmId: m.firmId, cleared, bankrupt: false });
+      }
+    }
+    const active = room.members.filter(member => !nativeBankrupt(room, member.firmId));
+    for (const m of active) m.submitted = true;
+    if (active.length && active.every(m => m.submitted)) {
+      calculate(room, db, false, autoIds);
+      for (const event of autoTurns) db.recordAutoTurn(room.id, index, event.firmId, event.cleared, event.bankrupt);
+      db.saveRoom(room);
+    }
+  });
 }
 function initialize(room: StoredRoom): void {
   const l = room.snapshot.league;
@@ -473,11 +531,13 @@ async function handle(
     }
     if (method === "POST") {
       const b = await body(req);
-      keys(b, ["name", "visibility", "settings"]);
+      keys(b, ["name", "visibility", "settings", "timerMode"]);
       const roomName = name(b.name);
       if (b.visibility !== "public" && b.visibility !== "link")
         throw new HttpError(400, "Invalid visibility");
       const s = settings(b.settings);
+      const timerMode = (b.timerMode ?? "standard") as RoomTimerMode;
+      if (!["fast", "standard", "unlimited"].includes(timerMode)) throw new HttpError(400, "Invalid timer mode");
       const room: StoredRoom = {
         id: randomUUID(),
         name: roomName,
@@ -485,6 +545,9 @@ async function handle(
         ownerLogin: user.login,
         visibility: b.visibility,
         phase: "lobby",
+        timerMode,
+        deadlineAt: null,
+        autoBankruptcy: true,
         settings: s,
         snapshot: buildOnlineGameSnapshot(roomName, s),
         members: [],
@@ -495,7 +558,7 @@ async function handle(
           throw new HttpError(409, "Room limit reached");
         db.insertRoom(room);
       });
-      return send(res, 201, detail(room, user));
+      return send(res, 201, detail(room, user, db));
     }
   }
   const match =
@@ -512,16 +575,16 @@ async function handle(
   };
   if (method === "GET") {
     const room = load();
-    if (!action) return send(res, 200, detail(room, user));
+    if (!action) return send(res, 200, detail(room, user, db));
     if (action === "me")
-      return send(res, 200, player(room, member(room, user)));
+      return send(res, 200, player(room, member(room, user), db));
     if (action === "status") {
       if (room.ownerId !== user.id) member(room, user);
       const status: GameStatus = {
         gameId: id,
         phase: room.phase,
         currentPeriodIndex: period(room),
-        firms: publicFirms(room),
+        firms: publicFirms(room, db),
         history: buildPublicHistory(room.snapshot.league.results),
       };
       return send(res, 200, status);
@@ -555,7 +618,7 @@ async function handle(
     const room = load();
     if (action === "join") {
       if (room.members.some((m) => m.userId === user.id))
-        return detail(room, user);
+        return detail(room, user, db);
       if (room.phase !== "lobby") throw new HttpError(409, "Lobby closed");
       if (room.members.length >= 12 || db.countMemberships(user.id) >= 100)
         throw new HttpError(409, "Membership limit reached");
@@ -578,9 +641,11 @@ async function handle(
       if (room.phase !== "lobby" || room.members.length < 2)
         throw new HttpError(409, "Lobby requires at least two firms");
       initialize(room);
+      room.deadlineAt = room.timerMode === "unlimited" ? null : Date.now() + (room.timerMode === "fast" ? 7 * 60_000 : 86400000);
     } else if (action === "close") {
       owner(room, user);
       room.phase = "closed";
+      room.deadlineAt = null;
     } else if (action === "bankruptcy") {
       owner(room, user);
       const i = current(room, b);
@@ -628,7 +693,7 @@ async function handle(
       calculate(room, db, b.force);
     }
     db.saveRoom(room);
-    return detail(room, user);
+    return detail(room, user, db);
   });
   send(res, 200, output);
 }

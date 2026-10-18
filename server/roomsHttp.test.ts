@@ -179,6 +179,8 @@ test("room authorization, link visibility, membership and public DTO privacy", a
         "currentPeriodIndex",
         "playerCount",
         "ownFirmId",
+        "timerMode",
+        "deadlineAt",
         "firms",
         "settings",
         "periodMacro",
@@ -466,7 +468,7 @@ test.each(["lobby", "collecting", "existing-eight"])("legacy %s snapshot advance
   expect((await call(route + "/calculate", "POST", { periodIndex: 8, force: true }, owner)).status).toBe(409);
 });
 
-test("recovered completed period seven resumes only period eight after restart", async () => {
+test("completed period seven remains complete after restart without reopening period eight", async () => {
   const { owner, a, b, route } = await game();
   const id = route.split("/").at(-1)!;
   await call(route + "/start", "POST", {}, owner);
@@ -478,6 +480,7 @@ test("recovered completed period seven resumes only period eight after restart",
   db.transaction(() => {
     const room = db.room(id)!;
     room.phase = "complete";
+    room.deadlineAt = null;
     room.snapshot.league.macroByPeriod.length = 8;
     room.snapshot.league.decisionsByPeriod.length = 8;
     room.snapshot.league.confirmedByPeriod.length = 8;
@@ -490,25 +493,17 @@ test("recovered completed period seven resumes only period eight after restart",
   server = createAccountServer(db);
   await listenAccounts(server, 0);
   base = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
-  const recovered = db.room(id)!;
-  expect(recovered.phase).toBe("collecting");
-  expect(recovered.snapshot.opening).toEqual(historical.snapshot.opening);
-  expect(recovered.members).toEqual(historical.members);
-  expect((await call(route + "/me", "GET", undefined, a)).body.currentPeriodIndex).toBe(8);
+  const unchanged = db.room(id)!;
+  expect(unchanged.phase).toBe("complete");
+  expect(unchanged.snapshot).toEqual(historical.snapshot);
+  expect(unchanged.members).toEqual(historical.members);
+  expect(unchanged.deadlineAt).toBeNull();
+  expect((await call(route + "/me", "GET", undefined, a)).body.phase).toBe("complete");
   expect((await call(route + "/calculate", "POST", { periodIndex: 7, force: true }, owner)).status).toBe(409);
-  for (const cookie of [a, b])
-    expect((await call(route + "/decision", "PUT", { periodIndex: 8, decision: conservative }, cookie)).status).toBe(200);
-  expect((await call(route + "/submit", "POST", { periodIndex: 8 }, a)).status).toBe(200);
-  expect((await call(route + "/submit", "POST", { periodIndex: 8 }, b)).status).toBe(200);
-  const completed = db.room(id)!;
-  expect(completed.phase).toBe("complete");
-  expect(completed.snapshot.league.results).toHaveLength(9);
-  expect(completed.snapshot.league.results.at(-1)!.periodIndex).toBe(8);
-  expect(completed.snapshot.league.results.slice(0, 8)).toEqual(historical.snapshot.league.results);
-  expect(completed.snapshot.league.decisionsByPeriod.slice(0, 8)).toEqual(historical.snapshot.league.decisionsByPeriod);
-  expect(completed.snapshot.league.confirmedByPeriod.slice(0, 8)).toEqual(historical.snapshot.league.confirmedByPeriod);
+  expect((await call(route + "/decision", "PUT", { periodIndex: 8, decision: conservative }, a)).status).toBe(409);
+  expect((await call(route + "/submit", "POST", { periodIndex: 8 }, b)).status).toBe(409);
   const raw = new (await import("node:sqlite")).DatabaseSync(join(directory, "rooms.sqlite"));
-  try { expect(raw.prepare("SELECT period_index FROM audit WHERE room_id=? ORDER BY id").all(id).map(row => row.period_index)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]); }
+  try { expect(raw.prepare("SELECT period_index FROM audit WHERE room_id=? ORDER BY id").all(id).map(row => row.period_index)).toEqual([1, 2, 3, 4, 5, 6, 7]); }
   finally { raw.close(); }
 });
 
