@@ -29,6 +29,7 @@ export interface RoomSummary {
   currentPeriodIndex: number;
   playerCount: number;
   ownFirmId: string | null;
+  ownFirmSubmitted: boolean | null;
   timerMode: RoomTimerMode;
   deadlineAt: number | null;
 }

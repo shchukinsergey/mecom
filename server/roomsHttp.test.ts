@@ -179,6 +179,7 @@ test("room authorization, link visibility, membership and public DTO privacy", a
         "currentPeriodIndex",
         "playerCount",
         "ownFirmId",
+        "ownFirmSubmitted",
         "timerMode",
         "deadlineAt",
         "firms",
@@ -188,6 +189,7 @@ test("room authorization, link visibility, membership and public DTO privacy", a
         "nativeBankruptcyAvailable",
       ].sort(),
     );
+    expect(dto.ownFirmSubmitted).toBe(dto.ownFirmId ? false : null);
     for (const f of dto.firms)
       expect(Object.keys(f).sort()).toEqual(
         ["firmId", "firmName", "submitted", "currentRif"].sort(),

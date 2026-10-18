@@ -288,6 +288,7 @@ function summary(room: StoredRoom, user: AccountUser): RoomSummary {
     currentPeriodIndex: period(room),
     playerCount: room.members.length + Number(!!room.botFirmId),
     ownFirmId: room.members.find((m) => m.userId === user.id)?.firmId ?? null,
+    ownFirmSubmitted: room.members.find((m) => m.userId === user.id)?.submitted ?? null,
     timerMode: room.timerMode,
     deadlineAt: room.deadlineAt,
   };
