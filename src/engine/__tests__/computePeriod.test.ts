@@ -490,7 +490,8 @@ describe('Банкротство', () => {
   }
 
   it('внешнее управление не даёт займу расти бесконечно', () => {
-    const league = makeLeague(2);
+    const league = makeLeague(2, { ...DEFAULT_LEAGUE_CONFIG,
+      featureFlags: { ...DEFAULT_LEAGUE_CONFIG.featureFlags, bankruptcyMode: 'externalManagement' } });
     const results = playGame(league, 5, (_, firmId, i) =>
       i === 0 ? ruinousDecision(firmId) : decide(firmId),
     );
@@ -507,7 +508,8 @@ describe('Банкротство', () => {
   });
 
   it('метка банкротства не сбрасывается в следующих периодах', () => {
-    const league = makeLeague(2);
+    const league = makeLeague(2, { ...DEFAULT_LEAGUE_CONFIG,
+      featureFlags: { ...DEFAULT_LEAGUE_CONFIG.featureFlags, bankruptcyMode: 'externalManagement' } });
     const results = playGame(league, 5, (_, firmId, i) =>
       i === 0 ? ruinousDecision(firmId) : decide(firmId),
     );

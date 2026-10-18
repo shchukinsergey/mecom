@@ -33,6 +33,7 @@ import {
   initialOpeningState,
   nextOpeningState,
 } from "../src/engine/computePeriod.ts";
+import { declareNativeBankruptcyOpening } from "../src/engine/nativeBankruptcy.ts";
 import { renderIndustryReport, renderFirmExport } from "../src/report/index.ts";
 import { validDecision, type Decision } from "./repository.ts";
 import { buildPublicHistory } from "./publicHistory.ts";
@@ -229,11 +230,17 @@ function valid(room: StoredRoom, m: StoredMember, d: Decision | null): boolean {
     !validateOnlineDecision(d, opening, macro, l.config)
   );
 }
+function nativeBankrupt(room: StoredRoom, firmId: string): boolean {
+  return room.snapshot.league.config.featureFlags.bankruptcyMode === "native" &&
+    !!room.snapshot.opening[firmId]?.nativeBankruptcy;
+}
+const retiredDecision = { price: 0, production: 0, marketing: 0, capexGross: 0, rnd: 0 };
 function publicFirms(room: StoredRoom): RoomDetail["firms"] {
   return room.members.map((m) => ({
     firmId: m.firmId,
     firmName: m.firmName,
     submitted: m.submitted,
+    ...(nativeBankrupt(room, m.firmId) ? { nativeBankrupt: true as const } : {}),
     currentRif:
       room.snapshot.league.results
         .at(-1)
@@ -258,6 +265,8 @@ function detail(room: StoredRoom, user: AccountUser): RoomDetail {
   return {
     ...summary(room, user),
     firms: publicFirms(room),
+    ...(room.phase === "collecting" && l.config.featureFlags.bankruptcyMode === "native"
+      ? { nativeBankruptcyAvailable: true } : {}),
     settings: room.settings,
     periodMacro: l.macroByPeriod[period(room)] ?? null,
     industryReport: l.results.length
@@ -298,7 +307,7 @@ function player(room: StoredRoom, m: StoredMember): PlayerMe {
   };
 }
 function preview(room: StoredRoom): CalculatePreview {
-  const firms = room.members.map((m) => ({
+  const firms = room.members.filter(m => !nativeBankrupt(room, m.firmId)).map((m) => ({
     firmId: m.firmId,
     firmName: m.firmName,
     submitted: m.submitted,
@@ -311,7 +320,8 @@ function preview(room: StoredRoom): CalculatePreview {
         : "missing") as CalculatePreview["firms"][number]["source"],
     valid: valid(room, m, m.decision ?? previous(room, m)),
   }));
-  const active = room.phase === "collecting" && firms.length >= 2;
+  const minimum = room.snapshot.league.config.featureFlags.bankruptcyMode === "native" ? 1 : 2;
+  const active = room.phase === "collecting" && firms.length >= minimum;
   return {
     periodIndex: period(room),
     canCalculate:
@@ -322,15 +332,17 @@ function preview(room: StoredRoom): CalculatePreview {
 }
 // Both automatic submission and the owner's fallback run inside db.transaction.
 function calculate(room: StoredRoom, db: RoomDatabase, force: boolean): void {
+  if (room.members.every(m => nativeBankrupt(room, m.firmId)))
+    throw new HttpError(409, "No active firms remain; period cannot be calculated");
   const p = preview(room);
   if (force ? !p.canForce : !p.canCalculate)
     throw new HttpError(409, "Valid decisions required");
   const i = period(room), l = room.snapshot.league;
   const decisions = Object.fromEntries(
-    room.members.map(m => [m.firmId, { ...(m.decision ?? previous(room, m))!, firmId: m.firmId }]),
+    room.members.map(m => [m.firmId, { ...(nativeBankrupt(room, m.firmId) ? retiredDecision : (m.decision ?? previous(room, m))!), firmId: m.firmId }]),
   );
   const confirmed = Object.fromEntries(room.members.map(m => [m.firmId, m.submitted]));
-  const affected = room.members.filter(m => !m.submitted).map(m => m.firmId);
+  const affected = room.members.filter(m => !nativeBankrupt(room, m.firmId) && !m.submitted).map(m => m.firmId);
   const result = computePeriod({
     periodIndex: i,
     config: l.config,
@@ -339,6 +351,7 @@ function calculate(room: StoredRoom, db: RoomDatabase, force: boolean): void {
     opening: room.snapshot.opening,
     decisions,
     previousIndustry: l.results.at(-1)?.industry,
+    previousNativeIndustryState: l.results.at(-1)?.nativeIndustryState,
   });
   l.decisionsByPeriod[i] = decisions;
   l.confirmedByPeriod[i] = confirmed;
@@ -439,7 +452,7 @@ async function handle(
   if (
     path !== "/api/auth/me" &&
     path !== "/api/rooms" &&
-    !/^\/api\/rooms\/[0-9a-f-]{36}(?:\/(join|start|close|me|status|decision|submit|calculate-preview|calculate))?$/.test(
+    !/^\/api\/rooms\/[0-9a-f-]{36}(?:\/(join|start|close|me|status|decision|submit|calculate-preview|calculate|bankruptcy))?$/.test(
       path,
     )
   )
@@ -486,7 +499,7 @@ async function handle(
     }
   }
   const match =
-    /^\/api\/rooms\/([0-9a-f-]{36})(?:\/(join|start|close|me|status|decision|submit|calculate-preview|calculate))?$/.exec(
+    /^\/api\/rooms\/([0-9a-f-]{36})(?:\/(join|start|close|me|status|decision|submit|calculate-preview|calculate|bankruptcy))?$/.exec(
       path,
     );
   if (!match) return send(res, 404, { error: "Not found" });
@@ -522,7 +535,7 @@ async function handle(
   if (
     !(
       method === "POST" &&
-      ["join", "start", "close", "submit", "calculate"].includes(action ?? "")
+      ["join", "start", "close", "submit", "calculate", "bankruptcy"].includes(action ?? "")
     ) &&
     !(method === "PUT" && action === "decision")
   )
@@ -535,6 +548,7 @@ async function handle(
     submit: ["periodIndex"],
     decision: ["periodIndex", "decision"],
     calculate: ["periodIndex", "force"],
+    bankruptcy: ["periodIndex", "firmId"],
   };
   keys(b, allowed[action!]);
   const output = db.transaction(() => {
@@ -567,9 +581,31 @@ async function handle(
     } else if (action === "close") {
       owner(room, user);
       room.phase = "closed";
+    } else if (action === "bankruptcy") {
+      owner(room, user);
+      const i = current(room, b);
+      const l = room.snapshot.league;
+      if (l.config.featureFlags.bankruptcyMode !== "native")
+        throw new HttpError(409, "Native bankruptcy is unavailable for this room");
+      const m = room.members.find(m => m.firmId === b.firmId);
+      if (!m || !room.snapshot.opening[m.firmId])
+        throw new HttpError(404, "Firm not found");
+      if (nativeBankrupt(room, m.firmId))
+        throw new HttpError(409, "Firm already declared bankrupt");
+      room.snapshot.opening[m.firmId] = declareNativeBankruptcyOpening(
+        room.snapshot.opening[m.firmId], l.config, i,
+      );
+      l.decisionsByPeriod[i] ??= {};
+      l.confirmedByPeriod[i] ??= {};
+      l.decisionsByPeriod[i][m.firmId] = { ...retiredDecision, firmId: m.firmId };
+      l.confirmedByPeriod[i][m.firmId] = false;
+      m.decision = { ...retiredDecision };
+      m.submitted = false;
     } else if (action === "decision" || action === "submit") {
       const m = member(room, user);
       current(room, b);
+      if (nativeBankrupt(room, m.firmId))
+        throw new HttpError(409, "Firm permanently excluded after bankruptcy");
       if (action === "decision") {
         if (m.submitted) throw new HttpError(409, "Decision already submitted");
         if (!validDecision(b.decision) || !valid(room, m, b.decision))
@@ -579,7 +615,7 @@ async function handle(
         if (!valid(room, m, m.decision))
           throw new HttpError(409, "Save a valid current decision first");
         m.submitted = true;
-        if (room.members.every(member => member.submitted))
+        if (room.members.filter(m => !nativeBankrupt(room, m.firmId)).every(member => member.submitted))
           calculate(room, db, false);
       }
       db.saveRoom(room);

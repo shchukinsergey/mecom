@@ -22,12 +22,17 @@ export function formatHistoryValue(value: number, metric: HistoryMetric, delta =
 }
 
 /** Completed public results only; missing results never carry forward. */
+function historyValue(period: PublicHistoryPeriod | undefined, firmId: string, metric: HistoryMetric) {
+  const firm = period?.firms.find(f => f.firmId === firmId);
+  return firm?.excluded ? undefined : firm?.[metric];
+}
+
 export function buildHistoryChartModel(history: PublicHistoryPeriod[], metric: HistoryMetric, ownFirmId: string, width = 900) {
   width = Number.isFinite(width) ? Math.max(240, width) : 900;
   const periods = [...new Map(history.filter(p => Number.isInteger(p.periodIndex) && p.periodIndex >= 0).map(p => [p.periodIndex, p])).values()].sort((a, b) => a.periodIndex - b.periodIndex);
   const firms = new Map<string, string>();
   periods.forEach(p => p.firms.forEach(f => firms.set(f.firmId, f.firmName)));
-  const values = periods.flatMap(p => p.firms.map(f => f[metric])).filter(Number.isFinite);
+  const values = periods.flatMap(p => p.firms.filter(f => !f.excluded).map(f => f[metric])).filter(Number.isFinite);
   let min = values.length ? Math.min(...values) : 0;
   let max = values.length ? Math.max(...values) : 1;
   const padding = max === min ? Math.max(Math.abs(max) * 0.1, 1) : (max - min) * 0.12;
@@ -43,7 +48,7 @@ export function buildHistoryChartModel(history: PublicHistoryPeriod[], metric: H
     let path = '';
     const points: Array<{ periodIndex: number; x: number; y: number; value: number }> = [];
     periods.forEach((period, index) => {
-      const value = period.firms.find(f => f.firmId === firmId)?.[metric];
+      const value = historyValue(period, firmId, metric);
       if (value === undefined || !Number.isFinite(value)) { lastPeriod = null; return; }
       const point = { periodIndex: period.periodIndex, value, x: x(index), y: y(value) };
       path += `${lastPeriod !== null && period.periodIndex === lastPeriod + 1 ? 'L' : 'M'}${point.x},${point.y} `;
@@ -52,10 +57,10 @@ export function buildHistoryChartModel(history: PublicHistoryPeriod[], metric: H
     return { firmId, firmName, color, path, points };
   });
   const latest = periods.at(-1);
-  const value = latest?.firms.find(f => f.firmId === ownFirmId)?.[metric];
+  const value = historyValue(latest, ownFirmId, metric);
   const previous = periods.at(-2);
-  const previousValue = previous?.firms.find(f => f.firmId === ownFirmId)?.[metric];
-  const validLatest = latest?.firms.filter(f => Number.isFinite(f[metric])) ?? [];
+  const previousValue = historyValue(previous, ownFirmId, metric);
+  const validLatest = latest?.firms.filter(f => !f.excluded && Number.isFinite(f[metric])) ?? [];
   const own = value !== undefined && Number.isFinite(value) ? {
     value, rank: 1 + validLatest.filter(f => f[metric] > value).length, total: validLatest.length,
     delta: previous && latest && previous.periodIndex === latest.periodIndex - 1 && previousValue !== undefined && Number.isFinite(previousValue) ? value - previousValue : null,
@@ -223,7 +228,7 @@ export function CompetitionHistoryChart({ history, ownFirmId }: { history: Publi
       </div>
       {visible.length === 0 && <p>Все команды скрыты. Выберите команду в легенде.</p>}
       <p className="competition-history__hint">Наведите рядом с точкой, коснитесь её или выберите клавишей Tab. ← → — соседняя точка, Esc — закрыть подсказку. Нажмите на команду, чтобы скрыть её линию.</p>
-      <details className="competition-history__table"><summary>Все значения в таблице</summary><div><table><caption>История результатов: {label}</caption><thead><tr><th scope="col">Период</th>{visible.map(s => <th scope="col" key={s.firmId}>{s.firmName}{s.firmId === ownFirmId && ' · Вы'}</th>)}</tr></thead><tbody>{model.periods.map(p => <tr key={p.periodIndex}><th scope="row">{p.periodIndex}</th>{visible.map(s => <td key={s.firmId}>{formatHistoryValue(p.firms.find(f => f.firmId === s.firmId)?.[metric] ?? NaN, metric)}</td>)}</tr>)}</tbody></table></div></details>
+      <details className="competition-history__table"><summary>Все значения в таблице</summary><div><table><caption>История результатов: {label}</caption><thead><tr><th scope="col">Период</th>{visible.map(s => <th scope="col" key={s.firmId}>{s.firmName}{s.firmId === ownFirmId && ' · Вы'}</th>)}</tr></thead><tbody>{model.periods.map(p => <tr key={p.periodIndex}><th scope="row">{p.periodIndex}</th>{visible.map(s => <td key={s.firmId}>{p.firms.find(f => f.firmId === s.firmId)?.excluded ? 'Исключена' : formatHistoryValue(historyValue(p, s.firmId, metric) ?? NaN, metric)}</td>)}</tr>)}</tbody></table></div></details>
     </>}
   </section>;
 }

@@ -47,6 +47,7 @@ function withConfigDefaults(league: League): League {
       // Older saved leagues defaulted to end-of-period borrowing; keep that
       // behavior when loading them instead of silently changing an active game.
       loanRepayment: old?.featureFlags?.loanRepayment ?? 'none',
+      bankruptcyMode: old?.featureFlags?.bankruptcyMode ?? 'externalManagement',
     },
     nativeDemand: { ...DEFAULT_LEAGUE_CONFIG.nativeDemand, ...old?.nativeDemand },
   } };

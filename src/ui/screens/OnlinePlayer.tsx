@@ -6,6 +6,8 @@ import { decisionFields as fields, emptyDecision, syncDecisionForm, type Decisio
 import { reconcileSelectedReportPeriod, sortPlayerReports } from '../../online/playerReports';
 import { checkDecisionBudget } from '../../engine/decisionBudget';
 import { computeCapex } from '../../engine/capex';
+import { CompetitionHistoryChart } from '../components/CompetitionHistoryChart';
+import { PlayerMarket, playerPublicPeriods } from '../components/PlayerMarket';
 import { PlayerOverview } from '../components/PlayerOverview';
 import { PlayerDecisions } from '../components/PlayerDecisions';
 
@@ -73,6 +75,7 @@ export function OnlinePlayer({ initialInviteToken, initialRejoinToken, accountRo
     if (nextSelection !== selectedReportPeriod) setSelectedReportPeriod(nextSelection);
     previousLatestReportPeriod.current = latestPeriod;
   }, [me?.reports, selectedReportPeriod]);
+  const excluded = !!me?.openingState?.nativeBankruptcy;
   const decision = Object.fromEntries(fields.map(([key]) => [key, Number(form[key])])) as {
     price: number; production: number; marketing: number; capexGross: number; rnd: number;
   };
@@ -90,15 +93,15 @@ export function OnlinePlayer({ initialInviteToken, initialRejoinToken, accountRo
   }
   if (decision.price <= 0) fieldErrors.price = 'Укажите цену больше нуля.';
   const invalidFields = Object.keys(fieldErrors).length > 0;
-  const budget = !invalidFields && me?.openingState && me.periodMacro && me.config
+  const budget = !excluded && !invalidFields && me?.openingState && me.periodMacro && me.config
     ? checkDecisionBudget(me.openingState, decision, me.periodMacro, me.config) : null;
-  const capexPreview = !invalidFields && me?.openingState && me.config
+  const capexPreview = !excluded && !invalidFields && me?.openingState && me.config
     ? computeCapex({ machines: me.openingState.machines, capexGross: decision.capexGross, amortFundRemainder: me.openingState.amortFundRemainder }, me.config) : null;
   const invalidDecision = invalidFields || Boolean(budget?.overspend);
 
   const doJoin = async (e: FormEvent) => { e.preventDefault(); setLoading(true); setError(''); try { acceptSession(await joinGame(invite, firmName)); setInvite(''); setFirmName(''); } catch (e) { setError(e instanceof Error ? e.message : 'Не удалось войти.'); } finally { busyRef.current = false; setLoading(false); } };
-  const doSave = async () => { if (!active || invalidDecision || busyRef.current || me?.phase !== 'collecting' || me.submitted) return; busyRef.current = true; setLoading(true); try { await saveDecision(active.rejoinToken, decision, accountRoomId ? me?.currentPeriodIndex : undefined); dirtyRef.current = false; await refresh(active, true); } catch(e) { handleError(e); } finally { busyRef.current = false; setLoading(false); } };
-  const doSubmit = async () => { if (!active || invalidDecision || busyRef.current || me?.phase !== 'collecting' || me.submitted) return; const recap = fields.map(([key,label]) => `${label}: ${form[key] || '0'}`).join('\n'); if (!window.confirm(`Проверьте решение перед отправкой:\n\n${recap}\n\nОтправить ведущему?`)) return; busyRef.current = true; setLoading(true); try { await saveDecision(active.rejoinToken, decision, accountRoomId ? me?.currentPeriodIndex : undefined); dirtyRef.current = false; await submitDecision(active.rejoinToken, accountRoomId ? me?.currentPeriodIndex : undefined); await refresh(active, true); } catch(e) { handleError(e); } finally { busyRef.current = false; setLoading(false); } };
+  const doSave = async () => { if (excluded || !active || invalidDecision || busyRef.current || me?.phase !== 'collecting' || me.submitted) return; busyRef.current = true; setLoading(true); try { await saveDecision(active.rejoinToken, decision, accountRoomId ? me?.currentPeriodIndex : undefined); dirtyRef.current = false; await refresh(active, true); } catch(e) { handleError(e); } finally { busyRef.current = false; setLoading(false); } };
+  const doSubmit = async () => { if (excluded || !active || invalidDecision || busyRef.current || me?.phase !== 'collecting' || me.submitted) return; const recap = fields.map(([key,label]) => `${label}: ${form[key] || '0'}`).join('\n'); if (!window.confirm(`Проверьте решение перед отправкой:\n\n${recap}\n\nОтправить ведущему?`)) return; busyRef.current = true; setLoading(true); try { await saveDecision(active.rejoinToken, decision, accountRoomId ? me?.currentPeriodIndex : undefined); dirtyRef.current = false; await submitDecision(active.rejoinToken, accountRoomId ? me?.currentPeriodIndex : undefined); await refresh(active, true); } catch(e) { handleError(e); } finally { busyRef.current = false; setLoading(false); } };
   const changeTab = (next: PlayerTab) => {
     setTab(next);
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -107,7 +110,7 @@ export function OnlinePlayer({ initialInviteToken, initialRejoinToken, accountRo
     <header className="pc-header">
       <div className="pc-identity"><span className="pc-brand">МЭКОМ</span><h1>{me?.firmName || active?.firmName || 'Кабинет участника'}</h1></div>
       <div className="pc-header-actions">
-        {me && <div className="pc-period"><strong>Период {me.currentPeriodIndex}</strong><span role="status">{me.submitted ? 'Решение отправлено' : phaseLabels[me.phase]}</span></div>}
+        {me && <div className="pc-period"><strong>Период {me.currentPeriodIndex}</strong><span role="status">{excluded ? 'Фирма исключена' : me.submitted ? 'Решение отправлено' : phaseLabels[me.phase]}</span></div>}
         <button type="button" onClick={onBack}>На главную</button>
       </div>
     </header>
@@ -120,7 +123,13 @@ export function OnlinePlayer({ initialInviteToken, initialRejoinToken, accountRo
       <button className="primary" disabled={loading}>{initialInviteToken ? 'Создать фирму' : 'Войти в игру'}</button>
     </form>}
     {active && !me && <p className="pc-loading" role="status">Загружаем вашу компанию…</p>}
-    {active && me && <>
+    {active && me && excluded && <>
+      <section className="pc-card" role="status"><h2>Фирма исключена после банкротства</h2><p>Участие в дальнейших решениях и расчётах прекращено навсегда. История не откатывается; отчёты и публичные результаты остаются доступны.</p></section>
+      <PlayerMarket me={me} status={status} />
+      <div className="pc-market-history"><h2>Компания на фоне рынка</h2><CompetitionHistoryChart history={playerPublicPeriods(status)} ownFirmId={me.firmId} /></div>
+      <PlayerReports me={me} selectedPeriod={selectedReportPeriod} onSelect={setSelectedReportPeriod} onBackToDecision={() => window.scrollTo({ top: 0, behavior: 'instant' })} />
+    </>}
+    {active && me && !excluded && <>
       <nav className="pc-nav" role="tablist" aria-label="Кабинет компании">{tabs.map(([key, label]) => <button key={key} type="button" role="tab" id={`pc-tab-${key}`} aria-controls={`pc-panel-${key}`} aria-selected={tab === key} tabIndex={tab === key ? 0 : -1} onClick={() => changeTab(key)} onKeyDown={e => {
         const keys = tabs.map(([value]) => value);
         const index = keys.indexOf(key);

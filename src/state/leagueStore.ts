@@ -310,6 +310,7 @@ export const useLeagueStore = create<LeagueState>((set, get) => ({
         opening: snap.opening,
         decisions: league.decisionsByPeriod[index],
         previousIndustry: league.results[index - 1]?.industry,
+        previousNativeIndustryState: league.results[index - 1]?.nativeIndustryState,
       });
 
       const updated: LeagueSnapshot = {

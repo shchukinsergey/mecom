@@ -11,6 +11,8 @@ import type { LeagueConfig, PeriodMacroParams } from './types';
 /** Вход дележа: решение фирмы + накопленные счётчики НИОКР ДО этого периода. */
 export interface DemandFirmInput {
   firmId: string;
+  /** Cleared @out slot: retain its position for N/scale, never allocate orders. */
+  excluded?: boolean;
   production?: number;
   openingInventory?: number;
   price: number;
@@ -181,22 +183,28 @@ const attenuate = (x: number, threshold: number, slope: number) =>
 /** Native helper rounds a stored float32 halfway away from zero. */
 export const nativeRound = (x: number) => Math.sign(x) * Math.floor(Math.abs(f32(x)) + 0.5);
 
-function nativeStock(firms: DemandFirmInput[]): number {
+function nativeStock(firms: DemandFirmInput[], previous?: number): number {
   return Math.max(1, f32(accumulate32(firms.map(f => Math.max(0, f.rnd))) +
-    accumulate32(firms.map(f => Math.max(0, f.rndCumulativeBefore)))));
+    (previous ?? accumulate32(firms.map(f => Math.max(0, f.rndCumulativeBefore))))));
 }
 
-export function computeShares(firms: DemandFirmInput[], config: LeagueConfig): DemandResult['breakdown']['shares'] {
-  if (config.demandModel === 'legacy') return computeLegacyShares(firms, config);
+export function computeShares(firms: DemandFirmInput[], config: LeagueConfig,
+  history?: { rndCumulativeBefore: number }): DemandResult['breakdown']['shares'] {
+  if (config.demandModel === 'legacy') return computeLegacyShares(firms.filter(f => !f.excluded), config);
   const g = config.nativeDemand;
   const k = Math.ceil(firms.length / 8);
+  const active = firms.filter(f => !f.excluded);
   // Zero/invalid prices are a conservative browser guard, not proven native behavior.
   const price = (f: DemandFirmInput) => Math.max(0.01, f.price);
-  const dm = accumulate32(firms.map(f => Math.pow(Math.max(0, f.marketing) / price(f), f32(config.mktgExponent)))) || 1;
-  const dp = accumulate32(firms.map(f => Math.pow(price(f), f32(g.priceExponent)))) || 1;
-  const stock = nativeStock(firms);
+  const dm = accumulate32(active.map(f => Math.pow(Math.max(0, f.marketing) / price(f), f32(config.mktgExponent)))) || 1;
+  const dp = accumulate32(active.map(f => Math.pow(price(f), f32(g.priceExponent)))) || 1;
+  const stock = nativeStock(firms, history?.rndCumulativeBefore);
   const shares: DemandResult['breakdown']['shares'] = {};
   for (const f of firms) {
+    if (f.excluded) {
+      shares[f.firmId] = { marketing: 0, price: 0, rnd: 0, total: 0 };
+      continue;
+    }
     const marketing = f32(Math.pow(attenuate(Math.max(0, f.marketing), f32(g.firmMarketingThreshold * k),
       f32(g.firmMarketingExcessSlope)) / price(f), f32(config.mktgExponent)) / dm);
     const p = f32(Math.pow(price(f), f32(g.priceExponent)) / dp);
@@ -213,8 +221,9 @@ export function computeShares(firms: DemandFirmInput[], config: LeagueConfig): D
  * Not a bitwise Borland float80 emulator; custom coefficients/status exclusions remain unverified. */
 export function computeDemand(firms: DemandFirmInput[], config: LeagueConfig,
   macro: Pick<PeriodMacroParams, 'periodIndex' | 'demandOS' | 'demandVM' | 'demandVN'> = { periodIndex: 0 },
+  history?: { rndCumulativeBefore: number },
 ): DemandResult {
-  if (config.demandModel === 'legacy') return computeLegacyDemand(firms, config);
+  if (config.demandModel === 'legacy') return computeLegacyDemand(firms.filter(f => !f.excluded), config);
   const g = config.nativeDemand;
   const k = Math.ceil(firms.length / 8);
   const marketingSum = accumulate32(firms.map(f => Math.max(0, f.marketing)));
@@ -227,10 +236,10 @@ export function computeDemand(firms: DemandFirmInput[], config: LeagueConfig,
     f32(g.marketingThreshold * k), f32(g.marketingExcessSlope))) * f32(g.marketingScale) *
     (f32(g.marketingIntercept) + f32(g.marketingModifierSensitivity) * (macro.demandVM ?? 0)) / avgPrice : 0;
   const rndTerm = (1 + f32(g.rndModifierSensitivity) * (macro.demandVN ?? 0)) * k *
-    f32(g.rndScale) * nativeStock(firms) / Math.max(1, f32(g.initialLeagueRnd * k) * (macro.periodIndex + 1));
+    f32(g.rndScale) * nativeStock(firms, history?.rndCumulativeBefore) / Math.max(1, f32(g.initialLeagueRnd * k) * (macro.periodIndex + 1));
   const latentMarketDemand = avgPrice > 0 ? Math.max(0, nativeRound(f32(g.demandScale) *
     (1 + f32(g.generalDemandSensitivity) * (macro.demandOS ?? 0)) * (marketingTerm + rndTerm))) : 0;
-  const shares = computeShares(firms, config);
+  const shares = computeShares(firms, config, history);
   const ordersByFirm: Record<string, number> = {};
   const stocks: Record<string, number> = {};
   for (const f of firms) {

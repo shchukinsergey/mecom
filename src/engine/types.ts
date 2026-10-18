@@ -22,12 +22,13 @@ export interface FeatureFlags {
   bankInterestFormula: 'official' | 'flatLoanRate';
 
   /**
-   * Что делать с фирмой, попавшей под критерий банкротства.
-   * 'externalManagement' — метка + запрет займа сверх абсолютного лимита (дефолт);
+   * 'native'             — явное объявление ведущим, ликвидация и исключение (новые игры);
+   * Архивные режимы используют финансовый критерий, а не нативное объявление:
+   * 'externalManagement' — метка + запрет займа сверх абсолютного лимита;
    * 'freeze'             — фирма исключается из расчёта, показатели замораживаются;
    * 'labelOnly'          — только метка в таблице, расчёт без ограничений.
    */
-  bankruptcyMode: 'externalManagement' | 'freeze' | 'labelOnly';
+  bankruptcyMode: 'native' | 'externalManagement' | 'freeze' | 'labelOnly';
 
   /**
    * 'none' — archived behavior: debt only grows to cover an end-period cash deficit.
@@ -234,7 +235,23 @@ export interface FirmDecision {
  * Состояние фирмы на начало периода. Для периода 0 собирается из стартовых
  * условий, дальше переносится из результата предыдущего периода.
  */
+export interface NativeBankruptcyDeclaration {
+  periodIndex: number;
+  assets: number;
+  bankLoss: number;
+  shareholderLoss: number;
+  rndCumulative: number;
+  demandPotentialCumulative: number;
+}
+
+/** Private carried industry history; never reconstruct by replaying old results. */
+export interface NativeIndustryState {
+  rndCumulative: number;
+  marketingCumulative: number;
+}
+
 export interface FirmOpeningState {
+  nativeBankruptcy?: NativeBankruptcyDeclaration;
   firmId: string;
   machines: number; // «Полная мощность» текущего периода, шт
   period0Machines: number; // стартовая мощность — мощность_баз в себестоимости (часть 3)
@@ -278,6 +295,7 @@ export interface RifBreakdown {
 }
 
 export interface FirmPeriodResult {
+  nativeBankruptcy?: NativeBankruptcyDeclaration;
   firmId: string;
   firmName: string;
   periodIndex: number;
@@ -385,6 +403,7 @@ export interface IndustryPeriodResult {
 }
 
 export interface PeriodResults {
+  nativeIndustryState?: NativeIndustryState;
   periodIndex: number;
   computedAt: string;
   firms: FirmPeriodResult[];

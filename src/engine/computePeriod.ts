@@ -24,6 +24,7 @@ import type {
   LeagueConfig,
   PeriodMacroParams,
   PeriodResults,
+  NativeIndustryState,
   RifWeights,
 } from './types';
 
@@ -121,6 +122,7 @@ export interface ComputePeriodInput {
   opening: Record<string, FirmOpeningState>;
   decisions: Record<string, FirmDecision>;
   previousIndustry?: IndustryPeriodResult;
+  previousNativeIndustryState?: NativeIndustryState;
 }
 
 /** Стартовое состояние фирм для периода 0 — из настроек лиги. */
@@ -190,6 +192,7 @@ export function nextOpeningState(
         r.productionCumulative ?? (prev.productionCumulative ?? 0) + r.produced,
       sharePrevious: r.marketShareSold,
       isBankrupt: r.isBankrupt,
+      ...(r.nativeBankruptcy ? { nativeBankruptcy: { ...r.nativeBankruptcy }, retainedEarningsBase: 0 } : {}),
     };
   }
   return out;
@@ -197,6 +200,11 @@ export function nextOpeningState(
 
 export function computePeriod(input: ComputePeriodInput): PeriodResults {
   const { config, macro, periodIndex } = input;
+  const excluded = new Set(input.firms.filter(f => input.opening[f.id]?.nativeBankruptcy).map(f => f.id));
+  // Safety guard: original all-out 0/0 behavior has NOT been runtime verified.
+  if (excluded.size === input.firms.length && excluded.size > 0) {
+    throw new RangeError('Native all-out calculation is unsupported');
+  }
 
   // Фирмы под заморозкой выбывают из расчёта спроса и P&L целиком.
   const frozen = new Set<string>();
@@ -209,7 +217,7 @@ export function computePeriod(input: ComputePeriodInput): PeriodResults {
 
   // ── Фаза 1: решения ───────────────────────────────────────────────────────
   const decisionOf = (firmId: string): FirmDecision =>
-    input.decisions[firmId] ?? {
+    (!excluded.has(firmId) ? input.decisions[firmId] : undefined) ?? {
       firmId,
       price: 0,
       production: 0,
@@ -223,6 +231,7 @@ export function computePeriod(input: ComputePeriodInput): PeriodResults {
     const d = decisionOf(f.id);
     return {
       firmId: f.id,
+      excluded: excluded.has(f.id),
       price: d.price,
       production: d.production,
       openingInventory: input.opening[f.id]?.inventory ?? 0,
@@ -232,7 +241,25 @@ export function computePeriod(input: ComputePeriodInput): PeriodResults {
       rndDecayStockBefore: input.opening[f.id]?.rndDecayStock ?? 0,
     };
   });
-  const demand = computeDemand(demandInputs, config, { ...macro, periodIndex });
+  const accumulate32 = (values: number[]) => values.reduce((a, b) => Math.fround(a + b), 0);
+  const nativeMode = config.featureFlags.bankruptcyMode === 'native' || excluded.size > 0;
+  const historical = input.previousNativeIndustryState ?? {
+    rndCumulative: accumulate32(input.firms.map(f => {
+      const state = input.opening[f.id];
+      return state.nativeBankruptcy?.rndCumulative ?? state.rndCumulative;
+    })),
+    marketingCumulative: accumulate32(input.firms.map(f => {
+      const state = input.opening[f.id];
+      const past = state.nativeBankruptcy ?? state;
+      return Math.max(0, (past.demandPotentialCumulative ?? 0) - past.rndCumulative);
+    })),
+  };
+  const nativeIndustryState = nativeMode ? {
+    rndCumulative: Math.max(1, Math.fround(historical.rndCumulative + accumulate32(demandInputs.map(f => f.rnd)))),
+    marketingCumulative: Math.max(1, Math.fround(historical.marketingCumulative + accumulate32(demandInputs.map(f => f.marketing)))),
+  } : undefined;
+  const demand = computeDemand(demandInputs, config, { ...macro, periodIndex },
+    nativeMode ? { rndCumulativeBefore: historical.rndCumulative } : undefined);
 
   // ── Фазы 3–8 по каждой фирме ─────────────────────────────────────────────
   const firmResults: FirmPeriodResult[] = [];
@@ -240,6 +267,15 @@ export function computePeriod(input: ComputePeriodInput): PeriodResults {
   for (const f of input.firms) {
     const opening = input.opening[f.id];
     const d = decisionOf(f.id);
+
+    if (excluded.has(f.id)) {
+      // Declaration snapshots are metadata, never financial losses or RIF sentinels.
+      const cleared = Object.fromEntries(Object.entries(opening).map(([key, value]) =>
+        [key, typeof value === 'number' && key !== 'period0Machines' ? 0 : value])) as unknown as FirmOpeningState;
+      firmResults.push({ ...frozenResult(f, cleared, d, periodIndex, config),
+        nativeBankruptcy: { ...opening.nativeBankruptcy! } });
+      continue;
+    }
 
     if (frozen.has(f.id)) {
       firmResults.push(frozenResult(f, opening, d, periodIndex, config));
@@ -377,7 +413,8 @@ export function computePeriod(input: ComputePeriodInput): PeriodResults {
       productionCumulative: (opening.productionCumulative ?? opening.productionPrevious) + produced,
       rndDecayStock: demand.breakdown.rndDecayStockByFirm[f.id] ?? 0,
       isBankrupt:
-        opening.isBankrupt || isBankrupt(balance.cash, balance.loan, macro),
+        config.featureFlags.bankruptcyMode === 'native' ? false :
+          opening.isBankrupt || isBankrupt(balance.cash, balance.loan, macro),
       unfundedShortfall: cf.unfundedShortfall,
 
       rif: emptyRif(),
@@ -396,6 +433,11 @@ export function computePeriod(input: ComputePeriodInput): PeriodResults {
     })),
     config.rifMarketingRndCarry,
   );
+  if (nativeIndustryState) {
+    rifAverages.avgMarketingRndPlusCarry =
+      (nativeIndustryState.rndCumulative + nativeIndustryState.marketingCumulative) / Math.max(1, firmResults.length) +
+      config.rifMarketingRndCarry;
+  }
 
   const rifWeights: RifWeights = {
     retainedProfit: macro.rifWeightRetainedProfit,
@@ -407,6 +449,7 @@ export function computePeriod(input: ComputePeriodInput): PeriodResults {
   };
 
   for (const r of firmResults) {
+    if (r.nativeBankruptcy) continue;
     const opening = input.opening[r.firmId];
     r.marketShareSold = industry.totalSold > 0 ? (100 * r.sold) / industry.totalSold : 0;
 
@@ -441,6 +484,7 @@ export function computePeriod(input: ComputePeriodInput): PeriodResults {
     periodIndex,
     computedAt: new Date().toISOString(),
     firms: firmResults,
+    ...(nativeIndustryState ? { nativeIndustryState } : {}),
     industry,
     macro,
   };

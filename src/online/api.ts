@@ -4,7 +4,7 @@ import type { LeagueSnapshot } from '../state/persistence';
 import type { FirmDecision, FirmOpeningState, LeagueConfig, PeriodMacroParams, FirmPeriodResult } from '../engine/types';
 
 const BASE = '/api';
-export interface OnlineFirm { firmId: string; firmName: string; submitted: boolean; currentRif?: number | null; }
+export interface OnlineFirm { firmId: string; firmName: string; submitted: boolean; currentRif?: number | null; nativeBankrupt?: true; }
 export interface OnlineGame { gameId: string; name: string; inviteToken?: string; inviteTokenHash?: string; open: boolean; phase: 'lobby' | 'collecting' | 'complete' | 'closed'; firms: Array<{firmId:string;firmName:string;submitted:boolean;decision?:Partial<FirmDecision>|null}>; snapshot?: LeagueSnapshot | null; }
 export interface PlayerMe { gameId: string; firmId: string; firmName: string; phase: 'lobby' | 'collecting' | 'complete' | 'closed'; currentPeriodIndex: number; submitted: boolean; decision?: Partial<FirmDecision> | null; openingState?: FirmOpeningState | null; periodMacro?: PeriodMacroParams | null; config?: LeagueConfig | null; recentResults?: FirmPeriodResult[]; report?: string | null; reports?: Array<{ periodIndex: number; report: string }>; }
 export interface JoinResult { gameId: string; firmId: string; firmName: string; rejoinToken: string; }

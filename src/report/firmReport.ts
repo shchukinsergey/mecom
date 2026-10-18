@@ -133,7 +133,13 @@ export function renderFirmReport(
 
   lines.push('', `Лига «${leagueName}»`);
 
-  if (result.isBankrupt) {
+  if (result.nativeBankruptcy) {
+    const liquidation = result.nativeBankruptcy;
+    lines.push('');
+    lines.push('Фирма объявлена банкротом и исключена из дальнейших периодов.');
+    lines.push(`Убытки банка: ${money(liquidation.bankLoss)}.`);
+    lines.push(`${liquidation.shareholderLoss > 0 ? 'Убытки' : 'Прибыль'} акционеров: ${money(Math.abs(liquidation.shareholderLoss))}.`);
+  } else if (result.isBankrupt) {
     lines.push(
       '',
       '! ФИРМА В ТЯЖЁЛОМ МИНУСЕ: наличные отрицательны, кредитная линия исчерпана.',

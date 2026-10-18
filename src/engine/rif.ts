@@ -80,10 +80,15 @@ export function computeRif(input: RifInput, config: LeagueConfig): RifBreakdown 
 
   // C3 — ПотПр: производство (тек. + пред.) к среднему по лиге.
   const s = Math.max(0, input.production) + Math.max(0, input.productionPrevious);
-  const supplyPotential =
+  const uncappedSupplyPotential =
     input.avgProductionPlusPrevious > 1e-9
       ? roundHalfUp((w.supplyPotential * s) / input.avgProductionPlusPrevious)
       : 0;
+  // S22:5185–5289 caps R33 after rounding; retain the archived implementation
+  // in old modes. With excluded slots this bound is reachable by survivors.
+  const supplyPotential = config.featureFlags.bankruptcyMode === 'native'
+    ? Math.min(uncappedSupplyPotential, Math.trunc(2 * w.supplyPotential))
+    : uncappedSupplyPotential;
 
   // C4 — Эфф80%.
   const efficiency80 = roundHalfUp((w.efficiency80 / 10) * eff80(input.utilizationPercent, config));

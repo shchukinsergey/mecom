@@ -38,6 +38,7 @@ function openingInventory(f: FirmPeriodResult): number {
  * отдельно округляет кредит/усекает наличные.
  */
 function freeFunds(f: FirmPeriodResult, macro: PeriodMacroParams): number {
+  if (f.nativeBankruptcy) return 0;
   return f.cash + Math.max(0, macro.loanLimitAbs - f.loan);
 }
 
@@ -144,11 +145,12 @@ export function renderRankings(period: PeriodResults): string[] {
   const firms = period.firms;
   const nameWidth = Math.max(8, ...firms.map((f) => f.firmName.length));
 
-  const byRif = [...firms].sort((a, b) => b.rif.total - a.rif.total);
-  const byProfit = [...firms].sort((a, b) => b.netProfit - a.netProfit);
+  const outLast = (a: FirmPeriodResult, b: FirmPeriodResult) => Number(!!a.nativeBankruptcy) - Number(!!b.nativeBankruptcy);
+  const byRif = [...firms].sort((a, b) => outLast(a, b) || b.rif.total - a.rif.total);
+  const byProfit = [...firms].sort((a, b) => outLast(a, b) || b.netProfit - a.netProfit);
 
-  const rifValues = byRif.map((f) => num(f.rif.total));
-  const profitValues = byProfit.map((f) => num(f.netProfit));
+  const rifValues = byRif.map((f) => f.nativeBankruptcy ? '—' : num(f.rif.total));
+  const profitValues = byProfit.map((f) => f.nativeBankruptcy ? '—' : num(f.netProfit));
   const rifWidth = Math.max(4, ...rifValues.map((v) => v.length));
   const profitWidth = Math.max(6, ...profitValues.map((v) => v.length));
 

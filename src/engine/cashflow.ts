@@ -96,7 +96,7 @@ export function computePreRevenueFinancing(
   const budget = input.produced * input.unitCost + input.marketing + input.rnd +
     input.capexGross - (input.depreciation ?? 0) + input.firingPenalty;
   const requested = budget - input.openingCash;
-  const initialLoanMovement = requested <= 0 || config.featureFlags.bankruptcyMode === 'labelOnly'
+  const initialLoanMovement = requested <= 0 || config.featureFlags.bankruptcyMode === 'native' || config.featureFlags.bankruptcyMode === 'labelOnly'
     ? requested
     : Math.min(requested, Math.max(0, macro.loanLimitAbs - input.openingLoan));
   return { budget, initialLoanMovement, financedLoan: input.openingLoan + initialLoanMovement };
@@ -127,7 +127,7 @@ export function computeCashFlow(
   if (config.featureFlags.loanRepayment === 'preRevenue') {
     const { initialLoanMovement: movement, financedLoan } = computePreRevenueFinancing(input, macro, config);
     const requestedTopup = Math.max(0, -(raw + movement));
-    const topup = config.featureFlags.bankruptcyMode === 'labelOnly'
+    const topup = config.featureFlags.bankruptcyMode === 'native' || config.featureFlags.bankruptcyMode === 'labelOnly'
       ? requestedTopup
       : Math.min(requestedTopup, Math.max(0, macro.loanLimitAbs - financedLoan));
     return {
@@ -177,7 +177,7 @@ export function computeCashFlow(
   // Фирма уходит в минус по кассе ровно на непокрытую часть — это и есть сигнал
   // банкротства, но долг больше не растёт бесконечно.
   const canBorrow =
-    config.featureFlags.bankruptcyMode === 'labelOnly'
+    config.featureFlags.bankruptcyMode === 'native' || config.featureFlags.bankruptcyMode === 'labelOnly'
       ? requested
       : Math.max(0, Math.min(requested, macro.loanLimitAbs - input.openingLoan));
 

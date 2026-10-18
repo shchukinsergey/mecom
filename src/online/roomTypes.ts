@@ -6,6 +6,7 @@ export interface PublicHistoryPeriod {
   firms: Array<{
     firmId: string;
     firmName: string;
+    excluded?: true;
     rif: number;
     netProfit: number;
     marketShareSold: number;
@@ -33,8 +34,10 @@ export interface RoomFirm {
   firmName: string;
   submitted: boolean;
   currentRif: number | null;
+  nativeBankrupt?: true;
 }
 export interface RoomDetail extends RoomSummary {
+  nativeBankruptcyAvailable?: boolean;
   firms: RoomFirm[];
   settings: OnlineGameSettings;
   periodMacro: PeriodMacroParams | null;

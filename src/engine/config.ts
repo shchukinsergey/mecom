@@ -16,7 +16,7 @@ import type {
 
 export const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
   bankInterestFormula: 'official',
-  bankruptcyMode: 'externalManagement',
+  bankruptcyMode: 'native',
   loanRepayment: 'preRevenue',
 };
 

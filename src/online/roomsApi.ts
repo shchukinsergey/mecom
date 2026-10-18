@@ -28,3 +28,5 @@ export const getCalculatePreview = (id: string) => accountRequest<CalculatePrevi
 export const calculateRoom = (id: string, periodIndex: number, force = false) => post<RoomDetail>(`${roomPath(id)}/calculate`, { periodIndex, force });
 export const forceSourceLabels: Record<CalculatePreview['firms'][number]['source'], string> = { submitted: 'Отправленное решение', draft: 'Сохранённый черновик', previous: 'Решение предыдущего периода', missing: 'Решение отсутствует' };
 export const canConfirmForce = (preview: CalculatePreview) => preview.canForce && preview.firms.every(firm => firm.valid && firm.source !== 'missing');
+
+export const declareRoomBankruptcy = (id: string, periodIndex: number, firmId: string) => post<RoomDetail>(`${roomPath(id)}/bankruptcy`, { periodIndex, firmId });

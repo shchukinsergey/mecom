@@ -24,6 +24,25 @@ function makeSnapshot(): LeagueSnapshot {
 }
 
 describe('Экспорт и импорт лиги', () => {
+  it('does not apply the new native bankruptcy default to archived snapshots missing the flag', () => {
+    const snapshot = makeSnapshot();
+    const file = JSON.parse(serializeLeague(snapshot));
+    delete file.snapshot.league.config.featureFlags.bankruptcyMode;
+    file.snapshot.opening.a.isBankrupt = true;
+    file.snapshot.opening.a.cash = -20;
+    const history = JSON.stringify(file.snapshot.league.results);
+    const opening = JSON.stringify(file.snapshot.opening);
+    vi.stubGlobal('localStorage', { getItem: () => JSON.stringify({ schemaVersion: SCHEMA_VERSION,
+      leagues: { 'league-1': file.snapshot } }) });
+    try {
+      for (const restored of [parseLeagueFile(JSON.stringify(file)), loadAll().leagues['league-1']]) {
+        expect(restored.league.config.featureFlags.bankruptcyMode).toBe('externalManagement');
+        expect(JSON.stringify(restored.league.results)).toBe(history);
+        expect(JSON.stringify(restored.opening)).toBe(opening);
+        expect(restored.opening.a.nativeBankruptcy).toBeUndefined();
+      }
+    } finally { vi.unstubAllGlobals(); }
+  });
   it.each([
     [145, 72.5, undefined, 15, 'native', 10000 / 69, 10000 / 138],
     [147, 73.5, undefined, 15, 'native', 147, 73.5],

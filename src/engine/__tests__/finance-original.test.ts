@@ -135,7 +135,8 @@ describe('original MECOM pre-revenue financing (default)', () => {
     { openingLoan: 99000, openingCash: 0, revenue: 0, loan: 100000, cash: -19794, shortfall: 19794 },
     { openingLoan: 99500, openingCash: 17800, revenue: 0, loan: 100000, cash: -2494, shortfall: 2494 },
   ])('caps both financing stages under external management: $openingLoan/$openingCash', (row) => {
-    const result = computeCashFlow(input({ ...row, bankInterest: 716, tax: 890 }), macro, config);
+    const archived = { ...config, featureFlags: { ...config.featureFlags, bankruptcyMode: 'externalManagement' as const } };
+    const result = computeCashFlow(input({ ...row, bankInterest: 716, tax: 890 }), macro, archived);
     expect(result.loan).toBe(row.loan);
     expect(result.cash).toBe(row.cash);
     expect(result.unfundedShortfall).toBe(row.shortfall);

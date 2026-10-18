@@ -4,6 +4,7 @@ import { DEFAULT_FIRM_START, DEFAULT_LEAGUE_CONFIG, makeMacroParams } from '../.
 import type { FirmDecision, League } from '../../engine/types';
 import { renderFirmReport, renderFirmExport, renderIndustryReport, renderMasterReport } from '../index';
 import { money, num, deltaPercent, percent } from '../format';
+import { renderRankings } from '../masterReport';
 
 function buildPeriod(newsText = '') {
   const league: League = {
@@ -168,6 +169,59 @@ describe('Отраслевой отчёт', () => {
     expect(out).toContain('Убытки');
     // Выручка банкрота числом не печатается.
     expect(out).not.toContain(money(period.firms[1].revenue));
+  });
+});
+
+describe('Нативное объявление банкротства', () => {
+  it('explains permanent exclusion and liquidation losses in the private firm report', () => {
+    const { league, period } = buildPeriod();
+    const firm = { ...period.firms[0], isBankrupt: true, nativeBankruptcy: {
+      periodIndex: 1, assets: 12500, bankLoss: 4321, shareholderLoss: -3200,
+      rndCumulative: 10, demandPotentialCumulative: 20 } };
+    const text = renderFirmReport(firm, period, league.config, league.name);
+    expect(text).toContain('Фирма объявлена банкротом');
+    expect(text).toContain('Убытки банка');
+    expect(text).toContain(money(4321));
+    expect(text).toContain('Прибыль акционеров');
+    expect(text).toContain(money(3200));
+    expect(text).not.toContain('Кредитный лимит исчерпан');
+  });
+  it('ranks excluded slots last even when all active profits and RIF are negative', () => {
+    const { period } = buildPeriod();
+    const firms = period.firms.map((firm, i) => ({ ...firm, netProfit: -100 * i,
+      rif: { ...firm.rif, total: -10 * i } }));
+    firms[0] = { ...firms[0], nativeBankruptcy: { periodIndex: 1, assets: 0, bankLoss: 0,
+      shareholderLoss: 0, rndCumulative: 0, demandPotentialCumulative: 0 } };
+    const lines = renderRankings({ ...period, firms });
+    expect(lines.at(-1)?.match(/Альфа/g)).toHaveLength(2);
+    expect(lines.at(-1)).toContain('—');
+  });
+  it.each([-20, 0])('shows signed shareholder loss %s as a gain/non-loss without a negative printed gain', shareholderLoss => {
+    const { league, period } = buildPeriod();
+    period.firms[0].nativeBankruptcy = { periodIndex: 1, assets: 100, bankLoss: 0,
+      shareholderLoss, rndCumulative: 0, demandPotentialCumulative: 0 };
+    const text = renderIndustryReport(period, league.name);
+    const cell = (label: string) => text.split('\n').find(line => line.startsWith(label.padEnd(16)))!.slice(16, 28).trim();
+    expect(cell('Н.Приб')).toBe('Прибыль');
+    expect(cell('РИФ')).toBe(money(Math.abs(shareholderLoss)));
+  });
+  it('публикует ликвидационные потери, а не прежнюю маску кредитного лимита', () => {
+    const { league, period } = buildPeriod();
+    const declaration = { periodIndex: 1, assets: 891234, bankLoss: 4321,
+      shareholderLoss: 3200, rndCumulative: 7311234, demandPotentialCumulative: 9511234 };
+    const changed = { ...period, firms: period.firms.map((firm, index) => index === 0
+      ? { ...firm, isBankrupt: true, nativeBankruptcy: declaration } : firm) };
+    const text = renderIndustryReport(changed, league.name);
+    const cell = (label: string) => text.split('\n').find(line => line.startsWith(label.padEnd(16)))!.slice(16, 28).trim();
+    expect(cell('Цена')).toBe('Убытки');
+    expect(cell('Выручка')).toBe('банка:');
+    expect(cell('Ч.Приб')).toBe(money(4321));
+    expect(cell('Н.Приб')).toBe('Убытки');
+    expect(cell('Доля Р')).toBe('акц-ров:');
+    expect(cell('РИФ')).toBe(money(3200));
+    expect(text).not.toContain(money(declaration.assets));
+    expect(text).not.toContain(money(declaration.rndCumulative));
+    expect(text).not.toContain(money(declaration.demandPotentialCumulative));
   });
 });
 

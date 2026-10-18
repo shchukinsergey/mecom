@@ -47,3 +47,15 @@ test('includes all completed periods starting at zero sorted without changing in
 test('returns empty history when no periods have been computed', () => {
   expect(buildPublicHistory([])).toEqual([]);
 });
+
+test('projects exclusion status, not private liquidation operands or historical stocks', () => {
+  const period = computedPeriod(1);
+  period.firms[0].nativeBankruptcy = { periodIndex: 1, assets: 12345, bankLoss: 6789,
+    shareholderLoss: -100, rndCumulative: 23456, demandPotentialCumulative: 34567 };
+  const history = buildPublicHistory([period]);
+  expect(history[0].firms[0].excluded).toBe(true);
+  expect(history[0].firms[1].excluded).toBeUndefined();
+  for (const field of Object.keys(period.firms[0].nativeBankruptcy)) {
+    if (field !== 'periodIndex') expect(JSON.stringify(history)).not.toContain(field);
+  }
+});

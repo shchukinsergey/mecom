@@ -12,6 +12,15 @@ const history: PublicHistoryPeriod[] = [
 const render = (data: PublicHistoryPeriod[] = history) => renderToStaticMarkup(createElement(CompetitionHistoryChart, { history: data, ownFirmId: 'mine' }));
 
 describe('CompetitionHistoryChart', () => {
+  it('ends an excluded firm line without plotting its cleared zeros or changing active rankings', () => {
+    const data: PublicHistoryPeriod[] = [history[0], { periodIndex: 1,
+      firms: [{ ...firm('mine', 0), excluded: true }, firm('other', -10)] }];
+    const model = buildHistoryChartModel(data, 'rif', 'mine');
+    expect(model.series.find(s => s.firmId === 'mine')!.points).toHaveLength(1);
+    expect(model.own).toBeNull();
+    expect(buildHistoryChartModel(data, 'rif', 'other').own).toMatchObject({ rank: 1, total: 1 });
+    expect(render(data)).toContain('Исключена');
+  });
   it('selects the closest point within 40 screen pixels, not just its tiny hit circle', () => {
     const points = [{ x: 100, y: 100, firmId: 'mine' }, { x: 100, y: 120, firmId: 'other' }];
     expect(nearestHistoryPoint(points, 72, 100)).toBe(points[0]);

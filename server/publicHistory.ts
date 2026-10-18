@@ -8,6 +8,7 @@ export function buildPublicHistory(results: PeriodResults[]): PublicHistoryPerio
     firms: period.firms.map(firm => ({
       firmId: firm.firmId,
       firmName: firm.firmName,
+      ...(firm.nativeBankruptcy ? { excluded: true as const } : {}),
       rif: firm.rif.total,
       netProfit: firm.netProfit,
       marketShareSold: firm.marketShareSold,

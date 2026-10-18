@@ -9,9 +9,11 @@ export function playerPublicPeriods(status: GameStatus | null): PublicHistoryPer
 }
 
 export function playerPublicRank(period: PublicHistoryPeriod | undefined, firmId: string): number | null {
-  const value = period?.firms.find(f => f.firmId === firmId)?.rif;
+  const firm = period?.firms.find(f => f.firmId === firmId);
+  if (firm?.excluded) return null;
+  const value = firm?.rif;
   return typeof value === 'number' && Number.isFinite(value)
-    ? 1 + period!.firms.filter(f => Number.isFinite(f.rif) && f.rif > value).length : null;
+    ? 1 + period!.firms.filter(f => !f.excluded && Number.isFinite(f.rif) && f.rif > value).length : null;
 }
 
 export function formatPlayerValue(value: number | null | undefined, unit = '', signed = false): string {
@@ -54,12 +56,14 @@ export function PlayerMarket({ me, status }: { me: PlayerMe; status: GameStatus 
           const oldRank = playerPublicRank(previous, f.firmId);
           const delta = rank !== null && oldRank !== null ? oldRank - rank : null;
           const current = status?.firms.find(item => item.firmId === f.firmId);
-          const value = latest?.firms.find(item => item.firmId === f.firmId)?.rif;
+          const latestFirm = latest?.firms.find(item => item.firmId === f.firmId);
+          const excluded = current?.nativeBankrupt || latestFirm?.excluded;
+          const value = latestFirm?.excluded ? undefined : latestFirm?.rif;
           return <tr key={f.firmId} className={f.firmId === me.firmId ? 'pc-own-row' : undefined}>
             <td><span className="pc-rank-position">{rank ?? '—'}<PlayerRankChange delta={delta} period={previous?.periodIndex} /></span></td>
             <th scope="row" className="pc-company-name">{f.firmName}{f.firmId === me.firmId && <span className="pc-own-label">Вы</span>}</th>
             <td className="pc-numeric">{formatPlayerValue(value)}</td>
-            <td className="pc-decision-status"><span className={current?.submitted ? 'pc-positive' : 'pc-muted'}>{current ? current.submitted ? 'Отправлено' : 'Не отправлено' : 'Нет данных'}</span></td>
+            <td className="pc-decision-status"><span className={current?.submitted ? 'pc-positive' : 'pc-muted'}>{excluded ? 'Исключена' : current ? current.submitted ? 'Отправлено' : 'Не отправлено' : 'Нет данных'}</span></td>
           </tr>;
         }) : <tr><td colSpan={4} className="pc-empty">Компании пока не присоединились к игре.</td></tr>}</tbody>
       </table>

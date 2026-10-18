@@ -141,25 +141,25 @@ export function renderComparisonTable(period: PeriodResults, columnsPerBlock = 5
     out.push(
       row(
         'Цена',
-        chunk.map((f) => firmCell(money(f.decision.price, 2), f.isBankrupt, 'Убытки')),
+        chunk.map((f) => f.nativeBankruptcy ? 'Убытки' : firmCell(money(f.decision.price, 2), f.isBankrupt, 'Убытки')),
       ),
     );
     out.push(
       row(
         'Выручка',
-        chunk.map((f) => firmCell(money(f.revenue), f.isBankrupt, 'банкрот')),
+        chunk.map((f) => f.nativeBankruptcy ? 'банка:' : firmCell(money(f.revenue), f.isBankrupt, 'банкрот')),
       ),
     );
     out.push(
       row(
         'Ч.Приб',
-        chunk.map((f) => firmCell(money(f.netProfit), f.isBankrupt, 'Убытки')),
+        chunk.map((f) => f.nativeBankruptcy ? money(f.nativeBankruptcy.bankLoss) : firmCell(money(f.netProfit), f.isBankrupt, 'Убытки')),
       ),
     );
     out.push(
       row(
         'Н.Приб',
-        chunk.map((f) => firmCell(money(f.retainedEarnings), f.isBankrupt, 'Убытки')),
+        chunk.map((f) => f.nativeBankruptcy ? (f.nativeBankruptcy.shareholderLoss > 0 ? 'Убытки' : 'Прибыль') : firmCell(money(f.retainedEarnings), f.isBankrupt, 'Убытки')),
       ),
     );
     out.push(
@@ -167,13 +167,13 @@ export function renderComparisonTable(period: PeriodResults, columnsPerBlock = 5
         'Доля Р',
         // Доля рынка — в штуках проданного (мекомspec 1: доля_i = 100·сбыт_i/Σсбыт),
         // а не в полученных заказах.
-        chunk.map((f) => firmCell(percent(f.marketShareSold / 100), f.isBankrupt, 'акц-ров:')),
+        chunk.map((f) => f.nativeBankruptcy ? 'акц-ров:' : firmCell(percent(f.marketShareSold / 100), f.isBankrupt, 'акц-ров:')),
       ),
     );
     out.push(
       row(
         'РИФ',
-        chunk.map((f) => firmCell(num(f.rif.total, 1), f.isBankrupt, '—')),
+        chunk.map((f) => f.nativeBankruptcy ? money(Math.abs(f.nativeBankruptcy.shareholderLoss)) : firmCell(num(f.rif.total, 1), f.isBankrupt, '—')),
       ),
     );
 

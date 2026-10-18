@@ -183,6 +183,7 @@ test("room authorization, link visibility, membership and public DTO privacy", a
         "settings",
         "periodMacro",
         "industryReport",
+        "nativeBankruptcyAvailable",
       ].sort(),
     );
     for (const f of dto.firms)

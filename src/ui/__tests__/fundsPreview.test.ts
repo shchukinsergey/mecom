@@ -104,7 +104,7 @@ describe('native entry-budget arithmetic (synthetic branch checks)', () => {
     expect(p.netInvestment).toBe(0);
   });
 
-  it('does not deduct firing/storage/interest, which still create a settled zero-revenue shortfall', () => {
+  it('does not deduct firing/storage/interest, which create a settled shortfall under archived credit caps', () => {
     const state = opening({ cash: 0, loan: 100000, inventoryAgedUnits: 10, employees: 84 });
     const d = decision({ production: 0, marketing: 0, rnd: 0, capexGross: 1050 });
     const p = estimateFunds(state, d, macro, config);
@@ -113,7 +113,8 @@ describe('native entry-budget arithmetic (synthetic branch checks)', () => {
     const cf = computeCashFlow({ openingCash: 0, openingLoan: state.loan, revenue: 0,
       produced: 0, unitCost: 0, marketing: 0, rnd: 0, capexGross: d.capexGross,
       firingPenalty: p.firingPenalty, storageCost: p.storageCost, bankInterest: p.bankInterest,
-      tax: 0, isBankrupt: false }, macro, config);
+      tax: 0, isBankrupt: false }, macro, { ...config,
+        featureFlags: { ...config.featureFlags, bankruptcyMode: 'externalManagement' } });
     expect(cf.unfundedShortfall).toBeGreaterThan(0);
   });
 

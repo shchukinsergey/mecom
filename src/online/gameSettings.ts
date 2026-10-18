@@ -55,6 +55,7 @@ export function buildOnlineGameSnapshot(
     depositRate: settings.depositRatePercent / 100,
     featureFlags: {
       ...DEFAULT_LEAGUE_CONFIG.featureFlags,
+      bankruptcyMode: 'native',
       bankInterestFormula: settings.bankInterestFormula,
       loanRepayment: settings.loanRepayment,
     },

@@ -42,7 +42,7 @@ export function PlayerOverview({ me, status, onDecisions }: { me: PlayerMe; stat
     <div className="pc-company-summary">
       <div className="pc-company-position"><span className="pc-label">Место по РИФ</span>
         <strong className="pc-rank-position">{rank ?? '—'}<PlayerRankChange delta={rankDelta} period={previousPublic?.periodIndex} /></strong>
-        {rank !== null && <span className="pc-muted">из {latestPublic?.firms.filter(f => Number.isFinite(f.rif)).length} · период {latestPublic?.periodIndex}</span>}
+        {rank !== null && <span className="pc-muted">из {latestPublic?.firms.filter(f => !f.excluded && Number.isFinite(f.rif)).length} · период {latestPublic?.periodIndex}</span>}
         {rankDelta === null && <small className="pc-muted">Нет предыдущего места для сравнения</small>}
       </div>
       <div className="pc-kpis">{latest ? <>
