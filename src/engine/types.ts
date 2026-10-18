@@ -159,6 +159,8 @@ export interface RifWeights {
 export interface Firm {
   id: string;
   name: string;
+  /** Marks an automated participant in online rooms; has no effect on formulas. */
+  isBot?: boolean;
   initialMachines: number;
   initialCash: number;
   initialLoan: number;

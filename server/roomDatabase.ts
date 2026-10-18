@@ -27,6 +27,7 @@ export interface StoredRoom {
   timerMode: RoomTimerMode;
   deadlineAt: number | null;
   autoBankruptcy: boolean;
+  botFirmId?: string | null;
   settings: OnlineGameSettings;
   snapshot: LeagueSnapshot;
   members: StoredMember[];
@@ -57,6 +58,8 @@ export class RoomDatabase {
     if (!roomColumns.includes("deadline_at")) this.db.exec("ALTER TABLE rooms ADD COLUMN deadline_at INTEGER");
     if (!roomColumns.includes("auto_bankruptcy")) this.db.exec("ALTER TABLE rooms ADD COLUMN auto_bankruptcy INTEGER NOT NULL DEFAULT 0");
     this.db.prepare("UPDATE rooms SET deadline_at=? WHERE phase='collecting' AND timer_mode='standard' AND deadline_at IS NULL").run(Date.now() + 86400000);
+
+    if (!roomColumns.includes("bot_firm_id")) this.db.exec("ALTER TABLE rooms ADD COLUMN bot_firm_id TEXT");
 
   }
   close(): void {
@@ -161,6 +164,7 @@ export class RoomDatabase {
       timerMode: (row.timer_mode ?? "standard") as RoomTimerMode,
       deadlineAt: row.deadline_at === null || row.deadline_at === undefined ? null : Number(row.deadline_at),
       autoBankruptcy: !!row.auto_bankruptcy,
+      ...(row.bot_firm_id ? { botFirmId: String(row.bot_firm_id) } : {}),
       settings: JSON.parse(String(row.settings)),
       snapshot: JSON.parse(String(row.snapshot)),
       members,
@@ -194,7 +198,7 @@ export class RoomDatabase {
   }
   insertRoom(room: StoredRoom): void {
     this.db
-      .prepare("INSERT INTO rooms(id,owner_id,name,visibility,phase,settings,snapshot,timer_mode,deadline_at,auto_bankruptcy) VALUES(?,?,?,?,?,?,?,?,?,?)")
+      .prepare("INSERT INTO rooms(id,owner_id,name,visibility,phase,settings,snapshot,timer_mode,deadline_at,auto_bankruptcy,bot_firm_id) VALUES(?,?,?,?,?,?,?,?,?,?,?)")
       .run(
         room.id,
         room.ownerId,
@@ -206,6 +210,7 @@ export class RoomDatabase {
         room.timerMode ?? "standard",
         room.deadlineAt ?? null,
         Number(room.autoBankruptcy ?? false),
+        room.botFirmId ?? null,
       );
   }
   saveRoom(room: StoredRoom): void {
