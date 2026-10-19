@@ -15,6 +15,7 @@
     "typecheck": "tsc --noEmit",
     "smoke": "node scripts/smoke.mjs",
     "smoke:rooms": "node scripts/rooms-smoke.mjs",
+    "smoke:telegram": "node scripts/telegram-smoke.mjs",
     "server": "node dist-server/index.js",
     "package:amvera": "node scripts/package-amvera.mjs",
     "start": "npm run build && npm run server",

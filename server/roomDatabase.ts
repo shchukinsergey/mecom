@@ -10,6 +10,7 @@ import type {
 import { type OnlineGameSettings } from "../src/online/gameSettings.ts";
 import type { LeagueSnapshot } from "../src/state/persistence.ts";
 import type { Decision } from "./repository.ts";
+import { TelegramStore } from './telegramStore.ts';
 export interface StoredMember {
   userId: string;
   firmId: string;
@@ -38,6 +39,7 @@ export interface StoredUser extends AccountUser {
 }
 export class RoomDatabase {
   private readonly db: DatabaseSync;
+  readonly telegram: TelegramStore;
   constructor(filePath: string) {
     if (filePath !== ":memory:")
       mkdirSync(dirname(filePath), { recursive: true });
@@ -60,6 +62,7 @@ export class RoomDatabase {
     this.db.prepare("UPDATE rooms SET deadline_at=? WHERE phase='collecting' AND timer_mode='standard' AND deadline_at IS NULL").run(Date.now() + 86400000);
 
     if (!roomColumns.includes("bot_firm_id")) this.db.exec("ALTER TABLE rooms ADD COLUMN bot_firm_id TEXT");
+    this.telegram = new TelegramStore(this.db);
 
   }
   close(): void {
@@ -214,6 +217,7 @@ export class RoomDatabase {
       );
   }
   saveRoom(room: StoredRoom): void {
+    const before = this.room(room.id);
     this.db
       .prepare("UPDATE rooms SET phase=?,snapshot=?,timer_mode=?,deadline_at=?,auto_bankruptcy=? WHERE id=?")
       .run(room.phase, JSON.stringify(room.snapshot), room.timerMode ?? "standard", room.deadlineAt ?? null, Number(room.autoBankruptcy ?? false), room.id);
@@ -231,6 +235,7 @@ export class RoomDatabase {
           m.decision ? JSON.stringify(m.decision) : null,
           Number(m.submitted),
         );
+    if (before) this.telegram.transition(before, room);
   }
   audit(
     roomId: string,

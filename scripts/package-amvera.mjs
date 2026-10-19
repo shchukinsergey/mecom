@@ -23,6 +23,7 @@ await addDirectory('dist');
 await addDirectory('dist-server');
 zip.file('amvera.yml', await readFile(join(root, 'amvera.yml')));
 zip.file('DEPLOY-AMVERA.md', await readFile(join(root, 'DEPLOY-AMVERA.md')));
+zip.file('docs/TELEGRAM.md', await readFile(join(root, 'docs/TELEGRAM.md')));
 // The upload is prebuilt locally: no npm installation or TypeScript compilation on hosting.
 zip.file('Dockerfile', `FROM node:24-bookworm-slim
 WORKDIR /app

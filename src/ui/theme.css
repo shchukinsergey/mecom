@@ -473,3 +473,5 @@ input:focus, select:focus, textarea:focus { outline: 3px solid rgba(0, 82, 255, 
   .decision-budget-grid { grid-template-columns: 1fr; }
   .report-scroll-hint { display: block; margin: 0 0 8px; color: var(--text-dim); font-size: 13px; line-height: 1.4; }
 }
+.telegram-option { display: flex; align-items: center; gap: 0.6rem; margin: 0.7rem 0; }
+.telegram-option input[type="checkbox"] { width: auto; margin: 0; }

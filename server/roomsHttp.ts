@@ -40,10 +40,12 @@ import { renderIndustryReport, renderFirmExport } from "../src/report/index.ts";
 import { validDecision, type Decision } from "./repository.ts";
 import { buildPublicHistory } from "./publicHistory.ts";
 import { validateOnlineDecision } from "./decisionValidation.ts";
+import type { TelegramBot } from './telegram.ts';
 export interface AccountServerOptions {
   webRoot?: string;
   secureCookies?: boolean;
   publicOrigin?: string;
+  telegram?: TelegramBot;
 }
 export function createAccountServer(
   database: RoomDatabase,
@@ -507,6 +509,12 @@ async function handle(
     method = req.method ?? "GET";
   if (method === "GET" && path === "/health")
     return send(res, 200, { ok: true });
+  if (method === 'POST' && path === '/api/telegram/webhook') {
+    if (!options.telegram) return send(res, 404, { error: 'Telegram is disabled' });
+    if (!options.telegram.authorized(req.headers['x-telegram-bot-api-secret-token'])) throw new HttpError(403, 'Invalid webhook secret');
+    await options.telegram.update(await body(req));
+    return send(res, 200, { ok: true });
+  }
   if (!path.startsWith("/api/") && path !== "/api") {
     if (
       method === "GET" &&
@@ -538,6 +546,32 @@ async function handle(
     keys(await body(req), []);
     auth.logout(req, res);
     return send(res, 200, { ok: true });
+  }
+  if (['/api/telegram', '/api/telegram/code', '/api/telegram/subscriptions'].includes(path)) {
+    const user = authenticated(req, db);
+    if (method === 'GET' && path === '/api/telegram') return send(res, 200, { enabled: !!options.telegram, username: options.telegram?.options.username ?? null, chats: db.telegram.chats(user.id), rooms: db.listIds('mine', user.id).map(id => db.room(id)!).filter(r => r.ownerId === user.id).map(r => ({ id: r.id, name: r.name, phase: r.phase })) });
+    if (!options.telegram) throw new HttpError(503, 'Telegram-бот ещё не настроен на сервере.');
+    if (method === 'POST' && path === '/api/telegram/code') {
+      keys(await body(req), []);
+      return send(res, 200, db.telegram.code(user.id));
+    }
+    if (method === 'PUT' && path === '/api/telegram/subscriptions') {
+      const b = await body(req); keys(b, ['chatId', 'roomIds']);
+      if (typeof b.chatId !== 'string' || !Array.isArray(b.roomIds) || b.roomIds.length > 50 || b.roomIds.some(id => typeof id !== 'string') || new Set(b.roomIds).size !== b.roomIds.length) throw new HttpError(400, 'Invalid subscriptions');
+      const chatId = b.chatId;
+      await options.telegram.verifyManager(user.id, chatId);
+      db.transaction(() => {
+        if (!db.telegram.manages(user.id, chatId)) throw new HttpError(403, 'Подключите этот чат с помощью своего кода.');
+        const rooms = (b.roomIds as string[]).map(id => {
+          const room = db.room(id);
+          if (!room || room.ownerId !== user.id) throw new HttpError(403, 'Можно подключать только свои игры.');
+          return room;
+        });
+        db.telegram.select(user.id, chatId, rooms);
+      });
+      return send(res, 200, { ok: true });
+    }
+    return send(res, 404, { error: 'Not found' });
   }
   if (
     path !== "/api/auth/me" &&

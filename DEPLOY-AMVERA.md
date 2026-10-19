@@ -97,3 +97,10 @@ npm run server
 - Сеть и домены: https://docs.amvera.ru/applications/configuration/network.html
 
 Развёртывание и проверка публичного адреса требуют доступа к вашему аккаунту Amvera; локальная сборка не означает, что сайт уже опубликован.
+
+## Telegram-бот
+
+Для уведомлений задайте переменные `MECOM_TELEGRAM_BOT_TOKEN`,
+`MECOM_TELEGRAM_BOT_USERNAME`, `MECOM_TELEGRAM_WEBHOOK_SECRET` и публичный HTTPS-адрес
+`MECOM_PUBLIC_ORIGIN`, затем перезапустите приложение. Сервер сам регистрирует webhook.
+Подробная инструкция: [docs/TELEGRAM.md](docs/TELEGRAM.md).
