@@ -289,6 +289,8 @@ function summary(room: StoredRoom, user: AccountUser): RoomSummary {
     phase: room.phase,
     currentPeriodIndex: period(room),
     playerCount: room.members.length + Number(!!room.botFirmId),
+    activeFirmCount: gameMembers(room).filter(m => !nativeBankrupt(room, m.firmId)).length,
+    submittedCount: gameMembers(room).filter(m => !nativeBankrupt(room, m.firmId) && m.submitted).length,
     ownFirmId: room.members.find((m) => m.userId === user.id)?.firmId ?? null,
     ownFirmSubmitted: room.members.find((m) => m.userId === user.id)?.submitted ?? null,
     timerMode: room.timerMode,

@@ -28,6 +28,8 @@ export interface RoomSummary {
   phase: RoomPhase;
   currentPeriodIndex: number;
   playerCount: number;
+  activeFirmCount: number;
+  submittedCount: number;
   ownFirmId: string | null;
   ownFirmSubmitted: boolean | null;
   timerMode: RoomTimerMode;

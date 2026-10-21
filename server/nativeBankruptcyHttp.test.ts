@@ -103,6 +103,10 @@ test.each(['submit', 'normal', 'force'] as const)('retired firm does not block %
   }
   const preview = await call(route + '/calculate-preview', 'GET', undefined, owner);
   expect(preview.body.firms).toHaveLength(1);
+  const readiness = (await call(route, 'GET', undefined, owner)).body;
+  expect(readiness.playerCount).toBe(2);
+  expect(readiness.activeFirmCount).toBe(1);
+  expect(readiness.submittedCount).toBe(mode === 'normal' ? 1 : 0);
   expect(preview.body.canForce).toBe(true);
   const response = mode === 'submit'
     ? await call(route + '/submit', 'POST', { periodIndex: 1 }, b)

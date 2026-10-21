@@ -178,6 +178,8 @@ test("room authorization, link visibility, membership and public DTO privacy", a
         "phase",
         "currentPeriodIndex",
         "playerCount",
+        "activeFirmCount",
+        "submittedCount",
         "ownFirmId",
         "ownFirmSubmitted",
         "timerMode",
@@ -189,6 +191,8 @@ test("room authorization, link visibility, membership and public DTO privacy", a
         "nativeBankruptcyAvailable",
       ].sort(),
     );
+    expect(dto.activeFirmCount).toBe(2);
+    expect(dto.submittedCount).toBe(0);
     expect(dto.ownFirmSubmitted).toBe(dto.ownFirmId ? false : null);
     for (const f of dto.firms)
       expect(Object.keys(f).sort()).toEqual(
@@ -223,6 +227,10 @@ test("a room created with one bot initializes and calculates the bot as a firm",
   const started = await call(route + "/start", "POST", {}, owner);
   expect(started.status).toBe(200);
   expect(started.body.firms.find((firm: { isBot?: boolean }) => firm.isBot)?.submitted).toBe(true);
+  expect(started.body.activeFirmCount).toBe(2);
+  expect(started.body.submittedCount).toBe(1);
+  const listing = (await call('/api/rooms?scope=mine', 'GET', undefined, owner)).body.rooms;
+  expect(listing.find((room: { id: string }) => room.id === id)).toMatchObject({ activeFirmCount: 2, submittedCount: 1 });
 
   const decision = {
     price: 35, production: 0, marketing: 0, capexGross: 0, rnd: 0,
