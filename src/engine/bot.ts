@@ -1,159 +1,287 @@
 import { computeDepreciation } from './capex';
 import { computePeriod, nextOpeningState } from './computePeriod';
+import { checkDecisionBudget } from './decisionBudget';
+import { botPeriodConfig, estimateBotMarket, observeBot, type BotObservation } from './botObservation';
 import type { LeagueSnapshot } from '../state/persistence';
-import type { FirmDecision, PeriodMacroParams, PeriodResults } from './types';
+import type { FirmDecision, FirmOpeningState, FirmPeriodResult } from './types';
 
-const MAX_DECISION_SPEND = 50_000;
-const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
-const unique = (values: number[]) => [...new Set(values.filter(Number.isFinite).map(v => Math.round(v * 100) / 100))];
+const MAX_SPEND = 50_000;
+const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
+const integers = (values: number[]) => [...new Set(values.filter(Number.isFinite).map(Math.round))];
 
-type DecisionKey = 'price' | 'production' | 'marketing' | 'rnd' | 'capexGross';
-type Score = { unfunded: number; profit: number; endingCash: number };
+export type BotStrategy = 'scale' | 'quality' | 'mixed';
+export interface BotOptions {
+  /** Omit to compare all families; set to give a bot a strategic preference. */
+  strategy?: BotStrategy;
+}
+export interface BotForecast {
+  rif: number;
+  profit: number;
+  fundingRisk: number;
+  endingInventory: number;
+  endingLoan: number;
+}
+export interface BotRecommendation {
+  decision: FirmDecision;
+  strategy: BotStrategy;
+  explanation: string;
+  forecast: BotForecast;
+  evaluatedPlans: number;
+}
 
-/**
- * Search recommendations by running the real MECOM engine against candidate
- * decisions. The objective is projected cumulative net profit, not market share.
- * Future rival decisions are held at their latest available inputs; the plan is
- * a scenario estimate, not a prediction of how people will play.
- */
+// Search policy, not game formulas. Economic effects use the actual engine.
+const PROFILES: Record<BotStrategy, { growth: number; quality: number }> = {
+  scale: { growth: 0.3, quality: 0.02 },
+  quality: { growth: 0.05, quality: 0.35 },
+  mixed: { growth: 0.15, quality: 0.15 },
+};
+type Plan = { decision: FirmDecision; strategy: BotStrategy };
+type Score = BotForecast & { utility: number; netCash: number };
+
+/** Server-compatible entry point; randomness only breaks evaluated numeric ties. */
 export function chooseBotDecision(
   snapshot: LeagueSnapshot,
   firmId: string,
   random: () => number = Math.random,
+  options: BotOptions = {},
 ): FirmDecision {
-  const { league } = snapshot;
-  const firm = league.firms.find(candidate => candidate.id === firmId);
-  const opening = snapshot.opening[firmId];
-  const start = league.results.length;
-  const currentSlot = league.decisionsByPeriod[start];
-  const previous = league.results[start - 1]?.firms.find(result => result.firmId === firmId);
-  const initial = currentSlot?.[firmId] ?? previous?.decision;
-  if (!firm || !opening || !initial) throw new Error(`No current game state for firm: ${firmId}`);
-  if (opening.isBankrupt) throw new Error('A bankrupt firm cannot receive a bot decision.');
+  return recommendBotDecision(observeBot(snapshot, firmId), random, options).decision;
+}
 
-  const candidates = candidateValues(snapshot, firmId, initial, previous, random);
-  let best = { ...initial };
-  let bestScore = project(snapshot, firmId, best);
-  const keys: DecisionKey[] = ['price', 'production', 'marketing', 'rnd', 'capexGross'];
+/** Only own state and public reports are accessible inside the planner. */
+export function recommendBotDecision(
+  o: BotObservation,
+  random: () => number = Math.random,
+  options: BotOptions = {},
+): BotRecommendation {
+  const market = estimateBotMarket(o);
+  let evaluations = 0;
+  const cache = new Map<string, Score>();
+  const evaluate = (plan: Plan, stress = false): Score => {
+    const key = JSON.stringify([plan, stress]);
+    const cached = cache.get(key);
+    if (cached) return cached;
+    evaluations++;
+    const score = project(o, market, plan, stress);
+    cache.set(key, score);
+    return score;
+  };
+  const strategies: BotStrategy[] = options.strategy ? [options.strategy] : ['scale', 'quality', 'mixed'];
+  const candidates = candidateValues(o);
+  const initial = normalize(o, o.initial);
+  const valid = (d: FirmDecision) => !checkDecisionBudget(o.opening, d, o.macro, botPeriodConfig(o.config, o.macro)).overspend;
+  const finalists: { plan: Plan; score: Score }[] = [];
 
-  // Coordinate search: use the real engine to test each lever, then make a
-  // second pass because price, marketing, production and R&D interact.
-  for (let pass = 0; pass < 2; pass++) {
-    for (const key of keys) {
-      for (const value of candidates[key]) {
-        const trial = { ...best, [key]: value };
-        const score = project(snapshot, firmId, trial);
-        if (isBetter(score, bestScore)) {
-          best = trial;
-          bestScore = score;
+  // Preserve the common introduction and its retained-profit RIF denominator.
+  if (o.period === 0 && valid(initial)) {
+    const plan: Plan = { decision: initial, strategy: options.strategy ?? 'mixed' };
+    return recommendation(plan, evaluate(plan), evaluations, 'Вводный период: сохраняем общие стартовые условия.');
+  }
+
+  for (const strategy of strategies) {
+    const profile = PROFILES[strategy];
+    const depreciation = computeDepreciation(o.opening.machines, o.config, o.opening.amortFundRemainder);
+    const resources = checkDecisionBudget(o.opening, initial, o.macro, o.config).resourcesAvailable;
+    const seeds = [initial, ...[0.5, 1, 1.5].map(intensity => normalize(o, {
+      ...initial,
+      production: Math.round(o.opening.machines * o.config.costOptimalCu / 100),
+      capexGross: o.remainingPeriods <= 1 ? 0 : depreciation + o.opening.machines * profile.growth * intensity * o.config.machineCost,
+      rnd: o.remainingPeriods <= 1 ? 0 : Math.max(0, resources) * profile.quality * intensity,
+    })), normalize(o, { ...initial, production: 0, marketing: 0, rnd: 0, capexGross: 0 })];
+    const feasibleSeeds = seeds.filter(valid);
+    if (!feasibleSeeds.length) continue;
+    let plan: Plan = { decision: feasibleSeeds[0], strategy };
+    let score = evaluate(plan);
+    for (const seed of feasibleSeeds.slice(1)) {
+      const trial = { decision: seed, strategy };
+      const value = evaluate(trial);
+      if (better(value, score)) { plan = trial; score = value; }
+    }
+    // Price and output must be evaluated together, including restarting output.
+    for (let pass = 0; pass < 2; pass++) {
+      for (const price of candidates.price) {
+        for (const production of candidates.production) {
+          const decision = normalize(o, { ...plan.decision, price, production });
+          if (!valid(decision)) continue;
+          const trial = { decision, strategy };
+          const value = evaluate(trial);
+          if (better(value, score)) { plan = trial; score = value; }
+        }
+      }
+      for (const key of ['marketing', 'rnd', 'capexGross'] as const) {
+        for (const value of candidates[key]) {
+          const decision = normalize(o, { ...plan.decision, [key]: value });
+          if (!valid(decision)) continue;
+          const trial = { decision, strategy };
+          const valueScore = evaluate(trial);
+          if (better(valueScore, score)) { plan = trial; score = valueScore; }
         }
       }
     }
+    for (const price of [plan.decision.price - 1, plan.decision.price + 1]) {
+      for (const production of candidates.production) {
+        const decision = normalize(o, { ...plan.decision, price, production });
+        if (!valid(decision)) continue;
+        const trial = { decision, strategy };
+        const value = evaluate(trial);
+        if (better(value, score)) { plan = trial; score = value; }
+      }
+    }
+    if (valid(plan.decision)) finalists.push({ plan, score });
   }
-  // Keep a barely perceptible price variation among near-equivalent policies;
-  // decisions remain bounded and are still chosen by projected profit.
-  best.price = Math.round(best.price * (0.9975 + clamp(random(), 0, 1) * 0.005) * 100) / 100;
-  return best;
+  if (!finalists.length) throw new Error('No affordable bot decision, including zero production.');
+  // Stress-test finalists against cheaper, expanding rivals.
+  const robust = finalists.map(({ plan, score }) => {
+    const stress = evaluate(plan, true);
+    return { plan, score: {
+      ...score,
+      fundingRisk: Math.max(score.fundingRisk, stress.fundingRisk),
+      utility: (score.utility + stress.utility) / 2,
+    } };
+  });
+  robust.sort((a, b) => better(a.score, b.score) ? -1 : better(b.score, a.score) ? 1 : 0);
+  const best = robust[0];
+  const ties = robust.filter(entry => !better(entry.score, best.score) && !better(best.score, entry.score));
+  const selected = ties[Math.min(ties.length - 1, Math.floor(clamp(random(), 0, 1) * ties.length))];
+  const names: Record<BotStrategy, string> = { scale: 'масштабирование', quality: 'качество', mixed: 'смешанное развитие' };
+  return recommendation(selected.plan, selected.score, evaluations,
+    `План: ${names[selected.plan.strategy]}. Сравнены прибыль и итоговый РИФ с учётом кредита, склада и снижения цен конкурентами. Прогноз является оценкой.`);
 }
 
-function candidateValues(
-  snapshot: LeagueSnapshot,
-  firmId: string,
-  current: FirmDecision,
-  previous: PeriodResults['firms'][number] | undefined,
-  random: () => number,
-): Record<DecisionKey, number[]> {
-  const { league } = snapshot;
-  const start = league.results.length;
-  const opening = snapshot.opening[firmId];
-  const capacity = Math.max(0, opening.machines);
-  const recent = previous?.decision ?? current;
-  const marketPrice = league.results.at(-1)?.industry.avgPrice ?? recent.price;
-  const demandSignal = previous ? previous.unfulfilledOrders - previous.inventoryEnd : 0;
-  const priceSteps = demandSignal > 0
-    ? [1, 1.05, 1.1, 1.2]
-    : demandSignal < 0 ? [0.8, 0.9, 0.95, 1] : [0.9, 0.95, 1, 1.05, 1.1];
-  const randomPrice = recent.price * (0.985 + clamp(random(), 0, 1) * 0.03);
-  const prices = unique([
-    ...priceSteps.map(step => recent.price * step),
-    marketPrice * 0.9, marketPrice, marketPrice * 1.1, randomPrice,
-  ]).filter(price => price > 0);
-
-  const production = unique([
-    0, capacity * 0.5, capacity * 0.65, capacity * 0.75, capacity * 0.8,
-    capacity * 0.85, capacity * 0.9, capacity * 0.95, capacity,
-    recent.production, previous ? previous.sold + opening.inventory : current.production,
-  ]).map(value => Math.round(clamp(value, 0, capacity)));
-
-  const peerSpend = (field: 'marketing' | 'rnd') => league.firms
-    .filter(other => other.id !== firmId)
-    .map(other => league.decisionsByPeriod[start]?.[other.id]?.[field] ?? 0);
-  const marketingPeers = peerSpend('marketing');
-  const rndPeers = peerSpend('rnd');
-  const avgMarketing = marketingPeers.reduce((sum, value) => sum + value, 0) / Math.max(1, marketingPeers.length);
-  const avgRnd = rndPeers.reduce((sum, value) => sum + value, 0) / Math.max(1, rndPeers.length);
-  const marketing = unique([0, recent.marketing * 0.5, recent.marketing, recent.marketing * 1.25,
-    recent.marketing * 1.5, avgMarketing, avgMarketing * 1.5]).map(value => clamp(value, 0, MAX_DECISION_SPEND));
-  const rnd = unique([0, recent.rnd * 0.5, recent.rnd, recent.rnd * 1.25,
-    recent.rnd * 1.5, avgRnd, avgRnd * 1.5]).map(value => clamp(value, 0, MAX_DECISION_SPEND));
-
-  const depreciation = computeDepreciation(capacity, league.config, opening.amortFundRemainder);
-  const capexGross = unique([0, depreciation, depreciation + league.config.machineCost,
-    depreciation + league.config.machineCost * 2, depreciation + league.config.machineCost * 4,
-    recent.capexGross]).map(value => clamp(value, 0, MAX_DECISION_SPEND));
-  return { price: prices, production, marketing, rnd, capexGross };
+function recommendation(plan: Plan, score: Score, evaluatedPlans: number, explanation: string): BotRecommendation {
+  const { utility: _utility, netCash: _netCash, ...forecast } = score;
+  return { decision: plan.decision, strategy: plan.strategy, explanation, forecast, evaluatedPlans };
 }
 
-function project(snapshot: LeagueSnapshot, firmId: string, candidate: FirmDecision): Score {
-  const { league } = snapshot;
-  const start = league.results.length;
-  const horizon = Math.max(start + 1, league.macroByPeriod.length);
-  let opening = structuredClone(snapshot.opening);
-  let previousIndustry = league.results[start - 1]?.industry;
-  let previousNativeIndustryState = league.results[start - 1]?.nativeIndustryState;
+function normalize(o: BotObservation, d: FirmDecision): FirmDecision {
+  const limits = o.macro.scenarioRules;
+  const min = Math.max(1, Math.ceil(limits?.priceMin ?? 1));
+  const max = Math.floor(limits?.priceMax ?? Number.MAX_SAFE_INTEGER);
+  if (max < min) throw new Error('Scenario has no positive integer price.');
+  return {
+    firmId: o.firmId,
+    price: clamp(Math.round(d.price), min, max),
+    production: clamp(Math.round(d.production), 0, Math.floor(o.opening.machines)),
+    marketing: clamp(Math.round(d.marketing), 0, MAX_SPEND),
+    rnd: clamp(Math.round(d.rnd), 0, MAX_SPEND),
+    capexGross: clamp(Math.round(d.capexGross), 0, MAX_SPEND),
+  };
+}
+
+function candidateValues(o: BotObservation): Record<'price' | 'production' | 'marketing' | 'rnd' | 'capexGross', number[]> {
+  const previous = o.ownHistory.at(-1);
+  const capacity = o.opening.machines;
+  const marketPrice = o.marketHistory.at(-1)?.industry.avgPrice || o.initial.price;
+  const demand = previous?.ordersReceived ?? o.initial.production;
+  const required = Math.max(0, demand - o.opening.inventory);
+  const depreciation = computeDepreciation(capacity, o.config, o.opening.amortFundRemainder);
+  const resources = Math.max(0, checkDecisionBudget(o.opening, o.initial, o.macro, o.config).resourcesAvailable);
+  const baseline = Math.max(1, capacity * marketPrice);
+  const spend = (recent: number) => integers([0, recent / 2, recent, recent * 1.5, baseline * 0.01, baseline * 0.03, baseline * 0.08]);
+  return {
+    price: integers([o.initial.price, ...[0.6, 0.8, 0.9, 1, 1.1, 1.3, 1.6].map(s => marketPrice * s)]),
+    production: integers([0, capacity * 0.1, capacity * 0.25, capacity * 0.5, capacity * 0.65,
+      capacity * o.config.costOptimalCu / 100, capacity * 0.9, capacity,
+      required * 0.8, required, required * 1.2, o.initial.production]),
+    marketing: spend(o.initial.marketing),
+    rnd: integers([...spend(o.initial.rnd), resources * 0.15, resources * 0.35, resources * 0.6]),
+    capexGross: integers([0, depreciation, o.initial.capexGross,
+      ...[0.1, 0.3, 0.6, 1].map(growth => depreciation + capacity * o.config.machineCost * growth)]),
+  };
+}
+
+/** Initial capex/quality spending is a pulse followed by adaptive decisions. */
+function project(o: BotObservation, market: ReturnType<typeof estimateBotMarket>, plan: Plan, stress: boolean): Score {
+  let opening = structuredClone(market.opening);
+  let previousIndustry = o.marketHistory.at(-1)?.industry;
+  let previousNativeIndustryState: Parameters<typeof computePeriod>[0]['previousNativeIndustryState'];
+  let previous: FirmPeriodResult | undefined = o.ownHistory.at(-1);
   let profit = 0;
-  let unfunded = 0;
-  let endingCash = opening[firmId]?.cash ?? 0;
-  const baseRivals = league.decisionsByPeriod[start] ?? {};
-  const startingCapacity = Math.max(1, opening[firmId]?.machines ?? 1);
-
-  for (let period = start; period < horizon; period++) {
-    const baseMacro = league.macroByPeriod[period] ?? league.macroByPeriod[start];
-    if (!baseMacro) break;
-    const macro: PeriodMacroParams = { ...baseMacro, periodIndex: period };
-    const decisions = { ...baseRivals };
-    const capacity = opening[firmId]?.machines ?? 0;
-    decisions[firmId] = period === start ? candidate : {
-      ...candidate,
-      production: Math.round(clamp(candidate.production * capacity / startingCapacity, 0, capacity)),
-    };
-
+  let fundingRisk = 0;
+  let terminal: FirmPeriodResult | undefined;
+  const decisions = structuredClone(market.decisions);
+  for (let step = 0; step < o.remainingPeriods; step++) {
+    // Unknown future announcements are never read from the saved scenario plan.
+    const macro = { ...o.macro, periodIndex: o.period + step };
+    const config = botPeriodConfig(o.config, macro);
+    for (const f of o.firms) {
+      if (f.id === o.firmId || opening[f.id].nativeBankruptcy) continue;
+      const state = opening[f.id];
+      const baseline = market.decisions[f.id];
+      decisions[f.id] = normalize({ ...o, firmId: f.id, opening: state }, {
+        ...baseline,
+        price: Math.max(1, Math.round(baseline.price * (stress ? 0.9 : 1))),
+        production: Math.round(clamp(baseline.production * state.machines / Math.max(1, market.opening[f.id].machines), 0, state.machines)),
+        capexGross: Math.min(MAX_SPEND, computeDepreciation(state.machines, config, state.amortFundRemainder) +
+          (stress ? state.machines * config.machineCost * 0.1 : 0)),
+      });
+    }
+    const state = opening[o.firmId];
+    let decision = step === 0 ? plan.decision : followUp(o, plan, state, previous!, step);
+    if (step > 0) decision = affordableFollowUp(o, state, decision);
+    decisions[o.firmId] = decision;
+    const budget = checkDecisionBudget(state, decision, macro, config);
+    fundingRisk += Math.max(0, -budget.remainingBudget);
     const result = computePeriod({
-      periodIndex: period,
-      config: league.config,
-      macro,
-      firms: league.firms.map(({ id, name }) => ({ id, name })),
-      opening,
-      decisions,
-      previousIndustry,
-      previousNativeIndustryState,
+      periodIndex: macro.periodIndex, config, macro, firms: o.firms,
+      opening, decisions, previousIndustry, previousNativeIndustryState,
     });
-    const own = result.firms.find(entry => entry.firmId === firmId);
-    if (!own) break;
-    profit += own.netProfit;
-    unfunded += own.unfundedShortfall;
-    endingCash = own.cash;
-    if (own.isBankrupt) break;
-
+    terminal = result.firms.find(f => f.firmId === o.firmId)!;
+    profit += terminal.netProfit;
+    fundingRisk += terminal.unfundedShortfall + Math.max(0, terminal.loan - macro.loanLimitAbs) + Math.max(0, -terminal.cash);
+    if (terminal.isBankrupt) { fundingRisk += macro.loanLimitAbs; break; }
     opening = nextOpeningState(opening, result);
+    previous = terminal;
     previousIndustry = result.industry;
     previousNativeIndustryState = result.nativeIndustryState;
   }
-  return { unfunded, profit, endingCash };
+  const own = terminal!;
+  const profitBase = Math.max(1, Math.abs(o.opening.retainedEarningsBase || o.ownHistory[0]?.netProfit || 1));
+  // RIF is the game objective. Profit breaks close ratings without penalizing
+  // capex as an expense or debt as an intrinsic loss. Unsold stock earns no cash.
+  const strandedInventory = Math.max(0, own.inventoryEnd - own.ordersReceived * 0.1);
+  const utility = own.rif.total + (profit - strandedInventory * own.inventoryUnitCostEnd) / profitBase;
+  return { rif: own.rif.total, profit, fundingRisk, utility,
+    endingInventory: own.inventoryEnd, endingLoan: own.loan, netCash: own.cash - own.loan };
 }
 
-function isBetter(a: Score, b: Score): boolean {
-  if (Math.abs(a.unfunded - b.unfunded) > 0.01) return a.unfunded < b.unfunded;
-  if (Math.abs(a.profit - b.profit) > 0.01) return a.profit > b.profit;
-  return a.endingCash > b.endingCash;
+function followUp(o: BotObservation, plan: Plan, state: FirmOpeningState, previous: FirmPeriodResult, step: number): FirmDecision {
+  const optimal = state.machines * o.config.costOptimalCu / 100;
+  const demand = previous.ordersReceived;
+  const production = Math.round(clamp(demand - state.inventory, 0, state.machines));
+  const inventoryPressure = state.inventory > Math.max(1, previous.sold);
+  const profile = PROFILES[plan.strategy];
+  const early = step < o.remainingPeriods - 2;
+  const depreciation = computeDepreciation(state.machines, o.config, state.amortFundRemainder);
+  const resources = Math.max(0, checkDecisionBudget(state, previous.decision, o.macro, o.config).resourcesAvailable);
+  return normalize({ ...o, opening: state }, {
+    ...plan.decision, production,
+    price: previous.decision.price * (inventoryPressure ? 0.9 : previous.unfulfilledOrders > optimal * 0.2 ? 1.05 : 1),
+    capexGross: step === o.remainingPeriods - 1 ? 0 : depreciation + (early && demand > optimal && !inventoryPressure
+      ? state.machines * o.config.machineCost * profile.growth : 0),
+    rnd: early ? Math.min(plan.decision.rnd, resources * profile.quality * 0.15) : 0,
+    marketing: inventoryPressure || demand > 0 ? plan.decision.marketing : Math.max(plan.decision.marketing, resources * 0.01),
+  });
+}
+
+function affordableFollowUp(o: BotObservation, state: FirmOpeningState, decision: FirmDecision): FirmDecision {
+  const valid = (d: FirmDecision) => !checkDecisionBudget(state, d, o.macro, botPeriodConfig(o.config, o.macro)).overspend;
+  let d = { ...decision };
+  for (const key of ['capexGross', 'rnd', 'marketing'] as const) {
+    if (valid(d)) return d;
+    d[key] = 0;
+  }
+  if (valid(d)) return d;
+  // Unit cost is nonmonotonic, so binary search would discard feasible output.
+  for (const fraction of [0.8, 1, 0.65, 0.5, 0.25, 0.1, 0]) {
+    d = { ...d, production: Math.round(state.machines * fraction) };
+    if (valid(d)) return d;
+  }
+  return d;
+}
+
+function better(a: Score, b: Score): boolean {
+  if (Math.abs(a.fundingRisk - b.fundingRisk) > 0.01) return a.fundingRisk < b.fundingRisk;
+  if (Math.abs(a.utility - b.utility) > 0.01) return a.utility > b.utility;
+  return a.netCash > b.netCash + 0.01;
 }
