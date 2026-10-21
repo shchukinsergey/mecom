@@ -57,6 +57,7 @@ export interface CreateRoomInput {
   visibility: RoomVisibility;
   timerMode?: RoomTimerMode;
   settings?: OnlineGameSettings;
+  /** Legacy client compatibility. The UI adds bots to an existing lobby. */
   addBot?: boolean;
 }
 export interface CalculatePreview {

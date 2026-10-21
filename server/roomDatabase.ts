@@ -29,9 +29,19 @@ export interface StoredRoom {
   deadlineAt: number | null;
   autoBankruptcy: boolean;
   botFirmId?: string | null;
+  bots?: Array<{ firmId: string; firmName: string }>;
   settings: OnlineGameSettings;
   snapshot: LeagueSnapshot;
   members: StoredMember[];
+}
+
+/** Merge legacy single-bot rooms with the new list without duplicating a firm. */
+export function roomBots(room: Pick<StoredRoom, 'botFirmId' | 'bots'>): Array<{ firmId: string; firmName: string }> {
+  const bots = [...(room.bots ?? [])];
+  if (room.botFirmId && !bots.some(bot => bot.firmId === room.botFirmId)) {
+    bots.unshift({ firmId: room.botFirmId, firmName: 'Бот' });
+  }
+  return bots;
 }
 export interface StoredUser extends AccountUser {
   salt: string;
@@ -62,6 +72,7 @@ export class RoomDatabase {
     this.db.prepare("UPDATE rooms SET deadline_at=? WHERE phase='collecting' AND timer_mode='standard' AND deadline_at IS NULL").run(Date.now() + 86400000);
 
     if (!roomColumns.includes("bot_firm_id")) this.db.exec("ALTER TABLE rooms ADD COLUMN bot_firm_id TEXT");
+    if (!roomColumns.includes("bot_firms")) this.db.exec("ALTER TABLE rooms ADD COLUMN bot_firms TEXT NOT NULL DEFAULT '[]'");
     this.telegram = new TelegramStore(this.db);
 
   }
@@ -157,6 +168,7 @@ export class RoomDatabase {
           : null,
         submitted: !!m.submitted,
       }));
+    const bots = JSON.parse(String(row.bot_firms ?? '[]')) as NonNullable<StoredRoom['bots']>;
     return {
       id: String(row.id),
       name: String(row.name),
@@ -168,6 +180,7 @@ export class RoomDatabase {
       deadlineAt: row.deadline_at === null || row.deadline_at === undefined ? null : Number(row.deadline_at),
       autoBankruptcy: !!row.auto_bankruptcy,
       ...(row.bot_firm_id ? { botFirmId: String(row.bot_firm_id) } : {}),
+      ...(bots.length ? { bots } : {}),
       settings: JSON.parse(String(row.settings)),
       snapshot: JSON.parse(String(row.snapshot)),
       members,
@@ -201,7 +214,7 @@ export class RoomDatabase {
   }
   insertRoom(room: StoredRoom): void {
     this.db
-      .prepare("INSERT INTO rooms(id,owner_id,name,visibility,phase,settings,snapshot,timer_mode,deadline_at,auto_bankruptcy,bot_firm_id) VALUES(?,?,?,?,?,?,?,?,?,?,?)")
+      .prepare("INSERT INTO rooms(id,owner_id,name,visibility,phase,settings,snapshot,timer_mode,deadline_at,auto_bankruptcy,bot_firm_id,bot_firms) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)")
       .run(
         room.id,
         room.ownerId,
@@ -214,13 +227,14 @@ export class RoomDatabase {
         room.deadlineAt ?? null,
         Number(room.autoBankruptcy ?? false),
         room.botFirmId ?? null,
+        JSON.stringify(roomBots(room)),
       );
   }
   saveRoom(room: StoredRoom): void {
     const before = this.room(room.id);
     this.db
-      .prepare("UPDATE rooms SET phase=?,snapshot=?,timer_mode=?,deadline_at=?,auto_bankruptcy=? WHERE id=?")
-      .run(room.phase, JSON.stringify(room.snapshot), room.timerMode ?? "standard", room.deadlineAt ?? null, Number(room.autoBankruptcy ?? false), room.id);
+      .prepare("UPDATE rooms SET phase=?,snapshot=?,timer_mode=?,deadline_at=?,auto_bankruptcy=?,bot_firms=? WHERE id=?")
+      .run(room.phase, JSON.stringify(room.snapshot), room.timerMode ?? "standard", room.deadlineAt ?? null, Number(room.autoBankruptcy ?? false), JSON.stringify(roomBots(room)), room.id);
     for (const m of room.members)
       this.db
         .prepare(

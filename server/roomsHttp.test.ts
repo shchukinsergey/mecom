@@ -2,8 +2,9 @@ import { afterEach, expect, test, vi } from "vitest";
 import { mkdtemp, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { DatabaseSync } from "node:sqlite";
 import { RoomDatabase } from "./roomDatabase.ts";
-import { createAccountServer, listenAccounts } from "./roomsHttp.ts";
+import { createAccountServer, listenAccounts, processExpiredRooms } from "./roomsHttp.ts";
 import type { Server } from "node:http";
 let db: RoomDatabase, server: Server, directory: string, base: string;
 afterEach(async () => {
@@ -51,6 +52,111 @@ async function register(login: string) {
   expect(v.status).toBe(201);
   return v.cookie!.split(";")[0];
 }
+
+test('the owner adds multiple bots after room creation; all bots calculate and persist', async () => {
+  await setup();
+  const owner = await register('MultiBotOwner');
+  const human = await register('MultiBotPlayer');
+  const created = await call('/api/rooms', 'POST', { name: 'Multiple bots', visibility: 'public' }, owner);
+  const route = `/api/rooms/${created.body.id}`;
+  expect(created.body.playerCount).toBe(0);
+  expect((await call(route + '/bots', 'POST', {}, human)).status).toBe(403);
+  expect((await call(route + '/bots', 'POST', {})).status).toBe(401);
+  expect((await call(route + '/bots', 'POST', { count: 100 }, owner)).status).toBe(400);
+  const first = await call(route + '/bots', 'POST', {}, owner);
+  const second = await call(route + '/bots', 'POST', {}, owner);
+  expect(first.status).toBe(200);
+  expect(second.body.firms.map((f: { firmName: string }) => f.firmName)).toEqual(['Бот', 'Бот 2']);
+  expect(second.body.firms.every((f: { isBot?: boolean }) => f.isBot)).toBe(true);
+  expect((await call(route + '/join', 'POST', { firmName: 'Бот 2' }, human)).status).toBe(409);
+  expect((await call(route + '/join', 'POST', { firmName: 'Human' }, human)).status).toBe(200);
+  const started = await call(route + '/start', 'POST', {}, owner);
+  expect(started.status).toBe(200);
+  expect(started.body.playerCount).toBe(3);
+  expect(started.body.submittedCount).toBe(2);
+  expect((await call(route + '/bots', 'POST', {}, owner)).status).toBe(409);
+  for (const periodIndex of [1, 2]) {
+    expect((await call(route + '/decision', 'PUT', { periodIndex,
+      decision: { price: 30, production: 0, marketing: 0, rnd: 0, capexGross: 0 } }, human)).status).toBe(200);
+    expect((await call(route + '/submit', 'POST', { periodIndex }, human)).status).toBe(200);
+    const stored = db.room(created.body.id)!;
+    expect(stored.snapshot.league.results).toHaveLength(periodIndex + 1);
+    for (const bot of stored.bots!) {
+      const result = stored.snapshot.league.results.at(-1)!.firms.find(f => f.firmId === bot.firmId)!;
+      expect(result.produced).toBeGreaterThan(0);
+      expect(result.isBankrupt).toBe(false);
+      expect(Number.isInteger(result.decision.price)).toBe(true);
+    }
+  }
+  await new Promise<void>(resolve => server.close(() => resolve()));
+  db.close();
+  db = new RoomDatabase(join(directory, 'rooms.sqlite'));
+  server = createAccountServer(db);
+  await listenAccounts(server, 0);
+  base = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
+  const reloaded = await call(route, 'GET', undefined, owner);
+  expect(reloaded.body.firms.filter((f: { isBot?: boolean }) => f.isBot)).toHaveLength(2);
+  expect(reloaded.body.playerCount).toBe(3);
+  expect(reloaded.body.submittedCount).toBe(2);
+});
+
+test('bots share the 12-firm limit with people and names skip existing human firms', async () => {
+  await setup();
+  const owner = await register('BotLimitOwner');
+  const human = await register('BotLimitPlayer');
+  const outsider = await register('BotLimitOutsider');
+  const created = await call('/api/rooms', 'POST', { name: 'Limit', visibility: 'public' }, owner);
+  const route = `/api/rooms/${created.body.id}`;
+  await call(route + '/join', 'POST', { firmName: 'Бот 2' }, human);
+  for (let i = 0; i < 11; i++) expect((await call(route + '/bots', 'POST', {}, owner)).status).toBe(200);
+  const detail = await call(route, 'GET', undefined, owner);
+  expect(detail.body.playerCount).toBe(12);
+  expect(new Set(detail.body.firms.map((f: { firmName: string }) => f.firmName)).size).toBe(12);
+  expect((await call(route + '/bots', 'POST', {}, owner)).status).toBe(409);
+  expect((await call(route + '/join', 'POST', { firmName: 'Extra' }, outsider)).status).toBe(409);
+});
+
+test('legacy single-bot databases migrate and accept additional bots without duplicates', async () => {
+  await setup();
+  const owner = await register('LegacyBotOwner');
+  const created = await call('/api/rooms', 'POST', { name: 'Legacy', visibility: 'link', addBot: true }, owner);
+  const route = `/api/rooms/${created.body.id}`;
+  const legacyId = created.body.firms[0].firmId;
+  await new Promise<void>(resolve => server.close(() => resolve()));
+  db.close();
+  const legacy = new DatabaseSync(join(directory, 'rooms.sqlite'));
+  legacy.exec('ALTER TABLE rooms DROP COLUMN bot_firms');
+  legacy.close();
+  db = new RoomDatabase(join(directory, 'rooms.sqlite'));
+  server = createAccountServer(db);
+  await listenAccounts(server, 0);
+  base = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
+  const loaded = await call(route, 'GET', undefined, owner);
+  expect(loaded.body.firms).toHaveLength(1);
+  expect(loaded.body.firms[0].firmId).toBe(legacyId);
+  const added = await call(route + '/bots', 'POST', {}, owner);
+  expect(added.body.playerCount).toBe(2);
+  expect(added.body.firms.map((f: { firmName: string }) => f.firmName)).toEqual(['Бот', 'Бот 2']);
+  const started = await call(route + '/start', 'POST', {}, owner);
+  expect(started.status).toBe(200);
+  expect(started.body.activeFirmCount).toBe(2);
+});
+
+test('a room with only bots advances on its timer and disallows adding bots after closing', async () => {
+  await setup();
+  const owner = await register('BotsOnlyOwner');
+  const created = await call('/api/rooms', 'POST', { name: 'Bots only', visibility: 'link', timerMode: 'fast' }, owner);
+  const route = `/api/rooms/${created.body.id}`;
+  await call(route + '/bots', 'POST', {}, owner);
+  await call(route + '/bots', 'POST', {}, owner);
+  expect((await call(route + '/start', 'POST', {}, owner)).status).toBe(200);
+  expect((await call(route + '/calculate', 'POST', { periodIndex: 1, force: false }, owner)).status).toBe(200);
+  const deadline = db.room(created.body.id)!.deadlineAt!;
+  processExpiredRooms(db, deadline + 1);
+  expect(db.room(created.body.id)!.snapshot.league.results).toHaveLength(3);
+  await call(route + '/close', 'POST', {}, owner);
+  expect((await call(route + '/bots', 'POST', {}, owner)).status).toBe(409);
+});
 test("accounts persist case-insensitive credentials and revoke opaque sessions on logout", async () => {
   await setup();
   const cookie = await register("Alice");
