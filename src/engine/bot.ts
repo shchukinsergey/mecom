@@ -2,6 +2,7 @@ import { computeDepreciation } from './capex';
 import { computePeriod, nextOpeningState } from './computePeriod';
 import { checkDecisionBudget } from './decisionBudget';
 import { botPeriodConfig, estimateBotMarket, observeBot, type BotObservation } from './botObservation';
+import type { BotPersonality, BotStrategy } from './botPersonality';
 import type { LeagueSnapshot } from '../state/persistence';
 import type { FirmDecision, FirmOpeningState, FirmPeriodResult } from './types';
 
@@ -9,9 +10,9 @@ const MAX_SPEND = 50_000;
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 const integers = (values: number[]) => [...new Set(values.filter(Number.isFinite).map(Math.round))];
 
-export type BotStrategy = 'scale' | 'quality' | 'mixed';
-export interface BotOptions {
-  /** Omit to compare all families; set to give a bot a strategic preference. */
+export type { BotStrategy } from './botPersonality';
+export interface BotOptions extends Partial<BotPersonality> {
+  /** Online rooms persist this choice once, before the first playable turn. */
   strategy?: BotStrategy;
 }
 export interface BotForecast {
@@ -55,6 +56,8 @@ export function recommendBotDecision(
   options: BotOptions = {},
 ): BotRecommendation {
   const market = estimateBotMarket(o);
+  const investmentIntensity = clamp(options.investmentIntensity ?? 1, 0.8, 1.2);
+  const priceBias = clamp(options.priceBias ?? 1, 0.96, 1.04);
   let evaluations = 0;
   const cache = new Map<string, Score>();
   const evaluate = (plan: Plan, stress = false): Score => {
@@ -63,6 +66,7 @@ export function recommendBotDecision(
     if (cached) return cached;
     evaluations++;
     const score = project(o, market, plan, stress);
+    if (options.strategy) score.utility -= strategyDeviation(o, plan, investmentIntensity, priceBias);
     cache.set(key, score);
     return score;
   };
@@ -80,13 +84,20 @@ export function recommendBotDecision(
 
   for (const strategy of strategies) {
     const profile = PROFILES[strategy];
+    const targets = strategyTargets(o, strategy, investmentIntensity, priceBias);
+    const strategyCandidates = {
+      ...candidates,
+      price: integers([...candidates.price, targets.price, targets.price - 1, targets.price + 1]),
+      rnd: integers([...candidates.rnd, targets.rnd, targets.rnd * 0.5]),
+      capexGross: integers([...candidates.capexGross, targets.capexGross]),
+    };
     const depreciation = computeDepreciation(o.opening.machines, o.config, o.opening.amortFundRemainder);
     const resources = checkDecisionBudget(o.opening, initial, o.macro, o.config).resourcesAvailable;
-    const seeds = [initial, ...[0.5, 1, 1.5].map(intensity => normalize(o, {
+    const seeds = [initial, normalize(o, { ...initial, ...targets }), ...[0.5, 1, 1.5].map(intensity => normalize(o, {
       ...initial,
       production: Math.round(o.opening.machines * o.config.costOptimalCu / 100),
-      capexGross: o.remainingPeriods <= 1 ? 0 : depreciation + o.opening.machines * profile.growth * intensity * o.config.machineCost,
-      rnd: o.remainingPeriods <= 1 ? 0 : Math.max(0, resources) * profile.quality * intensity,
+      capexGross: o.remainingPeriods <= 1 ? 0 : depreciation + o.opening.machines * profile.growth * intensity * investmentIntensity * o.config.machineCost,
+      rnd: o.remainingPeriods <= 1 ? 0 : Math.max(0, resources) * profile.quality * intensity * investmentIntensity,
     })), normalize(o, { ...initial, production: 0, marketing: 0, rnd: 0, capexGross: 0 })];
     const feasibleSeeds = seeds.filter(valid);
     if (!feasibleSeeds.length) continue;
@@ -99,7 +110,7 @@ export function recommendBotDecision(
     }
     // Price and output must be evaluated together, including restarting output.
     for (let pass = 0; pass < 2; pass++) {
-      for (const price of candidates.price) {
+      for (const price of strategyCandidates.price) {
         for (const production of candidates.production) {
           const decision = normalize(o, { ...plan.decision, price, production });
           if (!valid(decision)) continue;
@@ -109,7 +120,7 @@ export function recommendBotDecision(
         }
       }
       for (const key of ['marketing', 'rnd', 'capexGross'] as const) {
-        for (const value of candidates[key]) {
+        for (const value of strategyCandidates[key]) {
           const decision = normalize(o, { ...plan.decision, [key]: value });
           if (!valid(decision)) continue;
           const trial = { decision, strategy };
@@ -146,6 +157,48 @@ export function recommendBotDecision(
   const names: Record<BotStrategy, string> = { scale: 'масштабирование', quality: 'качество', mixed: 'смешанное развитие' };
   return recommendation(selected.plan, selected.score, evaluations,
     `План: ${names[selected.plan.strategy]}. Сравнены прибыль и итоговый РИФ с учётом кредита, склада и снижения цен конкурентами. Прогноз является оценкой.`);
+}
+
+/** Strategic priorities affect real decisions, not just a label on identical plans.
+ * They are soft preferences: affordability and survival always rank first. */
+function strategyTargets(o: BotObservation, strategy: BotStrategy, intensity: number, priceBias: number) {
+  const profile = PROFILES[strategy];
+  const config = botPeriodConfig(o.config, o.macro);
+  const depreciation = computeDepreciation(o.opening.machines, config, o.opening.amortFundRemainder);
+  const capacityValue = o.opening.machines * config.machineCost;
+  const operatingPlan = { ...o.initial, production: Math.round(o.opening.machines * config.costOptimalCu / 100),
+    rnd: 0, capexGross: depreciation };
+  const budget = checkDecisionBudget(o.opening, operatingPlan, o.macro, config);
+  const spareBudget = Math.max(0, budget.remainingBudget);
+  const early = clamp((o.remainingPeriods - 1) / 5, 0, 1);
+  const last = o.ownHistory.at(-1);
+  const stockPressure = o.opening.inventory > Math.max(1, last?.sold ?? operatingPlan.production);
+  const rnd = Math.min(MAX_SPEND, Math.max(0, budget.resourcesAvailable) * profile.quality * intensity * early);
+  const growth = stockPressure ? 0 : Math.max(0, Math.min(MAX_SPEND - depreciation, capacityValue * profile.growth * intensity * early));
+  const desired = Math.max(0, rnd + growth);
+  const affordableFraction = desired > 0 ? Math.min(1, spareBudget / desired) : 0;
+  const marketPrice = o.marketHistory.at(-1)?.industry.avgPrice || o.initial.price;
+  const pricePosition = strategy === 'scale' ? 0.9 : strategy === 'quality' ? 1.2 : 1.03;
+  return {
+    price: marketPrice * pricePosition * priceBias,
+    rnd: rnd * affordableFraction,
+    capexGross: o.remainingPeriods <= 1 ? 0 : Math.min(MAX_SPEND, depreciation + growth * affordableFraction),
+  };
+}
+
+function strategyDeviation(o: BotObservation, plan: Plan, intensity: number, priceBias: number): number {
+  const target = strategyTargets(o, plan.strategy, intensity, priceBias);
+  const d = plan.decision;
+  const early = clamp((o.remainingPeriods - 1) / 5, 0, 1);
+  const capacityValue = Math.max(1, o.opening.machines * o.config.machineCost);
+  // RIF-point search preferences, not financial expenses or altered game formulas.
+  // Budget-scaled investment targets shrink in distress; the last turn has none.
+  const qualityWeight = plan.strategy === 'quality' ? 22 : plan.strategy === 'mixed' ? 12 : 4;
+  const growthWeight = plan.strategy === 'scale' ? 22 : plan.strategy === 'mixed' ? 12 : 4;
+  const rndDistance = Math.min(2, Math.abs(d.rnd - target.rnd) / Math.max(capacityValue * 0.03, target.rnd));
+  const capexDistance = Math.min(2, Math.abs(d.capexGross - target.capexGross) / Math.max(capacityValue * 0.05, target.capexGross));
+  const priceDistance = Math.min(2, Math.abs(d.price - target.price) / Math.max(1, target.price));
+  return early * (qualityWeight * rndDistance + growthWeight * capexDistance) + 20 * priceDistance;
 }
 
 function recommendation(plan: Plan, score: Score, evaluatedPlans: number, explanation: string): BotRecommendation {

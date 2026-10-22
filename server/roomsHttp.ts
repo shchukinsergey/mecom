@@ -31,6 +31,7 @@ import {
 } from "../src/online/gameSettings.ts";
 import { makeFirmDecision, makeFirmStart } from "../src/engine/config.ts";
 import { chooseBotDecision } from "../src/engine/bot.ts";
+import { ensureBotProfiles } from './botProfiles.ts';
 import {
   computePeriod,
   initialOpeningState,
@@ -375,13 +376,14 @@ function calculate(room: StoredRoom, db: RoomDatabase, force: boolean, autoFirmI
   const p = preview(room);
   if (force ? !p.canForce : !p.canCalculate)
     throw new HttpError(409, "Valid decisions required");
+  const profiles = ensureBotProfiles(room);
   const i = period(room), l = room.snapshot.league;
   const decisions = Object.fromEntries(
     gameMembers(room).map(m => [m.firmId, {
       ...(nativeBankrupt(room, m.firmId)
         ? retiredDecision
         : isBot(room, m)
-          ? chooseBotDecision(room.snapshot, m.firmId)
+          ? chooseBotDecision(room.snapshot, m.firmId, Math.random, profiles.get(m.firmId))
           : (m.decision ?? previous(room, m))!),
       firmId: m.firmId,
     }]),
@@ -459,6 +461,7 @@ export function processExpiredRooms(db: RoomDatabase, now = Date.now()): void {
   });
 }
 function initialize(room: StoredRoom): void {
+  const profiles = ensureBotProfiles(room);
   const l = room.snapshot.league;
   const participants = gameMembers(room);
   l.firms = participants.map((m) => ({
@@ -479,7 +482,7 @@ function initialize(room: StoredRoom): void {
     {},
   ];
   room.snapshot.opening = initialOpeningState(l);
-  for (const bot of roomBots(room)) decisions[bot.firmId] = chooseBotDecision(room.snapshot, bot.firmId);
+  for (const bot of roomBots(room)) decisions[bot.firmId] = chooseBotDecision(room.snapshot, bot.firmId, Math.random, profiles.get(bot.firmId));
   const result = computePeriod({
     periodIndex: 0,
     config: l.config,

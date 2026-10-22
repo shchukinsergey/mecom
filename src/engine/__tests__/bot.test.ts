@@ -89,6 +89,21 @@ function advance(game: LeagueSnapshot, botDecision = makeFirmDecision('bot', gam
 }
 
 describe('online bot regression and strategy planning', () => {
+  it('chooses genuinely different investment plans for persistent strategies from the same state', () => {
+    const game = snapshot(9, 8);
+    advance(game);
+    const observation = observeBot(game, 'bot');
+    const scale = recommendBotDecision(observation, () => 0.5, { strategy: 'scale' });
+    const quality = recommendBotDecision(observation, () => 0.5, { strategy: 'quality' });
+    const mixed = recommendBotDecision(observation, () => 0.5, { strategy: 'mixed' });
+    expect(scale.strategy).toBe('scale');
+    expect(quality.strategy).toBe('quality');
+    expect(mixed.strategy).toBe('mixed');
+    expect(scale.decision.capexGross).toBeGreaterThan(quality.decision.capexGross);
+    expect(quality.decision.rnd).toBeGreaterThan(scale.decision.rnd);
+    expect(quality.decision.price).toBeGreaterThan(scale.decision.price);
+    expect(new Set([scale, quality, mixed].map(r => JSON.stringify(r.decision))).size).toBe(3);
+  });
   it('estimates nonzero rivals with an empty current decision slot', () => {
     const game = snapshot(9);
     advance(game);
@@ -208,5 +223,9 @@ describe('online bot regression and strategy planning', () => {
     game.opening.bot.loan = 99000;
     const decision = chooseBotDecision(game, 'bot', () => 0.5);
     expect(checkDecisionBudget(game.opening.bot, decision, game.league.macroByPeriod[1], game.league.config).overspend).toBe(false);
+    for (const strategy of ['scale', 'quality', 'mixed'] as const) {
+      const committed = chooseBotDecision(game, 'bot', () => 0.5, { strategy, investmentIntensity: 1.2, priceBias: 1.04 });
+      expect(checkDecisionBudget(game.opening.bot, committed, game.league.macroByPeriod[1], game.league.config).overspend).toBe(false);
+    }
   });
 });

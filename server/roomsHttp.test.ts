@@ -116,6 +116,42 @@ test('bots share the 12-firm limit with people and names skip existing human fir
   expect((await call(route + '/join', 'POST', { firmName: 'Extra' }, outsider)).status).toBe(409);
 });
 
+test('three bots retain different strategies through every turn and a real database restart', async () => {
+  await setup();
+  const owner = await register('PersistentBotOwner');
+  const created = await call('/api/rooms', 'POST', { name: 'Persistent strategies', visibility: 'link', timerMode: 'unlimited' }, owner);
+  const route = `/api/rooms/${created.body.id}`;
+  for (let i = 0; i < 3; i++) expect((await call(route + '/bots', 'POST', {}, owner)).status).toBe(200);
+  expect(db.room(created.body.id)!.bots!.every(bot => !bot.profile)).toBe(true);
+  expect((await call(route + '/start', 'POST', {}, owner)).status).toBe(200);
+  const original = structuredClone(db.room(created.body.id)!.bots!);
+  expect(new Set(original.map(bot => bot.profile!.strategy)).size).toBe(3);
+  for (let p = 1; p <= 8; p++) {
+    const response = await call(route + '/calculate', 'POST', { periodIndex: p, force: false }, owner);
+    expect(response.status, JSON.stringify(response.body)).toBe(200);
+    const stored = db.room(created.body.id)!;
+    expect(stored.bots).toEqual(original);
+    const results = stored.snapshot.league.results[p].firms;
+    if (p === 1) {
+      expect(new Set(results.map(f => JSON.stringify({ ...f.decision, firmId: '' }))).size).toBe(3);
+      const scale = original.find(bot => bot.profile!.strategy === 'scale')!;
+      const quality = original.find(bot => bot.profile!.strategy === 'quality')!;
+      expect(results.find(f => f.firmId === quality.firmId)!.decision.rnd)
+        .toBeGreaterThan(results.find(f => f.firmId === scale.firmId)!.decision.rnd);
+    }
+    if (p === 3) {
+      await new Promise<void>(resolve => server.close(() => resolve()));
+      db.close();
+      db = new RoomDatabase(join(directory, 'rooms.sqlite'));
+      server = createAccountServer(db);
+      await listenAccounts(server, 0);
+      base = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
+      expect(db.room(created.body.id)!.bots).toEqual(original);
+    }
+  }
+  expect((await call(route, 'GET', undefined, owner)).body.phase).toBe('complete');
+});
+
 test('legacy single-bot databases migrate and accept additional bots without duplicates', async () => {
   await setup();
   const owner = await register('LegacyBotOwner');
@@ -228,6 +264,7 @@ const conservative = {
   capexGross: 0,
   rnd: 0,
 };
+
 test("room authorization, link visibility, membership and public DTO privacy", async () => {
   const { owner, a, b, outsider, route } = await game();
   const linked = await call(

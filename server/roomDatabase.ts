@@ -11,6 +11,12 @@ import { type OnlineGameSettings } from "../src/online/gameSettings.ts";
 import type { LeagueSnapshot } from "../src/state/persistence.ts";
 import type { Decision } from "./repository.ts";
 import { TelegramStore } from './telegramStore.ts';
+import type { BotPersonality } from '../src/engine/botPersonality.ts';
+export interface StoredBot {
+  firmId: string;
+  firmName: string;
+  profile?: BotPersonality;
+}
 export interface StoredMember {
   userId: string;
   firmId: string;
@@ -29,14 +35,14 @@ export interface StoredRoom {
   deadlineAt: number | null;
   autoBankruptcy: boolean;
   botFirmId?: string | null;
-  bots?: Array<{ firmId: string; firmName: string }>;
+  bots?: StoredBot[];
   settings: OnlineGameSettings;
   snapshot: LeagueSnapshot;
   members: StoredMember[];
 }
 
 /** Merge legacy single-bot rooms with the new list without duplicating a firm. */
-export function roomBots(room: Pick<StoredRoom, 'botFirmId' | 'bots'>): Array<{ firmId: string; firmName: string }> {
+export function roomBots(room: Pick<StoredRoom, 'botFirmId' | 'bots'>): StoredBot[] {
   const bots = [...(room.bots ?? [])];
   if (room.botFirmId && !bots.some(bot => bot.firmId === room.botFirmId)) {
     bots.unshift({ firmId: room.botFirmId, firmName: 'Бот' });
