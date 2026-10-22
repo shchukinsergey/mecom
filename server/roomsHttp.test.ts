@@ -265,6 +265,47 @@ const conservative = {
   rnd: 0,
 };
 
+test.each(['tractors-v1', 'ipad-v1', 'emobile-v1', 'tractors-v2', 'ipad-v2', 'emobile-v2'])('%s creation is opt-in, preserves existing rooms and survives all eight periods and restart', async (scenarioId) => {
+  const { owner, a, b, route: ordinaryRoute } = await game();
+  const ordinaryId = ordinaryRoute.split('/').at(-1)!;
+  const ordinaryBefore = JSON.stringify(db.room(ordinaryId));
+  expect((await call('/api/rooms', 'POST', { name: 'Invalid', visibility: 'public', scenarioId: 'unknown' }, owner)).status).toBe(400);
+  const created = await call('/api/rooms', 'POST', { name: 'Scenario', visibility: 'link', timerMode: 'unlimited', scenarioId }, owner);
+  expect(created.status).toBe(201);
+  expect(created.body.scenarioTitle).toContain('8 периодов');
+  expect(db.room(created.body.id)!.snapshot.league.scenario?.id).toBe(scenarioId);
+  const route = '/api/rooms/' + created.body.id;
+  for (const [cookie, firmName] of [[a, 'One'], [b, 'Two']]) {
+    expect((await call(route + '/join', 'POST', { firmName }, cookie)).status).toBe(200);
+  }
+  expect((await call(route + '/start', 'POST', {}, owner)).status).toBe(200);
+  const savedPlan = structuredClone(db.room(created.body.id)!.snapshot.league.macroByPeriod);
+  for (let i = 1; i <= 8; i++) {
+    const current = await call(route + '/me', 'GET', undefined, a);
+    expect(current.body.currentPeriodIndex).toBe(i);
+    expect(current.body.periodMacro).toEqual(savedPlan[i]);
+    expect(current.body).not.toHaveProperty('snapshot');
+    expect(current.body).not.toHaveProperty('macroByPeriod');
+    expect(current.body.config.priceWeight).toBe(savedPlan[i].scenarioRules!.priceWeight);
+    const invalid = await call(route + '/decision', 'PUT', { periodIndex: i, decision: { ...conservative, price: 201 } }, a);
+    expect(invalid.status).toBe(400);
+    for (const cookie of [a, b]) {
+      expect((await call(route + '/decision', 'PUT', { periodIndex: i, decision: conservative }, cookie)).status).toBe(200);
+      expect((await call(route + '/submit', 'POST', { periodIndex: i }, cookie)).status).toBe(200);
+    }
+    // The last participant submission automatically calculates the period.
+    const computed = await call(route, 'GET', undefined, owner);
+    expect(computed.status).toBe(200);
+    expect(computed.body.phase).toBe(i === 8 ? 'complete' : 'collecting');
+    expect(db.room(created.body.id)!.snapshot.league.results[i].macro).toEqual(savedPlan[i]);
+  }
+  expect(JSON.stringify(db.room(ordinaryId))).toBe(ordinaryBefore);
+  db.close();
+  db = new RoomDatabase(join(directory, 'rooms.sqlite'));
+  expect(db.room(created.body.id)!.snapshot.league.macroByPeriod).toEqual(savedPlan);
+  expect(db.room(created.body.id)!.snapshot.league.results).toHaveLength(9);
+  expect(JSON.stringify(db.room(ordinaryId))).toBe(ordinaryBefore);
+});
 test("room authorization, link visibility, membership and public DTO privacy", async () => {
   const { owner, a, b, outsider, route } = await game();
   const linked = await call(

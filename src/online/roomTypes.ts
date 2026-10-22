@@ -46,6 +46,7 @@ export interface RoomFirm {
   autoBankrupt?: true;
 }
 export interface RoomDetail extends RoomSummary {
+  scenarioTitle?: string;
   nativeBankruptcyAvailable?: boolean;
   firms: RoomFirm[];
   settings: OnlineGameSettings;
@@ -53,6 +54,7 @@ export interface RoomDetail extends RoomSummary {
   industryReport: string | null;
 }
 export interface CreateRoomInput {
+  scenarioId?: import('../engine/scenarios').ScenarioId;
   name: string;
   visibility: RoomVisibility;
   timerMode?: RoomTimerMode;

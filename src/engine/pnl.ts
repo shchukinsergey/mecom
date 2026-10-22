@@ -8,6 +8,7 @@
 
 import type { LeagueConfig, PeriodMacroParams } from './types';
 import { computeFiringPenalty } from './industry';
+import { nativeRound } from './demand';
 
 export interface BankInterestInput {
   /**
@@ -143,10 +144,13 @@ export function computePnl(
   macro: PeriodMacroParams,
   config: LeagueConfig,
 ): PnlResult {
-  const revenue = input.price * input.sold;
+  const money = (value: number) => config.nativeMoneyRounding ? nativeRound(value) : value;
+  const revenue = money(input.price * input.sold);
 
-  const avgCost = weightedUnitCost(input);
-  const cogs = avgCost * input.sold;
+  const totalUnits = input.inventoryOpening + input.produced;
+  const totalCost = money(input.inventoryOpening * input.inventoryOpeningUnitCost) + money(input.produced * input.unitCost);
+  const avgCost = config.nativeMoneyRounding && totalUnits > 0 ? totalCost / totalUnits : weightedUnitCost(input);
+  const cogs = money(avgCost * input.sold);
   const grossProfit = revenue - cogs;
 
   const firingPenalty = computeFiringPenalty(input.employeesPrevious, input.employeesCurrent, config);
@@ -159,9 +163,9 @@ export function computePnl(
     0,
     Math.min(input.inventoryAgedUnits, input.inventoryOpening, inventoryClosing),
   );
-  const storageCost = config.storageCostPerUnit * storedUnits;
+  const storageCost = money(config.storageCostPerUnit * storedUnits);
 
-  const bankInterest = input.bankInterest;
+  const bankInterest = money(input.bankInterest);
 
   const profitBeforeTax =
     grossProfit -
@@ -174,7 +178,7 @@ export function computePnl(
 
   // Налог берётся из макропараметров периода, а не 25% из конспекта: на реальном
   // отчёте подтвердилась ставка 32% ровно из блока «Ст.нал.на приб.».
-  const tax = macro.taxRate * Math.max(0, profitBeforeTax);
+  const tax = money(macro.taxRate * Math.max(0, profitBeforeTax));
   const netProfit = profitBeforeTax - tax;
 
   return {
@@ -190,6 +194,6 @@ export function computePnl(
     profitBeforeTax,
     tax,
     netProfit,
-    inventoryUnitCostEnd: avgCost,
+    inventoryUnitCostEnd: config.nativeMoneyRounding && inventoryClosing > 0 ? (totalCost - cogs) / inventoryClosing : avgCost,
   };
 }

@@ -50,6 +50,8 @@ export interface FeatureFlags {
  * здесь, а не в формулах.
  */
 export interface LeagueConfig {
+  /** Only version-2 original scenarios opt into whole-dollar native settlement. */
+  nativeMoneyRounding?: boolean;
   /** Native EXE default; legacy mode preserves archived custom curves. */
   demandModel: 'native' | 'legacy';
   nativeDemand: NativeDemandConfig;
@@ -174,6 +176,9 @@ export interface Firm {
 }
 
 export interface League {
+  /** Written only when creating a scenario game; never inferred for old saves. */
+  scenario?: { id: string; title: string; version: number; playablePeriods: number;
+    original?: { sha256: string; globals: number[]; periods: number[][] } };
   id: string;
   name: string;
   createdAt: string;
@@ -200,6 +205,21 @@ export interface League {
 
 /** Макропараметры периода — редактируются ведущим (раздел 10). */
 export interface PeriodMacroParams {
+  /** Explicit rules for newly created scenario games only; absent in old saves. */
+  scenarioRules?: {
+    config?: Partial<Pick<LeagueConfig, 'serviceFee' | 'depositRate' | 'costK1' | 'costK2' | 'costCuUp' | 'costCuDown'>>;
+    priceCutoff?: number;
+    marketingMax?: number;
+    capexMax?: number;
+    rndMax?: number;
+    priceWeight: number;
+    mktgWeight: number;
+    rndWeight: number;
+    storageCostPerUnit: number;
+    firingPenaltyPerEmployee: number;
+    priceMin: number;
+    priceMax: number;
+  };
   periodIndex: number;
   /** Native ОС/ВМ/ВН controls; nonzero trajectories are not corpus-tested. */
   demandOS?: number;

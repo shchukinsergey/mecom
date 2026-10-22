@@ -18,3 +18,7 @@ __pycache__/
 data/*.sqlite*
 data/backups/
 releases/
+.local-backups/
+.local-preview/
+data/scenario-research/decoded/
+data/scenario-research/mode-key.bin

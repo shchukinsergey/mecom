@@ -36,6 +36,9 @@ export function PlayerOverview({ me, status, onDecisions }: { me: PlayerMe; stat
   const rankDelta = rank !== null && oldRank !== null ? oldRank - rank : null;
   const insights = latest ? getPlayerInsights(latest, previous ?? null, me.config?.costOptimalCu) : [];
   const macro = me.periodMacro;
+  const news = macro?.scenarioNewsText.trim();
+  const newsBody = news?.replace(/^[^\n]*~{3,}[^\n]*\n?/, '')
+    .replace(/([а-яё])-\r?\n(?=[а-яё])/gi, '$1').replace(/\r?\n/g, ' ').trim();
   const phases = { lobby: 'Ожидаем начала игры', collecting: 'Приём решений', complete: 'Период завершён', closed: 'Игра закрыта' };
   const salesKnown = latest && Number.isFinite(latest.unfulfilledOrders) && Number.isFinite(latest.inventoryEnd);
   const salesCopy = !salesKnown ? 'Данные неполные' : latest.unfulfilledOrders > 0 && latest.inventoryEnd > 0 ? 'Есть невыполненные заказы и остаток'
@@ -59,6 +62,11 @@ export function PlayerOverview({ me, status, onDecisions }: { me: PlayerMe; stat
         </div><p className={`pc-balance-status ${salesKnown && (latest.unfulfilledOrders > 0 || latest.inventoryEnd > 0) ? 'pc-warning' : 'pc-muted'}`}>{salesCopy}</p></div>
       </> : <p className="pc-empty">Показатели появятся после расчёта.</p>}</div>
     </div>
+    {newsBody && <section className="pc-scenario-news" aria-labelledby="scenario-news-heading">
+      <div className="pc-scenario-news-heading"><span className="pc-scenario-news-kicker">Новости отрасли</span><span className="pc-scenario-news-period">Период {macro?.periodIndex ?? me.currentPeriodIndex}</span></div>
+      <h2 id="scenario-news-heading">Что происходит на рынке</h2>
+      <p>{newsBody}</p>
+    </section>}
     <div className="pc-overview-bottom">
       <section className={`pc-attention${insights.length ? ' pc-attention-warning' : ''}`}><h2>На что обратить внимание</h2>
 
@@ -71,7 +79,7 @@ export function PlayerOverview({ me, status, onDecisions }: { me: PlayerMe; stat
         {me.autoTurn && <p role="status">Решение за период {me.autoTurn.periodIndex} отправлено автоматически{me.autoTurn.bankrupt ? ' — фирма объявлена банкротом.' : me.autoTurn.cleared.length ? `. Обнулены расходы: ${me.autoTurn.cleared.map(field => autoClearedLabels[field]).join(', ')}.` : '.'}</p>}
         <button className="pc-primary" type="button" onClick={onDecisions}>{me.phase === 'collecting' && !me.submitted ? 'Открыть параметры решения' : 'Посмотреть решение'}</button>
         <div className="pc-macro"><h3>Условия периода {macro?.periodIndex ?? me.currentPeriodIndex}</h3>
-          {macro ? <><p>Налог {formatPlayerValue(macro.taxRate * 100, '%')}; базовая ставка банка {formatPlayerValue(macro.bankRateBase * 100, '%')}.</p>{macro.scenarioNewsText && <p className="pc-news">{macro.scenarioNewsText}</p>}</> : <p className="pc-muted">Условия периода недоступны.</p>}
+          {macro ? <p>Налог {formatPlayerValue(macro.taxRate * 100, '%')}; базовая ставка банка {formatPlayerValue(macro.bankRateBase * 100, '%')}.</p> : <p className="pc-muted">Условия периода недоступны.</p>}
         </div>
       </section>
     </div>

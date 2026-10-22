@@ -1,5 +1,6 @@
 import { makeFirmDecision, makeFirmStart } from './config';
 import { initialOpeningState } from './computePeriod';
+import { configForPeriod } from './periodConfig';
 import type { LeagueSnapshot } from '../state/persistence';
 import type { FirmDecision, FirmOpeningState, FirmPeriodResult, IndustryPeriodResult, LeagueConfig, PeriodMacroParams } from './types';
 
@@ -13,10 +14,7 @@ export type BotPeriodMacro = PeriodMacroParams & {
 };
 
 export function botPeriodConfig(config: LeagueConfig, macro: BotPeriodMacro): LeagueConfig {
-  const rules = macro.scenarioRules;
-  return rules ? { ...config, priceWeight: rules.priceWeight, mktgWeight: rules.mktgWeight,
-    rndWeight: rules.rndWeight, storageCostPerUnit: rules.storageCostPerUnit,
-    firingPenaltyPerEmployee: rules.firingPenaltyPerEmployee } : config;
+  return configForPeriod(config, macro);
 }
 
 /** Only fields actually published in the industry comparison are exposed here. */

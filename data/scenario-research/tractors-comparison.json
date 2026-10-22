@@ -1,0 +1,376 @@
+[
+  {
+    "period": 0,
+    "differences": [],
+    "orders": 3360,
+    "sold": 3360,
+    "details": [
+      {
+        "firm": 1,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7560,
+        "bankInterest": 248,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 2272,
+        "tax": 409
+      },
+      {
+        "firm": 2,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7560,
+        "bankInterest": 248,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 2272,
+        "tax": 409
+      },
+      {
+        "firm": 3,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7560,
+        "bankInterest": 248,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 2272,
+        "tax": 409
+      },
+      {
+        "firm": 4,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7560,
+        "bankInterest": 248,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 2272,
+        "tax": 409
+      },
+      {
+        "firm": 5,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7560,
+        "bankInterest": 248,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 2272,
+        "tax": 409
+      },
+      {
+        "firm": 6,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7560,
+        "bankInterest": 248,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 2272,
+        "tax": 409
+      },
+      {
+        "firm": 7,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7560,
+        "bankInterest": 248,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 2272,
+        "tax": 409
+      },
+      {
+        "firm": 8,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7560,
+        "bankInterest": 248,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 2272,
+        "tax": 409
+      }
+    ]
+  },
+  {
+    "period": 1,
+    "differences": [
+      {
+        "firm": 8,
+        "field": "netProfit",
+        "original": 228,
+        "actual": 227,
+        "delta": -1
+      },
+      {
+        "firm": 8,
+        "field": "retainedEarnings",
+        "original": 2091,
+        "actual": 2090,
+        "delta": -1
+      },
+      {
+        "firm": 8,
+        "field": "cash",
+        "original": 10449,
+        "actual": 10448,
+        "delta": -1
+      }
+    ],
+    "orders": 4091,
+    "sold": 3198,
+    "details": [
+      {
+        "firm": 1,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 6354,
+        "bankInterest": 197,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 3284,
+        "tax": 591
+      },
+      {
+        "firm": 2,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 4518,
+        "bankInterest": 197,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 2805,
+        "tax": 505
+      },
+      {
+        "firm": 3,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7560,
+        "bankInterest": 3773,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": -1253,
+        "tax": 0
+      },
+      {
+        "firm": 4,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7560,
+        "bankInterest": 3899,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": -22559,
+        "tax": 0
+      },
+      {
+        "firm": 5,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7560,
+        "bankInterest": 3563,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 1307,
+        "tax": 235
+      },
+      {
+        "firm": 6,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7560,
+        "bankInterest": 7773,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": -7353,
+        "tax": 0
+      },
+      {
+        "firm": 7,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7452,
+        "bankInterest": 157,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 4175,
+        "tax": 752
+      },
+      {
+        "firm": 8,
+        "unitCost": 19.6021768707483,
+        "productionCost": 9801.08843537415,
+        "cogs": 9801,
+        "bankInterest": 2952,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 277,
+        "tax": 50
+      }
+    ]
+  },
+  {
+    "period": 2,
+    "differences": [
+      {
+        "firm": 6,
+        "field": "netProfit",
+        "original": -709,
+        "actual": -701,
+        "delta": 8
+      },
+      {
+        "firm": 8,
+        "field": "netProfit",
+        "original": -2290,
+        "actual": -2292,
+        "delta": -2
+      },
+      {
+        "firm": 6,
+        "field": "retainedEarnings",
+        "original": -6199,
+        "actual": -6191,
+        "delta": 8
+      },
+      {
+        "firm": 8,
+        "field": "retainedEarnings",
+        "original": -199,
+        "actual": -202,
+        "delta": -3
+      },
+      {
+        "firm": 5,
+        "field": "loan",
+        "original": 58197,
+        "actual": 58198,
+        "delta": 1
+      },
+      {
+        "firm": 6,
+        "field": "loan",
+        "original": 65927,
+        "actual": 65919,
+        "delta": -8
+      },
+      {
+        "firm": 8,
+        "field": "loan",
+        "original": 53392,
+        "actual": 53396,
+        "delta": 4
+      },
+      {
+        "firm": 6,
+        "field": "cash",
+        "original": 8129,
+        "actual": 8131,
+        "delta": 2
+      },
+      {
+        "firm": 8,
+        "field": "cash",
+        "original": 3022,
+        "actual": 3021,
+        "delta": -1
+      }
+    ],
+    "orders": 4117,
+    "sold": 3937,
+    "details": [
+      {
+        "firm": 1,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 5994,
+        "bankInterest": 156,
+        "storageCost": 67,
+        "firingPenalty": 0,
+        "profitBeforeTax": 3251,
+        "tax": 585
+      },
+      {
+        "firm": 2,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 4914,
+        "bankInterest": 217,
+        "storageCost": 169,
+        "firingPenalty": 0,
+        "profitBeforeTax": 2827,
+        "tax": 509
+      },
+      {
+        "firm": 3,
+        "unitCost": 9.31020956607495,
+        "productionCost": 9310.209566074951,
+        "cogs": 4981,
+        "bankInterest": 5901,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 1200,
+        "tax": 216
+      },
+      {
+        "firm": 4,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7560,
+        "bankInterest": 2853,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 10587,
+        "tax": 1906
+      },
+      {
+        "firm": 5,
+        "unitCost": 10.012606672275398,
+        "productionCost": 9011.346005047859,
+        "cogs": 5006,
+        "bankInterest": 10004,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": -678,
+        "tax": 0
+      },
+      {
+        "firm": 6,
+        "unitCost": 7.50520655184873,
+        "productionCost": 10507.289172588222,
+        "cogs": 7362,
+        "bankInterest": 11915,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": -701,
+        "tax": 0
+      },
+      {
+        "firm": 7,
+        "unitCost": 18,
+        "productionCost": 7560,
+        "cogs": 7668,
+        "bankInterest": 66,
+        "storageCost": 0,
+        "firingPenalty": 0,
+        "profitBeforeTax": 3996,
+        "tax": 719
+      },
+      {
+        "firm": 8,
+        "unitCost": 10.1140513354145,
+        "productionCost": 8799.224661810615,
+        "cogs": 4743,
+        "bankInterest": 8816,
+        "storageCost": 0,
+        "firingPenalty": 150,
+        "profitBeforeTax": -2292,
+        "tax": 0
+      }
+    ]
+  }
+]

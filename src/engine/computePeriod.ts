@@ -8,6 +8,7 @@
  */
 
 import { computeCapex } from './capex';
+import { configForPeriod } from './periodConfig';
 import { type CashFlowInput, type CashFlowResult, computeCashFlow, computePreRevenueFinancing, isBankrupt } from './cashflow';
 import { computeUnitCost } from './cost';
 import { computeDemand, type DemandFirmInput } from './demand';
@@ -139,7 +140,7 @@ export function initialOpeningState(league: League): Record<string, FirmOpeningS
       capital: f.initialCapital,
       inventory: f.initialInventory,
       inventoryUnitCost: f.initialInventoryUnitCost,
-      inventoryAgedUnits: 0,
+      inventoryAgedUnits: league.scenario?.original ? f.initialInventory : 0,
       amortFundRemainder: f.initialAmortFundRemainder,
       employees: f.initialEmployees,
       rndCumulative: f.initialRnd,
@@ -199,7 +200,8 @@ export function nextOpeningState(
 }
 
 export function computePeriod(input: ComputePeriodInput): PeriodResults {
-  const { config, macro, periodIndex } = input;
+  const { macro, periodIndex } = input;
+  const config = configForPeriod(input.config, macro);
   const excluded = new Set(input.firms.filter(f => input.opening[f.id]?.nativeBankruptcy).map(f => f.id));
   // Safety guard: original all-out 0/0 behavior has NOT been runtime verified.
   if (excluded.size === input.firms.length && excluded.size > 0) {

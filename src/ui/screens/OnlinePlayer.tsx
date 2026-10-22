@@ -89,9 +89,15 @@ export function OnlinePlayer({ initialInviteToken, initialRejoinToken, accountRo
     fieldErrors.production = `Не больше текущей мощности: ${quantity(me.openingState.machines)}.`;
   if (!Number.isInteger(decision.production)) fieldErrors.production = 'Укажите целое количество штук.';
   for (const key of ['marketing', 'capexGross', 'rnd'] as const) {
-    if (decision[key] > 50000) fieldErrors[key] = 'Не больше 50 000 $.';
+    const rules = me?.periodMacro?.scenarioRules;
+    const max = (key === 'marketing' ? rules?.marketingMax : key === 'capexGross' ? rules?.capexMax : rules?.rndMax) ?? 50000;
+    if (decision[key] > max) fieldErrors[key] = `Не больше ${max} $.`;
   }
   if (decision.price <= 0) fieldErrors.price = 'Укажите цену больше нуля.';
+  const priceLimits = me?.periodMacro?.scenarioRules;
+  if (priceLimits && (decision.price < priceLimits.priceMin || decision.price > priceLimits.priceMax)) {
+    fieldErrors.price = `Цена по сценарию: от ${priceLimits.priceMin} до ${priceLimits.priceMax} $.`;
+  }
   const invalidFields = Object.keys(fieldErrors).length > 0;
   const budget = !excluded && !invalidFields && me?.openingState && me.periodMacro && me.config
     ? checkDecisionBudget(me.openingState, decision, me.periodMacro, me.config) : null;

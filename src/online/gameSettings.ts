@@ -1,6 +1,8 @@
 import { DEFAULT_LEAGUE_CONFIG, makeMacroParams } from '../engine/config';
 import type { League, LeagueConfig } from '../engine/types';
 import type { LeagueSnapshot } from '../state/persistence';
+import { makeScenarioPlan, originalScenario, scenarioMetadata, type ScenarioId } from '../engine/scenarios';
+import { originalConfig } from '../engine/originalScenarios';
 
 /** Period zero is the initial snapshot, not a playable period. */
 export const ONLINE_PLAYABLE_PERIODS = 8;
@@ -47,7 +49,9 @@ export function ensureOnlineFinalMacro(league: League): void {
 export function buildOnlineGameSnapshot(
   name: string,
   settings: OnlineGameSettings = DEFAULT_ONLINE_GAME_SETTINGS,
+  scenarioId?: ScenarioId,
 ): LeagueSnapshot {
+  if (scenarioId) settings = DEFAULT_ONLINE_GAME_SETTINGS;
   const config: LeagueConfig = {
     ...structuredClone(DEFAULT_LEAGUE_CONFIG),
     serviceFee: settings.serviceFeePercent / 100,
@@ -69,12 +73,13 @@ export function buildOnlineGameSnapshot(
     loanLimitAbs: settings.loanLimitAbs,
   }));
   const league: League = {
+    ...(scenarioId ? { scenario: scenarioMetadata(scenarioId) } : {}),
     id: 'new-online-game',
     name,
     createdAt: new Date().toISOString(),
-    config,
+    config: scenarioId && originalScenario(scenarioId) ? originalConfig(originalScenario(scenarioId)!.globals) : config,
     firms: [],
-    macroByPeriod,
+    macroByPeriod: scenarioId ? makeScenarioPlan(scenarioId) : macroByPeriod,
     decisionsByPeriod: [{}],
     confirmedByPeriod: [{}],
     results: [],

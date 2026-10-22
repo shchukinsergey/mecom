@@ -47,6 +47,7 @@
  */
 
 import type { LeagueConfig, PeriodMacroParams } from './types';
+import { nativeRound } from './demand';
 
 export interface CashFlowInput {
   openingCash: number;
@@ -93,7 +94,8 @@ export function computePreRevenueFinancing(
   macro: PeriodMacroParams,
   config: LeagueConfig,
 ): PreRevenueFinancing {
-  const budget = input.produced * input.unitCost + input.marketing + input.rnd +
+  const productionCost = config.nativeMoneyRounding ? nativeRound(input.produced * input.unitCost) : input.produced * input.unitCost;
+  const budget = productionCost + input.marketing + input.rnd +
     input.capexGross - (input.depreciation ?? 0) + input.firingPenalty;
   const requested = budget - input.openingCash;
   const initialLoanMovement = requested <= 0 || config.featureFlags.bankruptcyMode === 'native' || config.featureFlags.bankruptcyMode === 'labelOnly'
@@ -111,7 +113,7 @@ export function computeCashFlow(
   // себестоимость проданного, как в P&L) — отсюда расхождение прибыли и денег.
   // Капитальные затраты уходят наличными целиком, брутто: амортизация внутри них.
   const spending =
-    input.produced * input.unitCost +
+    (config.nativeMoneyRounding ? nativeRound(input.produced * input.unitCost) : input.produced * input.unitCost) +
     input.marketing +
     input.rnd +
     input.capexGross +

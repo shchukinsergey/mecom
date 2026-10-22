@@ -3,6 +3,8 @@ import type { FormEvent } from 'react';
 import { buildAdminBootstrapLink } from '../../online/adminAccess';
 import { calculateGame, closeGame, createGame, getAdminGame, kickFirm, rotateInviteToken, rotateRejoinToken, startGame, type OnlineGame } from '../../online/api';
 import { buildOnlineGameSnapshot, DEFAULT_ONLINE_GAME_SETTINGS, type OnlineGameSettings } from '../../online/gameSettings';
+import { ScenarioSelect } from '../components/ScenarioSelect';
+import type { ScenarioId } from '../../engine/scenarios';
 import { buildPlayerLink } from '../../online/links';
 
 export interface OnlineAdminProps {
@@ -35,6 +37,7 @@ const numericGameSettings: { key: NumericGameSetting; label: string; step: numbe
 export function OnlineAdmin({ initialGameId, initialAdminToken, initialPublicOrigin, onBack }: OnlineAdminProps) {
   const [token, setToken] = useState(() => initialAdminToken ?? sessionStorage.getItem(ADMIN_KEY) ?? '');
   const [name, setName] = useState('');
+  const [scenarioId, setScenarioId] = useState<ScenarioId>();
   const [gameSettings, setGameSettings] = useState<OnlineGameSettings>(() => ({ ...DEFAULT_ONLINE_GAME_SETTINGS }));
   const [gameId, setGameId] = useState(() => initialGameId ?? localStorage.getItem(ACTIVE_GAME_KEY) ?? '');
   const [game, setGame] = useState<OnlineGame | null>(null);
@@ -99,7 +102,7 @@ export function OnlineAdmin({ initialGameId, initialAdminToken, initialPublicOri
     event.preventDefault();
     if (!token) return;
     const gameName = name.trim() || 'Новая партия';
-    const snapshot = buildOnlineGameSnapshot(gameName, gameSettings);
+    const snapshot = buildOnlineGameSnapshot(gameName, gameSettings, scenarioId);
     void run(() => createGame(token, gameName, snapshot), result => {
       const created = result as OnlineGame;
       localStorage.setItem(ACTIVE_GAME_KEY, created.gameId);
@@ -115,6 +118,7 @@ export function OnlineAdmin({ initialGameId, initialAdminToken, initialPublicOri
     setGame(null);
     setName('');
     setGameSettings({ ...DEFAULT_ONLINE_GAME_SETTINGS });
+    setScenarioId(undefined);
     setMessage('');
     if (window.location.hash.startsWith('#admin/')) window.location.hash = 'admin';
   };
@@ -174,7 +178,7 @@ export function OnlineAdmin({ initialGameId, initialAdminToken, initialPublicOri
     {!token ? <section className="online-card"><h2>Откройте свою ссылку ведущего</h2><p>Запустите файл «Запустить MECOM Онлайн» в папке игры — доступ ведущего откроется автоматически.</p></section> : !game ? <form className="online-card online-create" onSubmit={create}>
       <span className="online-step">НОВАЯ ПАРТИЯ</span><h2>Создать игру</h2><p className="online-muted">Партия создаётся с готовыми правилами. Игроки сами подключатся и создадут фирмы.</p>
       <div className="online-create-row"><div className="field"><label htmlFor="game-name">Название партии</label><input id="game-name" value={name} onChange={event => setName(event.target.value)} placeholder="Например, Осенний рынок" maxLength={100} /></div><button className="primary" disabled={busy}>Создать игру</button></div>
-      <details className="online-settings">
+      <ScenarioSelect value={scenarioId} onChange={setScenarioId}/><details className="online-settings" hidden={!!scenarioId}>
         <summary>Дополнительные финансовые настройки</summary>
         <p className="hint">По умолчанию выбраны финансовые правила оригинального МЭКОМ. Настройки будут применены ко всем периодам новой игры.</p>
         <div className="online-grid online-settings-grid">

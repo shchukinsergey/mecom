@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react';
 import { useLeagueStore } from '../../state/leagueStore';
 import { parseLeagueFile } from '../../state/persistence';
+import { ScenarioSelect } from '../components/ScenarioSelect';
+import type { ScenarioId } from '../../engine/scenarios';
 
 export function LeagueList() {
   const leagues = useLeagueStore((s) => s.leagues);
@@ -10,6 +12,7 @@ export function LeagueList() {
   const importSnapshot = useLeagueStore((s) => s.importSnapshot);
 
   const [name, setName] = useState('');
+  const [scenarioId, setScenarioId] = useState<ScenarioId>();
   const [firmCount, setFirmCount] = useState(5);
   const [importError, setImportError] = useState<string | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -51,12 +54,14 @@ export function LeagueList() {
               onChange={(e) => setFirmCount(Math.max(2, Math.min(12, Number(e.target.value) || 2)))}
             />
           </div>
+          <ScenarioSelect value={scenarioId} onChange={setScenarioId} />
           <button
             className="primary"
             onClick={() =>
               createLeague(
                 name,
                 Array.from({ length: firmCount }, (_, i) => `Фирма ${i + 1}`),
+                scenarioId,
               )
             }
           >

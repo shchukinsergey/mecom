@@ -215,9 +215,9 @@ function normalize(o: BotObservation, d: FirmDecision): FirmDecision {
     firmId: o.firmId,
     price: clamp(Math.round(d.price), min, max),
     production: clamp(Math.round(d.production), 0, Math.floor(o.opening.machines)),
-    marketing: clamp(Math.round(d.marketing), 0, MAX_SPEND),
-    rnd: clamp(Math.round(d.rnd), 0, MAX_SPEND),
-    capexGross: clamp(Math.round(d.capexGross), 0, MAX_SPEND),
+    marketing: clamp(Math.round(d.marketing), 0, limits?.marketingMax ?? MAX_SPEND),
+    rnd: clamp(Math.round(d.rnd), 0, limits?.rndMax ?? MAX_SPEND),
+    capexGross: clamp(Math.round(d.capexGross), 0, limits?.capexMax ?? MAX_SPEND),
   };
 }
 

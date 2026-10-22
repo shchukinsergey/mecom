@@ -12,6 +12,8 @@ import {
   nextOpeningState,
 } from '../engine/computePeriod';
 import { DEFAULT_LEAGUE_CONFIG, makeFirmDecision, makeFirmStart, makeMacroParams } from '../engine/config';
+import { makeScenarioPlan, scenarioMetadata, originalScenario, type ScenarioId } from '../engine/scenarios';
+import { originalConfig, scenarioFirmStart, scenarioFirmDecision, normalizeScenarioStart } from '../engine/originalScenarios';
 import type {
   FirmDecision,
   League,
@@ -36,7 +38,7 @@ interface LeagueState {
 
   setScreen: (screen: Screen) => void;
   openLeague: (id: string, screen?: Screen) => void;
-  createLeague: (name: string, firmNames: string[]) => string;
+  createLeague: (name: string, firmNames: string[], scenarioId?: ScenarioId) => string;
   deleteLeague: (id: string) => void;
   importSnapshot: (snapshot: LeagueSnapshot) => void;
 
@@ -99,7 +101,7 @@ export function ensurePeriodSlots(league: League): League {
     // вводить их с нуля, только поправить то, что изменилось.
     const previousSlot = decisionsByPeriod[decisionsByPeriod.length - 1];
     const slot: Record<string, FirmDecision> = {};
-    for (const f of league.firms) slot[f.id] = carryDecision(f.id, previousSlot, league.firms.length);
+    for (const f of league.firms) slot[f.id] = previousSlot ? carryDecision(f.id, previousSlot, league.firms.length) : scenarioFirmDecision(league, f.id, league.firms.length);
     decisionsByPeriod.push(slot);
   }
 
@@ -122,24 +124,27 @@ export const useLeagueStore = create<LeagueState>((set, get) => ({
 
   openLeague: (id, screen = 'period') => set({ currentLeagueId: id, screen, computeError: null }),
 
-  createLeague: (name, firmNames) => {
+  createLeague: (name, firmNames, scenarioId) => {
     const id = newId('league');
     const league: League = {
+      ...(scenarioId ? { scenario: scenarioMetadata(scenarioId) } : {}),
       id,
       name: name.trim() || 'Новая лига',
       createdAt: new Date().toISOString(),
-      config: structuredClone(DEFAULT_LEAGUE_CONFIG),
+      config: scenarioId && originalScenario(scenarioId) ? originalConfig(originalScenario(scenarioId)!.globals) : structuredClone(DEFAULT_LEAGUE_CONFIG),
       firms: firmNames.map((firmName, i) => ({
         ...makeFirmStart(firmNames.length, DEFAULT_LEAGUE_CONFIG.machineCost),
         id: newId('firm'),
         name: firmName.trim() || `Фирма ${i + 1}`,
       })),
-      macroByPeriod: [],
+      macroByPeriod: scenarioId ? makeScenarioPlan(scenarioId) : [],
       decisionsByPeriod: [],
       confirmedByPeriod: [],
       results: [],
     };
 
+    normalizeScenarioStart(league, firmNames.length);
+    if (league.scenario?.original) league.firms = league.firms.map(f => ({ ...f, ...scenarioFirmStart(league, firmNames.length) }));
     const prepared = ensurePeriodSlots(league);
     const snapshot: LeagueSnapshot = {
       league: prepared,
@@ -236,6 +241,11 @@ export const useLeagueStore = create<LeagueState>((set, get) => ({
           [firm.id]: false,
         })),
       });
+      if (league.scenario?.original) {
+        normalizeScenarioStart(league, firmCount);
+        league.firms = league.firms.map(f => ({ ...f, ...scenarioFirmStart(league, firmCount) }));
+        league.decisionsByPeriod[0] = Object.fromEntries(league.firms.map(f => [f.id, scenarioFirmDecision(league, f.id, firmCount)]));
+      }
       return { league, opening: initialOpeningState(league) };
     }),
 
@@ -256,6 +266,11 @@ export const useLeagueStore = create<LeagueState>((set, get) => ({
           return next;
         }),
       };
+      if (league.scenario?.original && league.firms.length > 0) {
+        normalizeScenarioStart(league, league.firms.length);
+        league.firms = league.firms.map(f => ({ ...f, ...scenarioFirmStart(league, league.firms.length) }));
+        league.decisionsByPeriod[0] = Object.fromEntries(league.firms.map(f => [f.id, scenarioFirmDecision(league, f.id, league.firms.length)]));
+      }
       return { league, opening: initialOpeningState(league) };
     }),
 
@@ -302,6 +317,9 @@ export const useLeagueStore = create<LeagueState>((set, get) => ({
     const index = currentPeriodIndex(league);
 
     try {
+      if (league.scenario && index > league.scenario.playablePeriods) {
+        throw new Error('Сценарий завершён: рассчитаны все игровые периоды.');
+      }
       const results = computePeriod({
         periodIndex: index,
         config: league.config,

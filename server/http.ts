@@ -7,8 +7,9 @@ import { JsonRepository, validDecision } from './repository.ts';
 import type { Game, Firm } from './repository.ts';
 import type { LeagueSnapshot } from '../src/state/persistence.ts';
 import type { League, PeriodMacroParams } from '../src/engine/types.ts';
-import { makeFirmDecision, makeFirmStart, makeMacroParams, DEFAULT_LEAGUE_CONFIG } from '../src/engine/config.ts';
+import { makeMacroParams, DEFAULT_LEAGUE_CONFIG } from '../src/engine/config.ts';
 import { computePeriod, initialOpeningState, nextOpeningState } from '../src/engine/computePeriod.ts';
+import { scenarioFirmStart, scenarioFirmDecision, normalizeScenarioStart } from '../src/engine/originalScenarios.ts';
 import { renderFirmExport } from '../src/report/index.ts';
 import { buildPublicHistory } from './publicHistory.ts';
 import { validateOnlineDecision } from './decisionValidation.ts';
@@ -168,8 +169,9 @@ function freshSnapshot(source: LeagueSnapshot, gameId: string, name: string): Le
 function initializeGame(g: Game): void {
   if(!g.snapshot) throw new ApiError(409,'Game snapshot missing');
   const l=g.snapshot.league;
-  l.firms=g.firms.map(f=>({id:f.firmId,name:f.firmName,...makeFirmStart(g.firms.length,l.config.machineCost)}));
-  const periodZeroDecisions=Object.fromEntries(g.firms.map(f=>[f.firmId,makeFirmDecision(f.firmId,g.firms.length)]));
+  normalizeScenarioStart(l,g.firms.length);
+  l.firms=g.firms.map(f=>({id:f.firmId,name:f.firmName,...scenarioFirmStart(l,g.firms.length)}));
+  const periodZeroDecisions=Object.fromEntries(g.firms.map(f=>[f.firmId,scenarioFirmDecision(l,f.firmId,g.firms.length)]));
   l.decisionsByPeriod=[periodZeroDecisions];
   l.confirmedByPeriod=[{}];
   g.snapshot.opening=initialOpeningState(l);

@@ -29,9 +29,11 @@ import {
   ONLINE_PLAYABLE_PERIODS,
   type OnlineGameSettings,
 } from "../src/online/gameSettings.ts";
-import { makeFirmDecision, makeFirmStart } from "../src/engine/config.ts";
+import { scenarioFirmStart, scenarioFirmDecision, normalizeScenarioStart } from "../src/engine/originalScenarios.ts";
 import { chooseBotDecision } from "../src/engine/bot.ts";
 import { ensureBotProfiles } from './botProfiles.ts';
+import { isScenarioId, type ScenarioId } from "../src/engine/scenarios.ts";
+import { configForPeriod } from "../src/engine/periodConfig.ts";
 import {
   computePeriod,
   initialOpeningState,
@@ -304,6 +306,7 @@ function detail(room: StoredRoom, user: AccountUser, db: RoomDatabase): RoomDeta
     ...(room.phase === "collecting" && l.config.featureFlags.bankruptcyMode === "native"
       ? { nativeBankruptcyAvailable: true } : {}),
     settings: room.settings,
+    ...(l.scenario ? { scenarioTitle: l.scenario.title } : {}),
     periodMacro: l.macroByPeriod[period(room)] ?? null,
     industryReport: l.results.length
       ? renderIndustryReport(l.results.at(-1)!, room.name)
@@ -337,7 +340,7 @@ function player(room: StoredRoom, m: StoredMember, db: RoomDatabase): PlayerMe {
     openingState:
       room.phase === "lobby" ? null : (room.snapshot.opening[m.firmId] ?? null),
     periodMacro: l.macroByPeriod[period(room)] ?? null,
-    config: l.config,
+    config: l.macroByPeriod[period(room)] ? configForPeriod(l.config, l.macroByPeriod[period(room)]) : l.config,
     recentResults: l.results
       .flatMap((p) => p.firms.filter((f) => f.firmId === m.firmId))
       .slice(-2),
@@ -464,16 +467,17 @@ function initialize(room: StoredRoom): void {
   const profiles = ensureBotProfiles(room);
   const l = room.snapshot.league;
   const participants = gameMembers(room);
+  normalizeScenarioStart(l, participants.length);
   l.firms = participants.map((m) => ({
     id: m.firmId,
     name: m.firmName,
     ...(isBot(room, m) ? { isBot: true } : {}),
-    ...makeFirmStart(participants.length, l.config.machineCost),
+    ...scenarioFirmStart(l, participants.length),
   }));
   const decisions = Object.fromEntries(
     participants.map((m) => [
       m.firmId,
-      makeFirmDecision(m.firmId, participants.length),
+      scenarioFirmDecision(l, m.firmId, participants.length),
     ]),
   );
   l.decisionsByPeriod = [decisions, {}];
@@ -600,13 +604,15 @@ async function handle(
     }
     if (method === "POST") {
       const b = await body(req);
-      keys(b, ["name", "visibility", "settings", "timerMode", "addBot"]);
+      keys(b, ["name", "visibility", "settings", "timerMode", "addBot", "scenarioId"]);
+      if (b.scenarioId !== undefined && !isScenarioId(b.scenarioId)) throw new HttpError(400, "Unknown scenario");
       const roomName = name(b.name);
       if (b.visibility !== "public" && b.visibility !== "link")
         throw new HttpError(400, "Invalid visibility");
       if (b.addBot !== undefined && typeof b.addBot !== "boolean")
         throw new HttpError(400, "addBot must be boolean");
-      const s = settings(b.settings);
+      const suppliedSettings = settings(b.settings);
+      const s = b.scenarioId ? structuredClone(DEFAULT_ONLINE_GAME_SETTINGS) : suppliedSettings;
       const timerMode = (b.timerMode ?? "standard") as RoomTimerMode;
       if (!["fast", "standard", "unlimited"].includes(timerMode)) throw new HttpError(400, "Invalid timer mode");
       const room: StoredRoom = {
@@ -621,7 +627,7 @@ async function handle(
         autoBankruptcy: true,
         botFirmId: b.addBot ? randomUUID() : null,
         settings: s,
-        snapshot: buildOnlineGameSnapshot(roomName, s),
+        snapshot: buildOnlineGameSnapshot(roomName, s, b.scenarioId as ScenarioId | undefined),
         members: [],
       };
       room.snapshot.league.id = room.id;

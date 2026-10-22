@@ -103,7 +103,7 @@ export function PlayerDecisions({ me, form, loading, fieldErrors, budget, capexC
   const actionDisabled = locked || invalidDecision;
   const valuesValid = decisionFields.every(([key]) => {
     const value = numberInput(form[key]);
-    return value != null && value >= 0 && (key !== 'price' || value > 0) && (key !== 'production' || Number.isInteger(value)) && (key === 'price' || key === 'production' || value <= 50000);
+    return value != null && value >= 0 && (key !== 'price' || value > 0) && (key !== 'production' || Number.isInteger(value)) && (key === 'price' || key === 'production' || value <= ((key === 'marketing' ? me.periodMacro?.scenarioRules?.marketingMax : key === 'capexGross' ? me.periodMacro?.scenarioRules?.capexMax : me.periodMacro?.scenarioRules?.rndMax) ?? 50000));
   });
   const visibleBudget = valuesValid ? budget : null;
   const view = visibleBudget && me.openingState && me.periodMacro ? buildFundingView(visibleBudget, me.openingState, me.periodMacro) : null;
@@ -160,7 +160,7 @@ export function PlayerDecisions({ me, form, loading, fieldErrors, budget, capexC
             <div className="pc-field-heading pc-field-title"><label id={`player-${key}-label`} htmlFor={`player-${key}`}>{label}<span className="pc-field-unit">{key === 'price' ? ' · $ за штуку' : key === 'production' ? ' · шт.' : ' · $'}</span></label>
               <PlayerDecisionHelp field={key} label={label} id={helpId} open={openHelp === key} onToggle={() => setOpenHelp(current => current === key ? null : key)} onClose={closeHelp} />
             </div>
-            <input id={`player-${key}`} type="number" inputMode={key === 'production' ? 'numeric' : 'decimal'} min="0" step={key === 'production' ? '1' : 'any'} max={key === 'production' ? me.openingState?.machines : key === 'price' ? undefined : 50000} required aria-invalid={Boolean(fieldErrors[key])} aria-describedby={`${helpId}${fieldErrors[key] ? ` ${errorId}` : ''}`} disabled={locked} value={form[key]} onChange={event => onChange(key, event.target.value)} style={{ scrollMarginBottom: mobile ? panelHeight + 24 : undefined }} />
+            <input id={`player-${key}`} type="number" inputMode={key === 'production' ? 'numeric' : 'decimal'} min={key === 'price' ? me.periodMacro?.scenarioRules?.priceMin ?? 0 : 0} step={key === 'production' ? '1' : 'any'} max={key === 'production' ? me.openingState?.machines : key === 'price' ? me.periodMacro?.scenarioRules?.priceMax : (key === 'marketing' ? me.periodMacro?.scenarioRules?.marketingMax : key === 'capexGross' ? me.periodMacro?.scenarioRules?.capexMax : me.periodMacro?.scenarioRules?.rndMax) ?? 50000} required aria-invalid={Boolean(fieldErrors[key])} aria-describedby={`${helpId}${fieldErrors[key] ? ` ${errorId}` : ''}`} disabled={locked} value={form[key]} onChange={event => onChange(key, event.target.value)} style={{ scrollMarginBottom: mobile ? panelHeight + 24 : undefined }} />
             {fieldErrors[key] && <p className="pc-field-error" id={errorId}>{fieldErrors[key]}</p>}
             {key === 'production' && <><CapacityCard production={numberInput(form.production)} capacity={me.openingState?.machines} /><div className="pc-capacity-action"><ProductionCapacityButton capacity={me.openingState?.machines} disabled={locked} onSelect={value => onChange('production', String(value))} /></div></>}
           </div>;

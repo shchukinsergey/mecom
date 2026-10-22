@@ -1,4 +1,5 @@
 import { computeUnitCost } from './cost';
+import { configForPeriod } from './periodConfig';
 import type { FirmDecision, FirmOpeningState, LeagueConfig, PeriodMacroParams } from './types';
 
 /** Entry-budget diagnostic only; this is not a cash-flow or profit forecast. */
@@ -24,6 +25,7 @@ export function checkDecisionBudget(
   macro: PeriodMacroParams,
   config: LeagueConfig,
 ): DecisionBudget {
+  config = configForPeriod(config, macro);
   const production = Math.max(0, decision.production);
   const unitCost = computeUnitCost({
     capacityBase: opening.period0Machines,
