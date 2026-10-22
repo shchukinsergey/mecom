@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { CopyCommand } from './components/CopyCommand';
 import { accountRequest } from '../online/roomsApi';
 import type { AccountUser } from '../online/roomTypes';
 
@@ -30,7 +31,7 @@ export function TelegramAuth({ personal = false, onComplete }: { personal?: bool
     {error && <p role="alert" className="error">{error}</p>}
     {!challenge ? <button type="button" disabled={busy} onClick={() => { setBusy(true); setError(''); void accountRequest<{ token: string; code: string; expiresAt: number }>(endpoint + '/start', { method: 'POST', body: '{}' }).then(setChallenge).catch(e => setError(e.message)).finally(() => setBusy(false)); }}>{personal ? 'Подключить Telegram' : 'Войти через Telegram'}</button> : <>
       <p>Откройте <a href={`https://t.me/${bot}`} target="_blank" rel="noreferrer">@{bot}</a> и отправьте ему эту команду в личном чате:</p>
-      <input aria-label="Команда личного входа Telegram" readOnly value={`/login ${challenge.code}`} onFocus={e => e.target.select()}/>
+      <CopyCommand key={challenge.code} label="Команда личного входа Telegram" command={`/login ${challenge.code}`}/>
       <p className="hint">Код действует 5 минут. Используйте только код с самостоятельно открытой страницы. После ответа бота вернитесь сюда — подключение завершится автоматически.</p>
       <button type="button" onClick={() => setChallenge(null)}>Отмена</button>
     </>}

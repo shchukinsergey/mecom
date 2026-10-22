@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { TelegramAuth } from './TelegramAuth';
+import { CopyCommand } from './components/CopyCommand';
 import { accountRequest } from '../online/roomsApi';
 
 interface TelegramSettingsData {
@@ -42,7 +43,7 @@ export function TelegramSettings({ onUnauthorized }: { onUnauthorized: () => voi
       <h3>Уведомления в групповые чаты</h3>
       <ol><li>Добавьте <a href={`https://t.me/${data.username}?startgroup=true`} target="_blank" rel="noreferrer">@{data.username}</a> в групповой чат и разрешите отправку сообщений.</li><li>Создайте код и отправьте команду в чат от своего имени. Вы должны быть администратором чата.</li><li>После подключения выберите игры ниже. Список обновляется автоматически.</li></ol>
       <button disabled={busy} onClick={() => void work(async () => { setCode(await accountRequest('/telegram/code', { method: 'POST', body: '{}' })); })}>Создать код подключения</button>
-      {code && <div><p>Команда для чата (действует до {new Date(code.expiresAt).toLocaleTimeString('ru-RU')}):</p><input aria-label="Команда подключения Telegram" readOnly value={`/connect@${data.username} ${code.code}`} onFocus={e => e.target.select()}/><p className="hint">Каждый новый код заменяет предыдущий. После использования код недействителен.</p></div>}
+      {code && <div><p>Команда для чата (действует до {new Date(code.expiresAt).toLocaleTimeString('ru-RU')}):</p><CopyCommand key={code.code} label="Команда подключения Telegram" command={`/connect@${data.username} ${code.code}`}/><p className="hint">Каждый новый код заменяет предыдущий. После использования код недействителен.</p></div>}
       {data.chats.map(chat => {
         const selected = selection[chat.chatId] ?? chat.roomIds;
         return <fieldset key={chat.chatId} disabled={busy}><legend>{chat.title}</legend>

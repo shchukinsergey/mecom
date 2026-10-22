@@ -628,3 +628,8 @@ input:focus, select:focus, textarea:focus { outline: 3px solid rgba(0, 82, 255, 
 
 .rooms-mobile-header .rooms-menu-toggle { padding: 0; flex: 0 0 44px; line-height: 1; }
 .rooms-menu-icon { display: block; }
+
+.telegram-copy-row { display: flex; align-items: stretch; gap: 8px; }
+.telegram-copy-row input { flex: 1; min-width: 0; cursor: copy; }
+.telegram-copy-row button { flex-shrink: 0; min-height: 44px; }
+@media (max-width: 480px) { .telegram-copy-row { flex-direction: column; } }
