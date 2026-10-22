@@ -1,7 +1,7 @@
 import { timingSafeEqual } from 'node:crypto';
 import type { RoomDatabase } from './roomDatabase.ts';
 import { HttpError } from './accounts.ts';
-import { reminderMessage, roomPeriod } from './telegramMessages.ts';
+import { periodMessage, reminderMessage, roomPeriod } from './telegramMessages.ts';
 
 export interface TelegramOptions { token: string; username: string; secret: string; publicOrigin: string }
 class TelegramError extends Error {
@@ -9,7 +9,7 @@ class TelegramError extends Error {
 }
 type TelegramUpdate = {
   update_id: number;
-  message?: { text?: string; sender_chat?: unknown; from?: { id: number }; chat: { id: number; type: string; title?: string }; migrate_to_chat_id?: number };
+  message?: { text?: string; sender_chat?: unknown; from?: { id: number; username?: string; first_name?: string }; chat: { id: number; type: string; title?: string }; migrate_to_chat_id?: number };
   my_chat_member?: { chat: { id: number }; new_chat_member: { status: string } };
 };
 
@@ -64,7 +64,11 @@ export class TelegramBot {
       if (message?.text) {
         const chatId = String(message.chat.id);
         const match = /^\/connect(?:@[A-Za-z0-9_]+)?(?:\s+([a-f0-9]{36}))?\s*$/.exec(message.text);
-        if (match) {
+        const personal = /^\/(?:start|login)(?:@[A-Za-z0-9_]+)?\s+([a-f0-9]{24})\s*$/.exec(message.text);
+        if (personal && message.chat.type === 'private' && message.from && String(message.from.id) === chatId && !message.sender_chat) {
+          const ok = this.db.transaction(() => this.db.telegram.confirmAuth(personal[1], chatId, message.from!.username ?? null, message.from!.first_name ?? 'Участник'));
+          await this.send(chatId, ok ? 'Telegram подключён. Вернитесь на сайт для завершения входа. Я буду присылать уведомления о ваших играх.' : 'Код истёк, уже использован или Telegram связан с другим аккаунтом. Создайте новый код на сайте.');
+        } else if (match) {
           if (!['group', 'supergroup'].includes(message.chat.type) || !message.from || message.sender_chat) {
             await this.send(chatId, 'Отправьте команду от своего имени в групповом чате, где вы администратор.');
           } else if (!match[1]) {
@@ -78,7 +82,7 @@ export class TelegramBot {
             }
           }
         } else if (/^\/(help|start)(?:@[A-Za-z0-9_]+)?(?:\s|$)/.test(message.text)) {
-          await this.send(chatId, 'Я сообщаю о новых периодах с рейтингом РИФ и напоминаю о решениях за час до дедлайна. Для подключения: раздел «Telegram» на сайте МЭКОМ → создать код → /connect код в групповом чате → выбрать игры на сайте.');
+          await this.send(chatId, 'Я сообщаю о новых периодах с рейтингом РИФ и напоминаю о решениях за час до дедлайна. Для личного входа отправьте /login код, показанный сайтом. Код берите только со страницы, которую открыли сами. Для подключения чата: раздел «Telegram» на сайте МЭКОМ → создать код → /connect код в групповом чате → выбрать игры на сайте.');
         }
       }
       this.db.telegram.mark(update.update_id);
@@ -97,6 +101,10 @@ export class TelegramBot {
     this.running = true;
     try {
       this.db.transaction(() => {
+        for (const id of this.db.telegram.personalRoomIds()) {
+          const room = this.db.room(id);
+          if (room && reminderMessage(room, now)) this.db.telegram.personalEnqueue(room, 'reminder');
+        }
         for (const link of this.db.telegram.links()) {
           const room = this.db.room(link.roomId);
           if (room) {
@@ -110,7 +118,7 @@ export class TelegramBot {
         const room = this.db.room(job.roomId);
         if (!room || room.phase === 'closed' || roomPeriod(room) !== job.period || (job.kind === 'period' && room.phase !== 'collecting') || (job.kind === 'complete' && room.phase !== 'complete')) { this.db.telegram.done(job.id); continue; }
         // Read the latest submitted flags before every attempt, including retries.
-        const text = job.kind === 'reminder' ? reminderMessage(room, Math.max(now, Date.now())) : job.text;
+        const text = job.kind === 'reminder' ? reminderMessage(room, Math.max(now, Date.now()), this.db.telegram.mentions(room)) : ['period', 'complete', 'current'].includes(job.kind) ? periodMessage(room, job.kind === 'current', this.db.telegram.mentions(room)) : job.text;
         if (!text) { this.db.telegram.done(job.id); continue; }
         try {
           await this.send(job.chatId, text, room.id);
@@ -122,6 +130,23 @@ export class TelegramBot {
             const delay = error instanceof TelegramError && error.retryAfter ? error.retryAfter * 1000 : Math.min(3600000, 30000 * 2 ** Math.min(job.attempts, 7));
             this.db.telegram.retry(job.id, Date.now() + delay);
             // Respect Telegram throttling across all jobs, not just this message.
+            if (error instanceof TelegramError && error.code === 429) { this.rateUntil = Date.now() + delay; break; }
+          }
+        }
+      }
+      for (const job of this.db.telegram.personalDue(now)) {
+        if (this.stopped || now < this.rateUntil) break;
+        const room = this.db.room(job.roomId);
+        const member = room?.members.find(m => m.userId === job.userId);
+        if (!room || !member || room.phase === 'closed' || roomPeriod(room) !== job.period || (job.kind === 'period' && room.phase !== 'collecting') || (job.kind === 'complete' && room.phase !== 'complete')) { this.db.telegram.personalDone(job.id); continue; }
+        const text = job.kind === 'reminder' ? member.submitted || room.snapshot.opening[member.firmId]?.nativeBankruptcy ? null : reminderMessage({ ...room, members: [member] }, Math.max(now, Date.now())) : periodMessage(room);
+        if (!text) { this.db.telegram.personalDone(job.id); continue; }
+        try { await this.send(job.chatId, text, room.id); this.db.telegram.personalDone(job.id); }
+        catch (error) {
+          if (error instanceof TelegramError && [400, 403].includes(error.code)) this.db.telegram.personalInactive(job.userId);
+          else {
+            const delay = error instanceof TelegramError && error.retryAfter ? error.retryAfter * 1000 : Math.min(3600000, 30000 * 2 ** Math.min(job.attempts, 7));
+            this.db.telegram.personalRetry(job.id, Date.now() + delay);
             if (error instanceof TelegramError && error.code === 429) { this.rateUntil = Date.now() + delay; break; }
           }
         }

@@ -182,3 +182,90 @@ test('rollback does not enqueue a new period; expired reminders are dropped; thr
   await bot.tick(Date.now() + 61000); expect(sent).toHaveLength(0);
   expect(db.telegram.due(Date.now() + 61000)).toEqual([]);
 });
+
+async function personalConnect(cookie: string | undefined, telegramId: number, updateId: number, username = 'player') {
+  const route = cookie ? '/telegram/personal' : '/auth/telegram';
+  const start = await call(route + '/start', 'POST', {}, cookie);
+  expect(start.status).toBe(200);
+  const webhook = await call('/telegram/webhook', 'POST', { update_id: updateId, message: { from: { id: telegramId, username, first_name: '<Игрок>' }, chat: { id: telegramId, type: 'private' }, text: `/login ${start.body.code}` } }, undefined, { 'x-telegram-bot-api-secret-token': secret });
+  expect(webhook.status).toBe(200);
+  return { start, finish: await call(route + '/finish', 'POST', { token: start.body.token }, cookie) };
+}
+
+test('personal linking preserves account; Telegram login resumes it; secrets expire and are single-use', async () => {
+  await setup();
+  const owner = await register('Owner');
+  const user = (await call('/auth/me', 'GET', undefined, owner)).body.user;
+  const linked = await personalConnect(owner, 101, 1001);
+  expect(linked.finish.body.user.id).toBe(user.id);
+  expect((await call('/telegram', 'GET', undefined, owner)).body.identity.username).toBe('player');
+  expect((await call('/telegram/personal/finish', 'POST', { token: linked.start.body.token }, owner)).status).toBe(410);
+  const login = await personalConnect(undefined, 101, 1002);
+  expect(login.finish.body.user.id).toBe(user.id);
+  expect((await call('/auth/me', 'GET', undefined, login.finish.cookie)).body.user.id).toBe(user.id);
+  const pending = db.telegram.beginAuth(null, 1000);
+  expect(db.telegram.confirmAuth(pending.code, '202', null, 'Name', pending.expiresAt)).toBe(false);
+  expect(db.telegram.consumeAuth(pending.token, null, pending.expiresAt)).toEqual({ expired: true });
+  const other = await register('Other');
+  const conflict = await personalConnect(other, 101, 1003);
+  expect(conflict.finish.body.pending).toBe(true);
+  expect((await call('/telegram', 'GET', undefined, other)).body.identity).toBeNull();
+  expect((await call('/telegram/personal/unlink', 'POST', {}, owner)).status).toBe(200);
+  expect(db.telegram.identity(user.id)).toBeNull();
+  expect((await call('/auth/login', 'POST', { login: 'Owner', password: 'password123' })).status).toBe(200);
+});
+
+test('new Telegram account cannot lose its only login; code in group cannot authenticate; browser token is required', async () => {
+  await setup();
+  const created = await personalConnect(undefined, 303, 1101);
+  expect(created.finish.cookie).toBeTruthy();
+  expect((await call('/telegram/personal/unlink', 'POST', {}, created.finish.cookie)).status).toBe(409);
+  expect((await call('/auth/login', 'POST', { login: created.finish.body.user.login, password: 'password123' })).status).toBe(401);
+  const start = await call('/auth/telegram/start', 'POST', {});
+  await bot.update({ update_id: 1102, message: { from: { id: 404 }, chat: { id: -99, type: 'group' }, text: `/login ${start.body.code}` } });
+  expect((await call('/auth/telegram/finish', 'POST', { token: start.body.token })).body.pending).toBe(true);
+  expect((await call('/auth/telegram/finish', 'POST', { token: start.body.code })).status).toBe(400);
+});
+
+test('personal period and reminder delivery, group mentions, retries and submission suppression', async () => {
+  await setup();
+  const { alpha, beta, id } = await game();
+  const a = await personalConnect(alpha, 501, 1201, 'alpha_player');
+  await personalConnect(beta, 502, 1202, 'beta_player');
+  const room = db.room(id)!;
+  // A transition enqueues both personal and existing group notifications.
+  const before = structuredClone(room);
+  room.snapshot.league.results.push(structuredClone(room.snapshot.league.results[0]));
+  room.snapshot.league.results.at(-1)!.periodIndex = 1;
+  room.deadlineAt = Date.now() + 3590000;
+  db.transaction(() => db.saveRoom(room));
+  expect(before.snapshot.league.results.length + 1).toBe(room.snapshot.league.results.length);
+  sent = []; failure = 500;
+  await bot.tick();
+  expect(sent).toHaveLength(0);
+  failure = 0;
+  await bot.tick(Date.now() + 31000);
+  expect(sent.some(m => m.chat_id === '501' && m.text.includes('Начался период'))).toBe(true);
+  expect(sent.some(m => m.chat_id === '-123' && m.text.includes('tg://user?id=501') && m.text.includes('@alpha_player'))).toBe(true);
+  expect(sent.some(m => m.chat_id === '501' && m.text.includes('Ещё не отправили: Альфа.') && !m.text.includes('Ещё не отправили: Бета'))).toBe(true);
+  const count = sent.length;
+  await bot.tick(Date.now() + 62000);
+  expect(sent.length).toBe(count);
+  expect(a.finish.body.user).toBeTruthy();
+});
+
+test('personal reminders recheck submitted state on retry and unlink cancels pending delivery', async () => {
+  await setup();
+  const { alpha, beta, id } = await game();
+  await personalConnect(alpha, 601, 1301);
+  await personalConnect(beta, 602, 1302);
+  const room = db.room(id)!; room.deadlineAt = Date.now() + 3500000;
+  db.transaction(() => db.saveRoom(room));
+  failure = 500; await bot.tick();
+  room.members.find(m => m.firmName === 'Альфа')!.submitted = true;
+  db.transaction(() => db.saveRoom(room));
+  expect((await call('/telegram/personal/unlink', 'POST', {}, beta)).status).toBe(200);
+  sent = []; failure = 0; await bot.tick(Date.now() + 31000);
+  expect(sent.filter(m => ['601', '602'].includes(m.chat_id))).toEqual([]);
+  expect(sent.find(m => m.chat_id === '-123' && m.text.includes('Ещё не отправили'))?.text).toContain('Бета');
+});

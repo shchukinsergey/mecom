@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { TelegramAuth } from './TelegramAuth';
 import { accountRequest } from '../online/roomsApi';
 
 interface TelegramSettingsData {
+  identity: { id: string; username: string | null; name: string; active: boolean } | null;
   enabled: boolean;
   username: string | null;
   chats: Array<{ chatId: string; title: string; active: boolean; error: string | null; roomIds: string[] }>;
@@ -36,6 +38,8 @@ export function TelegramSettings({ onUnauthorized }: { onUnauthorized: () => voi
     {error && <p className="error" role="alert">{error}</p>}
     {notice && <p role="status">{notice}</p>}
     {!data ? <p role="status">Загружаем настройки…</p> : !data.enabled ? <p className="hint">Telegram-бот ещё не настроен на сервере.</p> : <>
+      {data.identity ? <div><h3>Личный Telegram</h3><p>Подключён: {data.identity.username ? '@' + data.identity.username : data.identity.name}. {data.identity.active ? 'Личные уведомления включены.' : 'Бот не может написать вам. Подключите Telegram повторно.'}</p><button disabled={busy} onClick={() => void work(async () => { await accountRequest('/telegram/personal/unlink', { method: 'POST', body: '{}' }); })}>Отключить Telegram</button>{!data.identity.active && <TelegramAuth personal onComplete={() => setRefresh(v => v + 1)}/>}</div> : <TelegramAuth personal onComplete={() => setRefresh(v => v + 1)}/>}
+      <h3>Уведомления в групповые чаты</h3>
       <ol><li>Добавьте <a href={`https://t.me/${data.username}?startgroup=true`} target="_blank" rel="noreferrer">@{data.username}</a> в групповой чат и разрешите отправку сообщений.</li><li>Создайте код и отправьте команду в чат от своего имени. Вы должны быть администратором чата.</li><li>После подключения выберите игры ниже. Список обновляется автоматически.</li></ol>
       <button disabled={busy} onClick={() => void work(async () => { setCode(await accountRequest('/telegram/code', { method: 'POST', body: '{}' })); })}>Создать код подключения</button>
       {code && <div><p>Команда для чата (действует до {new Date(code.expiresAt).toLocaleTimeString('ru-RU')}):</p><input aria-label="Команда подключения Telegram" readOnly value={`/connect@${data.username} ${code.code}`} onFocus={e => e.target.select()}/><p className="hint">Каждый новый код заменяет предыдущий. После использования код недействителен.</p></div>}

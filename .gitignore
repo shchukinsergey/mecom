@@ -22,3 +22,4 @@ releases/
 .local-preview/
 data/scenario-research/decoded/
 data/scenario-research/mode-key.bin
+.tmp-telegram-preview/

@@ -554,9 +554,32 @@ async function handle(
     auth.logout(req, res);
     return send(res, 200, { ok: true });
   }
+  if (method === 'GET' && path === '/api/auth/telegram') return send(res, 200, { enabled: !!options.telegram, username: options.telegram?.options.username ?? null });
+  if (method === 'POST' && ['/api/auth/telegram/start', '/api/auth/telegram/finish', '/api/telegram/personal/start', '/api/telegram/personal/finish', '/api/telegram/personal/unlink'].includes(path)) {
+    if (!options.telegram) throw new HttpError(503, 'Telegram-бот ещё не настроен.');
+    auth.limitTelegram(req, path.endsWith('/start'));
+    const personal = path.startsWith('/api/telegram/personal');
+    const userId = personal ? authenticated(req, db).id : null;
+    const b = await body(req);
+    if (path.endsWith('/unlink')) {
+      keys(b, []);
+      if (!db.transaction(() => db.telegram.unlink(userId!))) throw new HttpError(409, 'Для этого аккаунта Telegram — единственный способ входа.');
+      return send(res, 200, { ok: true });
+    }
+    if (path.endsWith('/start')) {
+      keys(b, []);
+      return send(res, 200, db.transaction(() => db.telegram.beginAuth(userId)));
+    }
+    keys(b, ['token']);
+    if (typeof b.token !== 'string' || !/^[a-f0-9]{64}$/.test(b.token)) throw new HttpError(400, 'Invalid token');
+    const result = db.transaction(() => db.telegram.consumeAuth(b.token as string, userId));
+    if ('expired' in result) throw new HttpError(410, 'Код истёк. Начните заново.');
+    if ('user' in result && result.user && !personal) auth.signIn(res, result.user.id);
+    return send(res, 200, result);
+  }
   if (['/api/telegram', '/api/telegram/code', '/api/telegram/subscriptions'].includes(path)) {
     const user = authenticated(req, db);
-    if (method === 'GET' && path === '/api/telegram') return send(res, 200, { enabled: !!options.telegram, username: options.telegram?.options.username ?? null, chats: db.telegram.chats(user.id), rooms: db.listIds('mine', user.id).map(id => db.room(id)!).filter(r => r.ownerId === user.id).map(r => ({ id: r.id, name: r.name, phase: r.phase })) });
+    if (method === 'GET' && path === '/api/telegram') return send(res, 200, { identity: db.telegram.identity(user.id), enabled: !!options.telegram, username: options.telegram?.options.username ?? null, chats: db.telegram.chats(user.id), rooms: db.listIds('mine', user.id).map(id => db.room(id)!).filter(r => r.ownerId === user.id).map(r => ({ id: r.id, name: r.name, phase: r.phase })) });
     if (!options.telegram) throw new HttpError(503, 'Telegram-бот ещё не настроен на сервере.');
     if (method === 'POST' && path === '/api/telegram/code') {
       keys(await body(req), []);

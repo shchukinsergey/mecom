@@ -60,6 +60,7 @@ export class Authentication {
     string,
     { count: number; until: number }
   >();
+  private readonly telegramAttempts = new Map<string, { count: number; until: number }>();
   private readonly loginAttempts = new Map<
     string,
     { count: number; until: number }
@@ -120,7 +121,7 @@ export class Authentication {
       });
     } else {
       const key = await derive(password, user?.salt ?? "0".repeat(64));
-      if (!user || !timingSafeEqual(key, Buffer.from(user.passwordHash, "hex")))
+      if (!user || !user.passwordHash || !timingSafeEqual(key, Buffer.from(user.passwordHash, "hex")))
         throw new HttpError(401, "Invalid login or password");
     }
     const token = randomBytes(32).toString("base64url");
@@ -128,6 +129,14 @@ export class Authentication {
     this.cookie(res, token, 30 * 86400);
     this.loginAttempts.delete(loginKey);
     return { id: user.id, login: user.login };
+  }
+  limitTelegram(req: IncomingMessage, start: boolean): void {
+    this.limit(this.telegramAttempts, `${start ? 'start' : 'poll'}:${req.socket.remoteAddress ?? 'unknown'}`, start ? 60 : 1800);
+  }
+  signIn(res: ServerResponse, userId: string): void {
+    const token = randomBytes(32).toString('base64url');
+    this.db.addSession(tokenHash(token), userId);
+    this.cookie(res, token, 30 * 86400);
   }
   logout(req: IncomingMessage, res: ServerResponse): void {
     this.db.removeSession(tokenHash(sessionToken(req)));
