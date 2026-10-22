@@ -4,6 +4,9 @@ import emobile from './scenarios/emobile.json';
 import originalTractors from './scenarios/tractors-v2.json';
 import originalIpad from './scenarios/ipad-v2.json';
 import originalEmobile from './scenarios/emobile-v2.json';
+import currentTractors from './scenarios/tractors-v3.json';
+import currentIpad from './scenarios/ipad-v3.json';
+import currentEmobile from './scenarios/emobile-v3.json';
 import { originalPlan, type OriginalScenarioData } from './originalScenarios';
 import { makeMacroParams } from './config';
 import type { PeriodMacroParams } from './types';
@@ -17,26 +20,34 @@ const LEGACY_SCENARIOS = [
   { id: 'emobile-v1', title: 'Е-мобиль · 8 периодов',
     description: 'Запуск нового автомобиля, рост спроса, повышение налогов и отзыв продукции.', data: emobile },
 ] as const;
-export const SCENARIOS = [
+const V2_SCENARIOS = [
   { id: 'tractors-v2', title: 'Тракторы · 8 периодов', description: LEGACY_SCENARIOS[0].description, data: originalTractors },
   { id: 'ipad-v2', title: 'iPad · 8 периодов', description: LEGACY_SCENARIOS[1].description, data: originalIpad },
   { id: 'emobile-v2', title: 'Е-мобиль · 8 периодов', description: LEGACY_SCENARIOS[2].description, data: originalEmobile },
 ] as const;
-export type ScenarioId = typeof SCENARIOS[number]['id'] | typeof LEGACY_SCENARIOS[number]['id'];
+export const SCENARIOS = [
+  { id: 'tractors-v3', title: 'Тракторы · 8 периодов', description: LEGACY_SCENARIOS[0].description, data: currentTractors },
+  { id: 'ipad-v3', title: 'iPad · 9 периодов', description: LEGACY_SCENARIOS[1].description, data: currentIpad },
+  { id: 'emobile-v3', title: 'Е-мобиль · 8 периодов', description: LEGACY_SCENARIOS[2].description, data: currentEmobile },
+] as const;
+const ALL_SCENARIOS = [...SCENARIOS, ...V2_SCENARIOS, ...LEGACY_SCENARIOS];
+export type ScenarioId = typeof ALL_SCENARIOS[number]['id'];
 
 export function originalScenario(id: ScenarioId): OriginalScenarioData | undefined {
-  return SCENARIOS.find(s => s.id === id)?.data;
+  return [...SCENARIOS, ...V2_SCENARIOS].find(s => s.id === id)?.data;
 }
 
 export function isScenarioId(value: unknown): value is ScenarioId {
-  return [...SCENARIOS, ...LEGACY_SCENARIOS].some(scenario => scenario.id === value);
+  return ALL_SCENARIOS.some(scenario => scenario.id === value);
 }
 
 export function scenarioMetadata(id: ScenarioId) {
-  const scenario = [...SCENARIOS, ...LEGACY_SCENARIOS].find(entry => entry.id === id);
+  const scenario = ALL_SCENARIOS.find(entry => entry.id === id);
   if (!scenario) throw new Error('Неизвестный сценарий');
   const original = originalScenario(id);
-  return { id, title: scenario.title, version: original ? 2 : 1, playablePeriods: 8,
+  const current = SCENARIOS.find(entry => entry.id === id);
+  return { id, title: scenario.title, version: current ? 3 : original ? 2 : 1,
+    playablePeriods: current?.data.playablePeriods ?? 8,
     ...(original ? { original: { sha256: original.sourceSha256, globals: [...original.globals],
       periods: original.periods.map(p => [...p.values]) } } : {}) };
 }

@@ -52,7 +52,7 @@ describe('opt-in tractors scenario', () => {
     let snapshot = buildOnlineGameSnapshot('Scenario', undefined, id);
     snapshot.league.firms = ['a', 'b'].map(id => ({ ...makeFirmStart(2, 40), id, name: id }));
     snapshot.opening = initialOpeningState(snapshot.league);
-    for (let i = 0; i <= 8; i++) {
+    for (let i = 0; i <= snapshot.league.scenario!.playablePeriods; i++) {
       const l = snapshot.league;
       const decisions = Object.fromEntries(l.firms.map(f => [f.id, makeFirmDecision(f.id, 2)]));
       l.decisionsByPeriod[i] = decisions;

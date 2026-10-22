@@ -26,7 +26,7 @@ import {
   buildOnlineGameSnapshot,
   ensureOnlineFinalMacro,
   DEFAULT_ONLINE_GAME_SETTINGS,
-  ONLINE_PLAYABLE_PERIODS,
+  playablePeriodCount,
   type OnlineGameSettings,
 } from "../src/online/gameSettings.ts";
 import { scenarioFirmStart, scenarioFirmDecision, normalizeScenarioStart } from "../src/engine/originalScenarios.ts";
@@ -411,9 +411,9 @@ function calculate(room: StoredRoom, db: RoomDatabase, force: boolean, autoFirmI
     m.decision = null;
     m.submitted = false;
   }
-  if (i >= ONLINE_PLAYABLE_PERIODS) room.phase = "complete";
+  if (i >= playablePeriodCount(l)) room.phase = "complete";
   else {
-    if (i + 1 === ONLINE_PLAYABLE_PERIODS) ensureOnlineFinalMacro(l);
+    if (i + 1 === playablePeriodCount(l)) ensureOnlineFinalMacro(l);
     l.decisionsByPeriod[i + 1] = {};
     l.confirmedByPeriod[i + 1] = {};
   }

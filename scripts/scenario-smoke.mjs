@@ -44,15 +44,15 @@ try {
   assert.equal(await select.count(), 0);
   await type.selectOption('scenario');
   assert.equal(await select.locator('option').count(), 3);
-  await select.selectOption('ipad-v2');
+  await select.selectOption('ipad-v3');
   await page.getByText('Бум продаж планшетов', { exact: false }).waitFor();
-  await select.selectOption('emobile-v2');
+  await select.selectOption('emobile-v3');
   await page.getByText('Запуск нового автомобиля', { exact: false }).waitFor();
   await type.selectOption('ordinary');
   assert.equal(await select.count(), 0);
   await page.getByText('Финансовые настройки', { exact: true }).waitFor();
   await type.selectOption('scenario');
-  await select.selectOption('tractors-v2');
+  await select.selectOption('tractors-v3');
   assert.equal(await page.getByText('Финансовые настройки', { exact: true }).count(), 0);
   await page.screenshot({ path: join(directory, 'scenario-create-desktop.png'), fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });

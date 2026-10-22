@@ -7,6 +7,11 @@ import { originalConfig } from '../engine/originalScenarios';
 /** Period zero is the initial snapshot, not a playable period. */
 export const ONLINE_PLAYABLE_PERIODS = 8;
 
+/** Use the saved horizon; changing a scenario template must not extend existing games. */
+export function playablePeriodCount(league: Pick<League, 'scenario'>): number {
+  return league.scenario?.playablePeriods ?? ONLINE_PLAYABLE_PERIODS;
+}
+
 export interface OnlineGameSettings {
   loanRepayment: LeagueConfig['featureFlags']['loanRepayment'];
   bankInterestFormula: LeagueConfig['featureFlags']['bankInterestFormula'];
@@ -35,12 +40,13 @@ export const DEFAULT_ONLINE_GAME_SETTINGS: OnlineGameSettings = {
 
 /** Extend legacy 0..7 plans without replacing saved financial or RIF rules. */
 export function ensureOnlineFinalMacro(league: League): void {
-  if (league.macroByPeriod[ONLINE_PLAYABLE_PERIODS]) return;
-  const previous = league.macroByPeriod[ONLINE_PLAYABLE_PERIODS - 1];
+  const last = playablePeriodCount(league);
+  if (league.macroByPeriod[last]) return;
+  const previous = league.macroByPeriod[last - 1];
   if (!previous) throw new Error('Missing prior online period macro');
-  league.macroByPeriod[ONLINE_PLAYABLE_PERIODS] = {
+  league.macroByPeriod[last] = {
     ...structuredClone(previous),
-    periodIndex: ONLINE_PLAYABLE_PERIODS,
+    periodIndex: last,
     scenarioNewsText: '',
   };
 }
