@@ -328,3 +328,14 @@ describe('Экспорт для рассылки', () => {
     expect(only).not.toContain('И Н Д У С Т Р И Я');
   });
 });
+
+it('export places upcoming scenario news between private figures and industry report', () => {
+  const { league, period } = buildPeriod('Старая новость');
+  const next = { ...period.macro, periodIndex: period.periodIndex + 1, scenarioNewsText: '~~~ Сценарий ~~~\nНовая новость.\n\nНовые условия.' };
+  const text = renderFirmExport(period.firms[0], period, league.config, league.name, true, next);
+  expect(text).toContain(`Новости отрасли · период ${next.periodIndex}`);
+  expect(text).toContain('Новая новость.\n\nНовые условия.');
+  expect(text).not.toContain('Старая новость');
+  expect(text.indexOf('Новая новость')).toBeGreaterThan(text.indexOf('Использование мощности'));
+  expect(text.indexOf('Новая новость')).toBeLessThan(text.indexOf('И Н Д У С Т Р И Я'));
+});

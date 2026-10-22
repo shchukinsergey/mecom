@@ -525,6 +525,7 @@ export function PeriodScreen() {
                     league.config,
                     league.name,
                     includeIndustry,
+                    league.macroByPeriod[lastResult.periodIndex + 1] ?? lastResult.macro,
                   )}
                   fileName={`mecom-${league.name}-p${lastResult.periodIndex}-${firm.firmName}`}
                   extra={

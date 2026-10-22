@@ -321,7 +321,7 @@ function player(room: StoredRoom, m: StoredMember, db: RoomDatabase): PlayerMe {
         ? [
             {
               periodIndex: p.periodIndex,
-              report: renderFirmExport(f, p, l.config, room.name),
+              report: renderFirmExport(f, p, l.config, room.name, true, l.macroByPeriod[p.periodIndex + 1] ?? p.macro),
             },
           ]
         : [];

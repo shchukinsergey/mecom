@@ -269,3 +269,16 @@ test('personal reminders recheck submitted state on retry and unlink cancels pen
   expect(sent.filter(m => ['601', '602'].includes(m.chat_id))).toEqual([]);
   expect(sent.find(m => m.chat_id === '-123' && m.text.includes('Ещё не отправили'))?.text).toContain('Бета');
 });
+
+test('new-period message includes only current scenario news and escapes HTML', async () => {
+  await setup();
+  const { id } = await game(); const room = db.room(id)!;
+  room.snapshot.league.macroByPeriod[1].scenarioNewsText = '~~~ Сценарий ~~~\nСпрос на тракто-\nры растёт.\n\nСтавка <10%> & поддержка.';
+  room.snapshot.league.macroByPeriod[2].scenarioNewsText = 'СЕКРЕТ БУДУЩЕГО ПЕРИОДА';
+  const text = periodMessage(room);
+  expect(text).toContain('Новости отрасли · период 1');
+  expect(text).toContain('Спрос на тракторы растёт.');
+  expect(text).toContain('Ставка &lt;10%&gt; &amp; поддержка.');
+  expect(text).not.toContain('СЕКРЕТ БУДУЩЕГО');
+  expect(periodMessage({ ...room, phase: 'complete' })).not.toContain('Новости отрасли');
+});

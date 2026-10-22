@@ -195,7 +195,7 @@ function initializeGame(g: Game): void {
 function adminDto(g: Game): unknown { const {inviteTokenHash:_,...safe}=g; return {...safe,firms:g.firms.map(({rejoinTokenHash:__,...f})=>f)}; }
 function playerDto(g: Game,f: Firm): unknown {
   const league=g.snapshot?.league, index=league?.results.length ?? 0, history: {periodIndex:number;report:string}[]=[];
-  if(league) for(const period of league.results){const own=period.firms.find(x=>x.firmId===f.firmId);if(own)history.push({periodIndex:period.periodIndex,report:renderFirmExport(own,period,league.config,league.name)});}
+  if(league) for(const period of league.results){const own=period.firms.find(x=>x.firmId===f.firmId);if(own)history.push({periodIndex:period.periodIndex,report:renderFirmExport(own,period,league.config,league.name,true,league.macroByPeriod[period.periodIndex+1] ?? period.macro)});}
   const current=history.at(-1)?.report ?? null;
   const openingState = g.phase === 'lobby' ? null : g.snapshot?.opening[f.firmId] ?? null;
   const periodMacro = league?.macroByPeriod[index] ?? null;

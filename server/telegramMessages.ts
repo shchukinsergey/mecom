@@ -1,3 +1,4 @@
+import { scenarioParagraphs } from '../src/report/scenarioNews.ts';
 import type { StoredRoom } from './roomDatabase.ts';
 
 const escape = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -29,7 +30,12 @@ export function periodMessage(room: StoredRoom, current = false, identities: Ide
     const people = [...previous.firms].sort((a, b) => b.rif.total - a.rif.total || a.firmName.localeCompare(b.firmName, 'ru')).filter(f => identities[f.firmId]);
     if (people.length) lines.push(...people.map(f => `${escape(clean(f.firmName))}:${mention(f.firmId, identities)}`));
   }
-  if (!complete) lines.push('', deadline(room));
+  if (!complete) {
+    lines.push('', deadline(room));
+    const macro = room.snapshot.league.macroByPeriod[roomPeriod(room)];
+    const news = scenarioParagraphs(macro?.scenarioNewsText ?? '');
+    if (news.length) lines.push('', `<b>Новости отрасли · период ${roomPeriod(room)}</b>`, ...news.map(p => '\n' + escape(p).replace(/^(Условия периода|Что меняется)(?=\n)/, '<b>$1</b>')));
+  }
   return lines.join('\n');
 }
 export function reminderMessage(room: StoredRoom, now: number, identities: Identities = {}): string | null {

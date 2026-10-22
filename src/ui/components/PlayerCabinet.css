@@ -419,3 +419,10 @@
 @media (prefers-reduced-motion: reduce) {
   .player-cabinet *, .player-cabinet *::before, .player-cabinet *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+.player-cabinet .pc-scenario-news > p + p { margin-top: 14px; }
+
+.player-cabinet .pc-scenario-conditions { margin-top: 20px; padding-top: 16px; border-top: 1px solid #cddcf0; }
+.player-cabinet .pc-scenario-conditions h3 { margin: 0 0 10px; font-size: 16px; color: #384a64; }
+.player-cabinet .pc-scenario-conditions ul { margin: 0; padding-left: 22px; color: #384a64; line-height: 1.8; }
+.player-cabinet .pc-scenario-news > p { white-space: pre-line; }

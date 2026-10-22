@@ -1,6 +1,6 @@
 /** Сборка отчётов для экспорта. */
 
-import type { FirmPeriodResult, LeagueConfig, PeriodResults } from '../engine/types';
+import type { FirmPeriodResult, LeagueConfig, PeriodResults, PeriodMacroParams } from '../engine/types';
 import { renderFirmReport } from './firmReport';
 import { renderIndustryReport } from './industryReport';
 
@@ -29,8 +29,9 @@ export function renderFirmExport(
   config: LeagueConfig,
   leagueName: string,
   includeIndustry = true,
+  newsMacro?: PeriodMacroParams,
 ): string {
-  const parts = [renderFirmReport(firm, period, config, leagueName)];
+  const parts = [renderFirmReport(firm, period, config, leagueName, newsMacro)];
   if (includeIndustry) parts.push('', renderIndustryReport(period, leagueName));
   return parts.join('\n');
 }

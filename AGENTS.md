@@ -46,3 +46,5 @@
 - `DOCS.md`: architecture, formulas, persistence, tests, limitations.
 - `mecom-spec.md`: calibrated model specification.
 - `src/engine/computePeriod.ts`, `src/state/leagueStore.ts`: calculation/state orchestration.
+## Scenario news authoring
+- Before adding or editing a scenario, read [docs/SCENARIO-TEXTS.md](docs/SCENARIO-TEXTS.md). Manually author paragraphs and explicit conditions lists; preserve narrative meaning and numeric settings. Historical presentation edits belong in `src/report/scenarioEditorial.json`, matched by complete source text, not by period number. Keep all three channels (player UI, Telegram, fixed-width reports) consistent.

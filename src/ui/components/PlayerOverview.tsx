@@ -1,3 +1,4 @@
+import { scenarioParagraphs } from '../../report/scenarioNews';
 import { useEffect, useState } from 'react';
 import type { GameStatus, PlayerMe } from '../../online/api';
 import { getPlayerInsights, type PlayerInsightKind } from '../../online/playerInsights';
@@ -37,8 +38,7 @@ export function PlayerOverview({ me, status, onDecisions }: { me: PlayerMe; stat
   const insights = latest ? getPlayerInsights(latest, previous ?? null, me.config?.costOptimalCu) : [];
   const macro = me.periodMacro;
   const news = macro?.scenarioNewsText.trim();
-  const newsBody = news?.replace(/^[^\n]*~{3,}[^\n]*\n?/, '')
-    .replace(/([а-яё])-\r?\n(?=[а-яё])/gi, '$1').replace(/\r?\n/g, ' ').trim();
+  const newsBody = scenarioParagraphs(news ?? '');
   const phases = { lobby: 'Ожидаем начала игры', collecting: 'Приём решений', complete: 'Период завершён', closed: 'Игра закрыта' };
   const salesKnown = latest && Number.isFinite(latest.unfulfilledOrders) && Number.isFinite(latest.inventoryEnd);
   const salesCopy = !salesKnown ? 'Данные неполные' : latest.unfulfilledOrders > 0 && latest.inventoryEnd > 0 ? 'Есть невыполненные заказы и остаток'
@@ -62,10 +62,15 @@ export function PlayerOverview({ me, status, onDecisions }: { me: PlayerMe; stat
         </div><p className={`pc-balance-status ${salesKnown && (latest.unfulfilledOrders > 0 || latest.inventoryEnd > 0) ? 'pc-warning' : 'pc-muted'}`}>{salesCopy}</p></div>
       </> : <p className="pc-empty">Показатели появятся после расчёта.</p>}</div>
     </div>
-    {newsBody && <section className="pc-scenario-news" aria-labelledby="scenario-news-heading">
+    {newsBody.length > 0 && <section className="pc-scenario-news" aria-labelledby="scenario-news-heading">
       <div className="pc-scenario-news-heading"><span className="pc-scenario-news-kicker">Новости отрасли</span><span className="pc-scenario-news-period">Период {macro?.periodIndex ?? me.currentPeriodIndex}</span></div>
       <h2 id="scenario-news-heading">Что происходит на рынке</h2>
-      <p>{newsBody}</p>
+      {newsBody.map((paragraph, index) => {
+        const [heading, ...items] = paragraph.split('\n');
+        return items.length && items.every(item => item.startsWith('• '))
+          ? <div className="pc-scenario-conditions" key={index}><h3>{heading}</h3><ul>{items.map((item, i) => <li key={i}>{item.slice(2)}</li>)}</ul></div>
+          : <p key={index}>{paragraph}</p>;
+      })}
     </section>}
     <div className="pc-overview-bottom">
       <section className={`pc-attention${insights.length ? ' pc-attention-warning' : ''}`}><h2>На что обратить внимание</h2>

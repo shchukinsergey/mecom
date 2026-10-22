@@ -1,3 +1,4 @@
+import { scenarioParagraphs } from './scenarioNews';
 /**
  * Приватный отчёт фирмы — моноширинный текст в две колонки по шаблону
  * раздела 1 источника.
@@ -6,7 +7,7 @@
  * не рендерятся вообще — ведущий рассылает эти отчёты по одному.
  */
 
-import type { FirmPeriodResult, LeagueConfig, PeriodResults } from '../engine/types';
+import type { FirmPeriodResult, LeagueConfig, PeriodResults, PeriodMacroParams } from '../engine/types';
 import {
   labelValue,
   money,
@@ -42,6 +43,7 @@ export function renderFirmReport(
   period: PeriodResults,
   config: LeagueConfig,
   leagueName: string,
+  newsMacro: PeriodMacroParams = period.macro,
 ): string {
   const d = result.decision;
 
@@ -127,8 +129,11 @@ export function renderFirmReport(
     rule(TOTAL_WIDTH),
   ];
 
-  if (period.macro.scenarioNewsText.trim()) {
-    lines.push('', ...wrapText(period.macro.scenarioNewsText.trim(), TOTAL_WIDTH));
+  const news = scenarioParagraphs(newsMacro.scenarioNewsText);
+  if (news.length) {
+    lines.push('', `Новости отрасли · период ${newsMacro.periodIndex}`, '');
+    news.forEach((paragraph, index) => { if (index) lines.push(''); lines.push(...wrapText(paragraph, TOTAL_WIDTH)); });
+    lines.push(rule(TOTAL_WIDTH));
   }
 
   lines.push('', `Лига «${leagueName}»`);

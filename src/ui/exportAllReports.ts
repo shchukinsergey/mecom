@@ -38,7 +38,7 @@ export async function downloadAllFirmReports(
     if (!periodFolder) continue;
 
     for (const firm of period.firms) {
-      const text = renderFirmExport(firm, period, league.config, league.name, includeIndustry);
+      const text = renderFirmExport(firm, period, league.config, league.name, includeIndustry, league.macroByPeriod[period.periodIndex + 1] ?? period.macro);
       const dataUrl = await renderReportPng(text);
       periodFolder.file(`${sanitizeFileName(firm.firmName)}.png`, dataUrlToBase64(dataUrl), {
         base64: true,
