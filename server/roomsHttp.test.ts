@@ -265,6 +265,34 @@ const conservative = {
   rnd: 0,
 };
 
+test('participants leave a lobby and rejoin with a new firm; started games reject leaving', async () => {
+  const { owner, a, b, outsider, route } = await game();
+  const roomId = route.split('/').at(-1)!;
+  const before = db.room(roomId)!;
+  const firstId = before.members[0].firmId;
+  expect((await call(route + '/leave', 'POST')).status).toBe(401);
+  expect((await call(route + '/leave', 'POST', {}, a)).status).toBe(200);
+  expect(db.countMemberships(before.members[0].userId)).toBe(0);
+  expect(db.room(roomId)!.members.map(m => m.firmName)).toEqual(['Two']);
+  expect((await call(route, 'GET', undefined, a)).body.ownFirmId).toBeFalsy();
+  expect((await call(route + '/leave', 'POST', {}, a)).status).toBe(200);
+  // The old name is available to another participant after leaving.
+  expect((await call(route + '/join', 'POST', { firmName: 'One' }, outsider)).status).toBe(200);
+  const rejoined = await call(route + '/join', 'POST', { firmName: 'New firm' }, a);
+  expect(rejoined.status).toBe(200);
+  expect(rejoined.body.ownFirmId).not.toBe(firstId);
+  expect(db.room(roomId)!.members.find(m => m.firmName === 'New firm')).toMatchObject({ decision: null, submitted: false });
+  // An owner can stop playing while retaining room management.
+  expect((await call(route + '/join', 'POST', { firmName: 'Owner firm' }, owner)).status).toBe(200);
+  const ownerLeft = await call(route + '/leave', 'POST', {}, owner);
+  expect(ownerLeft.body.isOwner).toBe(true);
+  expect(ownerLeft.body.ownFirmId).toBeFalsy();
+  expect((await call(route + '/start', 'POST', {}, owner)).status).toBe(200);
+  const started = JSON.stringify(db.room(roomId));
+  expect((await call(route + '/leave', 'POST', {}, b)).status).toBe(409);
+  expect(JSON.stringify(db.room(roomId))).toBe(started);
+});
+
 test.each(['tractors-v1', 'ipad-v1', 'emobile-v1', 'tractors-v2', 'ipad-v2', 'emobile-v2', 'tractors-v3', 'ipad-v3', 'emobile-v3'])('%s creation is opt-in, preserves existing rooms and survives its saved duration and restart', async (scenarioId) => {
   const duration = scenarioId === 'ipad-v3' ? 9 : 8;
   const { owner, a, b, route: ordinaryRoute } = await game();

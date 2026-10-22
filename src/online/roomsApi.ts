@@ -22,6 +22,7 @@ export const createRoom = (input: CreateRoomInput) => post<RoomDetail>('/rooms',
 const roomPath = (id: string) => `/rooms/${encodeURIComponent(id)}`;
 export const getRoom = (id: string, signal?: AbortSignal) => accountRequest<RoomDetail>(roomPath(id), { signal });
 export const joinRoom = (id: string, firmName: string) => post<RoomDetail>(`${roomPath(id)}/join`, { firmName });
+export const leaveRoom = (id: string) => post<RoomDetail>(`${roomPath(id)}/leave`);
 export const addRoomBot = (id: string) => post<RoomDetail>(`${roomPath(id)}/bots`);
 export const startRoom = (id: string) => post<RoomDetail>(`${roomPath(id)}/start`);
 export const closeRoom = (id: string) => post<RoomDetail>(`${roomPath(id)}/close`);

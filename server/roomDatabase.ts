@@ -236,6 +236,10 @@ export class RoomDatabase {
         JSON.stringify(roomBots(room)),
       );
   }
+  removeLobbyMember(roomId: string, userId: string): void {
+    this.db.prepare("DELETE FROM members WHERE room_id=? AND user_id=? AND EXISTS(SELECT 1 FROM rooms WHERE id=? AND phase='lobby')")
+      .run(roomId, userId, roomId);
+  }
   saveRoom(room: StoredRoom): void {
     const before = this.room(room.id);
     this.db

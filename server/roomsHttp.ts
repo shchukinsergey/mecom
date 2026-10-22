@@ -583,7 +583,7 @@ async function handle(
   if (
     path !== "/api/auth/me" &&
     path !== "/api/rooms" &&
-    !/^\/api\/rooms\/[0-9a-f-]{36}(?:\/(join|bots|start|close|me|status|decision|submit|calculate-preview|calculate|bankruptcy))?$/.test(
+    !/^\/api\/rooms\/[0-9a-f-]{36}(?:\/(join|leave|bots|start|close|me|status|decision|submit|calculate-preview|calculate|bankruptcy))?$/.test(
       path,
     )
   )
@@ -640,7 +640,7 @@ async function handle(
     }
   }
   const match =
-    /^\/api\/rooms\/([0-9a-f-]{36})(?:\/(join|bots|start|close|me|status|decision|submit|calculate-preview|calculate|bankruptcy))?$/.exec(
+    /^\/api\/rooms\/([0-9a-f-]{36})(?:\/(join|leave|bots|start|close|me|status|decision|submit|calculate-preview|calculate|bankruptcy))?$/.exec(
       path,
     );
   if (!match) return send(res, 404, { error: "Not found" });
@@ -676,7 +676,7 @@ async function handle(
   if (
     !(
       method === "POST" &&
-      ["join", "bots", "start", "close", "submit", "calculate", "bankruptcy"].includes(action ?? "")
+      ["join", "leave", "bots", "start", "close", "submit", "calculate", "bankruptcy"].includes(action ?? "")
     ) &&
     !(method === "PUT" && action === "decision")
   )
@@ -684,6 +684,7 @@ async function handle(
   const b = await body(req);
   const allowed: Record<string, string[]> = {
     join: ["firmName"],
+    leave: [],
     bots: [],
     start: [],
     close: [],
@@ -704,6 +705,10 @@ async function handle(
       let firmName = BOT_FIRM_NAME;
       while (names.has(firmName.toLowerCase())) firmName = `${BOT_FIRM_NAME} ${++number}`;
       room.bots = [...roomBots(room), { firmId: randomUUID(), firmName }];
+    } else if (action === "leave") {
+      if (room.phase !== "lobby") throw new HttpError(409, "Выйти из комнаты можно только до начала игры.");
+      db.removeLobbyMember(room.id, user.id);
+      room.members = room.members.filter(m => m.userId !== user.id);
     } else if (action === "join") {
       if (room.members.some((m) => m.userId === user.id))
         return detail(room, user, db);

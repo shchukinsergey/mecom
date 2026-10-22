@@ -14,14 +14,14 @@ import { PlayerDecisions } from '../components/PlayerDecisions';
 import { PlayerReports } from '../components/PlayerReports';
 import '../components/PlayerCabinet.css';
 
-export interface OnlinePlayerProps { initialInviteToken?: string; initialRejoinToken?: string; accountRoomId?: string; onUnauthorized?: () => void; onBack: () => void; }
+export interface OnlinePlayerProps { initialInviteToken?: string; initialRejoinToken?: string; accountRoomId?: string; onUnauthorized?: () => void; onBack: () => void; onLeave?: () => Promise<void>; leaveBusy?: boolean; }
 const quantity = (value: number) => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(value) + ' шт.';
 const phaseLabels = { lobby: 'Ожидаем начала игры', collecting: 'Приём решений', complete: 'Период завершён', closed: 'Игра закрыта' } as const;
 const tabs = [
   ['overview', 'Обзор'], ['decisions', 'Решения'],
 ] as const;
 type PlayerTab = typeof tabs[number][0];
-export function OnlinePlayer({ initialInviteToken, initialRejoinToken, accountRoomId, onUnauthorized, onBack }: OnlinePlayerProps) {
+export function OnlinePlayer({ initialInviteToken, initialRejoinToken, accountRoomId, onUnauthorized, onBack, onLeave, leaveBusy }: OnlinePlayerProps) {
   const [sessions, setSessions] = useState<StoredPlayerSession[]>(() => accountRoomId ? [] : readPlayerSessions());
   const [selected, setSelected] = useState('');
   const [invite, setInvite] = useState(initialInviteToken ?? '');
@@ -118,6 +118,7 @@ export function OnlinePlayer({ initialInviteToken, initialRejoinToken, accountRo
       <div className="pc-header-actions">
         {me && <div className="pc-period"><strong>Период {me.currentPeriodIndex}</strong><span role="status">{excluded ? 'Фирма исключена' : me.submitted ? 'Решение отправлено' : phaseLabels[me.phase]}</span></div>}
         <button type="button" onClick={onBack}>На главную</button>
+        {me?.phase === 'lobby' && onLeave && <button type="button" disabled={loading || leaveBusy} onClick={() => void onLeave()}>Выйти из комнаты</button>}
       </div>
     </header>
     {error && <div className="error" role="alert">{error}</div>}
